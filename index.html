@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমিরুল ম্যাথ কেয়ার - প্রো ম্যানেজমেন্ট</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hidden { display: none; }
+        .hero-section {
+            background-image: url('https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover; 
+            background-position: center; 
+            height: 35vh;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: white; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); 
+            position: relative;
+        }
+        .hero-section::before {
+            content: ''; 
+            position: absolute; 
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4); 
+            z-index: 1;
+        }
+        .hero-content { z-index: 2; text-align: center; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <nav class="bg-indigo-900 p-4 text-white flex justify-between items-center shadow-lg">
+        <h1 class="text-xl font-bold">আমিরুল ম্যাথ কেয়ার</h1>
+        <div class="space-x-4">
+            <button onclick="showSection('studentView')" class="hover:underline">রেজাল্ট দেখুন</button>
+            <button onclick="showSection('loginSection')" class="bg-white text-indigo-900 px-3 py-1 rounded font-bold">অ্যাডমিন</button>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="hero-content">
+            <h2 class="text-4xl font-extrabold mb-1">আমিরুল ম্যাথ কেয়ার</h2>
+            <p class="text-yellow-300 font-bold">নির্ভুল ডাটাবেস ও স্মার্ট রেজাল্ট ম্যানেজমেন্ট</p>
+        </div>
+    </div>
+
+    <div id="studentView" class="container mx-auto mt-10 p-6 max-w-md">
+        <div class="bg-white p-8 rounded shadow-lg border-t-4 border-indigo-600">
+            <h2 class="text-2xl font-bold text-center mb-6 text-indigo-800">ফলাফল চেক করুন</h2>
+            <div class="space-y-4">
+                <select id="searchClass" class="w-full p-3 border rounded outline-none">
+                    <option value="">শ্রেণী নির্বাচন করুন</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ শ্রেণী</option>
+                    <option value="৭ম">৭ম শ্রেণী</option>
+                    <option value="৮ম">৮ম শ্রেণী</option>
+                    <option value="৯ম">৯ম শ্রেণী</option>
+                    <option value="১০ম">১০ম শ্রেণী</option>
+                </select>
+                <input type="text" id="searchRoll" placeholder="রোল নম্বর দাও" class="w-full p-3 border rounded focus:ring-2 focus:ring-indigo-500 outline-none">
+                <button onclick="checkResult()" class="w-full bg-indigo-600 text-white py-2 rounded font-bold hover:bg-indigo-800 transition">রেজাল্ট দেখুন</button>
+            </div>
+            <div id="resultDisplay" class="mt-6 p-4 border rounded bg-gray-50 hidden"></div>
+        </div>
+    </div>
+
+    <div id="loginSection" class="container mx-auto mt-10 p-6 max-w-md hidden">
+        <div class="bg-white p-8 rounded shadow-lg text-center">
+            <h2 class="text-xl font-bold mb-4">অ্যাডমিন লগইন</h2>
+            <input type="password" id="adminPass" placeholder="পাসওয়ার্ড (1234)" class="w-full p-3 border rounded mb-4 text-center outline-none">
+            <button onclick="adminLogin()" class="w-full bg-indigo-600 text-white py-2 rounded font-bold">লগইন</button>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="container mx-auto mt-6 p-4 hidden">
+        <div class="bg-white p-6 rounded shadow mb-6">
+            <h2 id="formTitle" class="text-xl font-bold text-indigo-800 border-b pb-2 mb-4">ছাত্রছাত্রী যোগ ও এডিট করুন</h2>
+            <input type="hidden" id="editIndex" value="-1">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <input type="text" id="stdName" placeholder="নাম" class="p-2 border rounded">
+                <input type="text" id="stdRoll" placeholder="রোল নম্বর" class="p-2 border rounded">
+                <select id="stdClass" class="p-2 border rounded">
+                    <option value="৬ষ্ঠ">৬ষ্ঠ শ্রেণী</option>
+                    <option value="৭ম">৭ম শ্রেণী</option>
+                    <option value="৮ম">৮ম শ্রেণী</option>
+                    <option value="৯ম">৯ম শ্রেণী</option>
+                    <option value="১০ম">১০ম শ্রেণী</option>
+                </select>
+                <input type="text" id="stdBatch" placeholder="ব্যাচ" class="p-2 border rounded">
+                <input type="text" id="stdPhone" placeholder="মোবাইল (017...)" class="p-2 border rounded">
+                <input type="text" id="stdResult" placeholder="রেজাল্ট (GPA/Mark)" class="p-2 border rounded">
+                <button id="saveBtn" onclick="saveStudent()" class="bg-indigo-600 text-white p-2 rounded font-bold hover:bg-indigo-700">সেভ করুন</button>
+            </div>
+            <button id="cancelEdit" onclick="resetForm()" class="mt-2 text-sm text-red-500 hidden underline">এডিট বাতিল</button>
+        </div>
+
+        <div class="bg-indigo-50 p-4 rounded shadow mb-6 border-l-4 border-indigo-600">
+            <h3 class="font-bold text-indigo-800 mb-2"><i class="fas fa-bullhorn"></i> WhatsApp নোটিশ মেসেজ:</h3>
+            <textarea id="noticeMsg" placeholder="এখানে মেসেজ লিখুন যা SMS বাটনে ক্লিক করলে ছাত্রের ফোনে চলে যাবে..." class="w-full p-2 border rounded outline-none h-16"></textarea>
+        </div>
+
+        <div class="flex space-x-2 mb-4 overflow-x-auto pb-2">
+            <button onclick="filterClass('All')" class="bg-gray-800 text-white px-4 py-2 rounded shrink-0">সবাই</button>
+            <button onclick="filterClass('৬ষ্ঠ')" class="bg-indigo-500 text-white px-4 py-2 rounded shrink-0">৬ষ্ঠ</button>
+            <button onclick="filterClass('৭ম')" class="bg-indigo-500 text-white px-4 py-2 rounded shrink-0">৭ম</button>
+            <button onclick="filterClass('৮ম')" class="bg-indigo-500 text-white px-4 py-2 rounded shrink-0">৮ম</button>
+            <button onclick="filterClass('৯ম')" class="bg-indigo-500 text-white px-4 py-2 rounded shrink-0">৯ম</button>
+            <button onclick="filterClass('১০ম')" class="bg-indigo-500 text-white px-4 py-2 rounded shrink-0">১০ম</button>
+        </div>
+
+        <div class="bg-white shadow rounded overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="bg-indigo-900 text-white">
+                    <tr>
+                        <th class="p-3 text-left">রোল</th>
+                        <th class="p-3 text-left">নাম</th>
+                        <th class="p-3 text-left">শ্রেণী</th>
+                        <th class="p-3 text-left">রেজাল্ট</th>
+                        <th class="p-3 text-center">অ্যাকশন</th>
+                    </tr>
+                </thead>
+                <tbody id="adminTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let currentFilter = 'All';
+
+        function showSection(id) {
+            document.getElementById('studentView').classList.add('hidden');
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function adminLogin() {
+            if (document.getElementById('adminPass').value === "Muktarul248") {
+                showSection('adminPanel');
+                renderTable('All');
+            } else { alert("ভুল পাসওয়ার্ড!"); }
+        }
+
+        function saveStudent() {
+            const name = document.getElementById('stdName').value;
+            const roll = document.getElementById('stdRoll').value;
+            const sClass = document.getElementById('stdClass').value;
+            const batch = document.getElementById('stdBatch').value;
+            const phone = document.getElementById('stdPhone').value;
+            const result = document.getElementById('stdResult').value;
+            const editIndex = parseInt(document.getElementById('editIndex').value);
+
+            if(!name || !roll || !phone) return alert("নাম, রোল এবং ফোন নম্বর দিন!");
+
+            let data = JSON.parse(localStorage.getItem('math_care_live') || "[]");
+
+            if (editIndex === -1) {
+                // নতুন যোগ করার সময় রোল চেক
+                const exists = data.some(s => s.roll === roll && s.sClass === sClass);
+                if (exists) {
+                    alert(`এই রোলে ডাটা আগে থেকেই আছে!`);
+                    return;
+                }
+                data.push({ name, roll, sClass, batch, phone, result });
+            } else {
+                data[editIndex] = { name, roll, sClass, batch, phone, result };
+            }
+
+            localStorage.setItem('math_care_live', JSON.stringify(data));
+            resetForm();
+            renderTable(currentFilter);
+            alert("সফলভাবে সেভ হয়েছে!");
+        }
+
+        function renderTable(filter) {
+            currentFilter = filter;
+            const data = JSON.parse(localStorage.getItem('math_care_live') || "[]");
+            const tbody = document.getElementById('adminTableBody');
+            tbody.innerHTML = '';
+
+            data.forEach((s, index) => {
+                if (filter === 'All' || s.sClass === filter) {
+                    tbody.innerHTML += `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3 font-bold">${s.roll}</td>
+                            <td class="p-3">${s.name}</td>
+                            <td class="p-3">${s.sClass}</td>
+                            <td class="p-3 text-green-600 font-bold">${s.result || '...'}</td>
+                            <td class="p-3 text-center space-x-1">
+                                <button onclick="sendSms('${s.phone}')" class="bg-green-500 text-white px-2 py-1 rounded text-xs">SMS</button>
+                                <button onclick="editStudent(${index})" class="text-blue-600 font-bold text-xs">এডিট</button>
+                                <button onclick="deleteData(${index})" class="text-red-500 text-xs">মুছুন</button>
+                            </td>
+                        </tr>`;
+                }
+            });
+        }
+
+        function sendSms(phone) {
+            const msg = document.getElementById('noticeMsg').value;
+            if(!msg) return alert("মেসেজ লিখুন!");
+            window.open(`https://wa.me/88${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function editStudent(index) {
+            const data = JSON.parse(localStorage.getItem('math_care_live'));
+            const s = data[index];
+            document.getElementById('stdName').value = s.name;
+            document.getElementById('stdRoll').value = s.roll;
+            document.getElementById('stdClass').value = s.sClass;
+            document.getElementById('stdBatch').value = s.batch;
+            document.getElementById('stdPhone').value = s.phone;
+            document.getElementById('stdResult').value = s.result;
+            document.getElementById('editIndex').value = index;
+            document.getElementById('formTitle').innerText = "তথ্য পরিবর্তন করুন";
+            document.getElementById('saveBtn').innerText = "আপডেট করুন";
+            document.getElementById('saveBtn').classList.replace('bg-indigo-600', 'bg-orange-500');
+            document.getElementById('cancelEdit').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('stdName').value = '';
+            document.getElementById('stdRoll').value = '';
+            document.getElementById('stdPhone').value = '';
+            document.getElementById('stdResult').value = '';
+            document.getElementById('editIndex').value = '-1';
+            document.getElementById('formTitle').innerText = "ছাত্রছাত্রী যোগ ও এডিট করুন";
+            document.getElementById('saveBtn').innerText = "সেভ করুন";
+            document.getElementById('saveBtn').classList.replace('bg-orange-500', 'bg-indigo-600');
+            document.getElementById('cancelEdit').classList.add('hidden');
+        }
+
+        function filterClass(cls) { renderTable(cls); }
+
+        function deleteData(index) {
+            if(confirm("মুছে ফেলতে চান?")) {
+                let data = JSON.parse(localStorage.getItem('math_care_live'));
+                data.splice(index, 1);
+                localStorage.setItem('math_care_live', JSON.stringify(data));
+                renderTable(currentFilter);
+            }
+        }
+
+        function checkResult() {
+            const roll = document.getElementById('searchRoll').value;
+            const cls = document.getElementById('searchClass').value;
+            if(!roll || !cls) return alert("শ্রেণী ও রোল দিন!");
+            const data = JSON.parse(localStorage.getItem('math_care_live') || "[]");
+            const student = data.find(s => s.roll === roll && s.sClass === cls);
+            const display = document.getElementById('resultDisplay');
+            if (student) {
+                display.classList.remove('hidden');
+                display.innerHTML = `
+                    <p><b>নাম:</b> ${student.name}</p>
+                    <p><b>শ্রেণী:</b> ${student.sClass} | <b>ব্যাচ:</b> ${student.batch}</p>
+                    <hr class="my-2">
+                    <p class="text-xl text-indigo-700 font-bold">ফলাফল: ${student.result || 'শীঘ্রই আসছে'}</p>`;
+            } else { alert("কোনো তথ্য পাওয়া যায়নি!"); }
+        }
+    </script>
+</body>
+</html>
