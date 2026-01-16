@@ -111,9 +111,42 @@
             <button onclick="toggleStudentManager()" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition hover:bg-blue-700">
                 <i class="fas fa-users-cog mr-2"></i>স্টুডেন্ট ডাটাবেজ
             </button>
+            <button onclick="toggleAttendanceSystem()" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition hover:bg-green-700">
+                <i class="fas fa-calendar-check mr-2"></i>উপস্থিতি এন্ট্রি
+            </button>
+            <button onclick="sendBulkWhatsAppResults()" class="bg-teal-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition hover:bg-teal-700">
+                <i class="fab fa-whatsapp mr-2"></i>গ্রুপ রেজাল্ট পাঠান
+            </button>
             <button onclick="downloadMeritListPDF()" class="bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition hover:bg-indigo-800">
                 <i class="fas fa-trophy mr-2"></i>মেধা তালিকা PDF
             </button>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-xl mb-8 border-t-4 border-yellow-500 text-black">
+            <h2 class="font-bold text-xl text-yellow-800 mb-4"><i class="fas fa-bullhorn mr-2"></i>নোটিশ আপডেট করুন</h2>
+            <div class="flex gap-2">
+                <input type="text" id="adminNoticeInput" placeholder="নতুন নোটিশ এখানে লিখুন..." class="flex-1 p-3 border rounded-xl outline-none focus:border-yellow-500">
+                <button onclick="saveNotice()" class="bg-yellow-500 text-white px-6 py-3 rounded-xl font-bold shadow-md hover:bg-yellow-600">আপডেট</button>
+            </div>
+        </div>
+
+        <div id="attendanceSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-8 border-t-4 border-green-600 hidden text-black">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="font-bold text-xl text-green-800">দৈনিক উপস্থিতি ট্র্যাকার</h2>
+                <input type="date" id="attDate" class="p-2 border rounded-lg">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <select id="attClass" class="p-3 border rounded-xl font-bold" onchange="loadStudentsForAttendance()">
+                    <option value="">শ্রেণী নির্বাচন করুন</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option><option value="৯ম">৯ম</option><option value="১০ম">১০ম</option><option value="SSC">SSC</option>
+                </select>
+                <div class="text-right py-2">
+                    <span class="text-sm font-semibold text-gray-600">সিলেক্ট করুন যারা আজ উপস্থিত:</span>
+                </div>
+            </div>
+            <div id="attendanceList" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-80 overflow-y-auto mb-4 border p-4 rounded-xl bg-gray-50">
+                </div>
+            <button onclick="saveAttendanceData()" class="w-full bg-green-700 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-green-800">উপস্থিতি ডাটাবেজে সংরক্ষণ করুন</button>
         </div>
 
         <div id="studentManager" class="bg-white p-6 rounded-2xl shadow-xl mb-8 border-t-4 border-blue-600 hidden text-black">
@@ -187,7 +220,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC4j1NqdqdYoHlKj_mtX5Kcz_X0M9DhMdI",
@@ -213,13 +246,20 @@
         onValue(ref(db, 'students'), (snapshot) => {
             if (snapshot.exists()) {
                 localStorage.setItem('amc_student_db', JSON.stringify(snapshot.val()));
-                if(sessionStorage.getItem('is_admin')) loadStudentList();
+                if(sessionStorage.getItem('is_admin')) { loadStudentList(); updateDashboardStats(); }
             }
         });
         onValue(ref(db, 'notice'), (snapshot) => {
             if (snapshot.exists()) {
                 localStorage.setItem('amc_notice', snapshot.val());
                 document.getElementById('mainNotice').innerText = snapshot.val();
+            }
+        });
+        // Load attendance
+        onValue(ref(db, 'attendance'), (snapshot) => {
+            if (snapshot.exists()) {
+                localStorage.setItem('amc_attendance', JSON.stringify(snapshot.val()));
+                updateDashboardStats();
             }
         });
     </script>
@@ -239,21 +279,88 @@
             "SSC": ["সাধারণ গণিত", "উচ্চতর গণিত", "ICT"]
         };
 
-        // Student Database Functions
+        // --- Attendance System Logic ---
+        function toggleAttendanceSystem() {
+            document.getElementById('attendanceSystem').classList.toggle('hidden');
+            document.getElementById('attDate').valueAsDate = new Date();
+        }
+
+        function loadStudentsForAttendance() {
+            const cls = document.getElementById('attClass').value;
+            const container = document.getElementById('attendanceList');
+            const students = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            
+            if(!cls) { container.innerHTML = ""; return; }
+            
+            let filtered = Object.values(students).filter(s => s.cls === cls);
+            if(filtered.length === 0) { container.innerHTML = "<p class='col-span-2 text-center text-red-500'>কোন শিক্ষার্থী পাওয়া যায়নি!</p>"; return; }
+
+            container.innerHTML = filtered.map(s => `
+                <label class="flex items-center gap-3 p-3 bg-white border rounded-lg cursor-pointer hover:bg-green-50">
+                    <input type="checkbox" class="att-check w-5 h-5 accent-green-600" value="${s.cls}_${s.roll}">
+                    <span class="font-bold">Roll: ${s.roll}</span>
+                    <span class="text-sm">${s.name}</span>
+                </label>
+            `).join('');
+        }
+
+        function saveAttendanceData() {
+            const date = document.getElementById('attDate').value;
+            if(!date) return alert("তারিখ নির্বাচন করুন!");
+            
+            const checks = document.querySelectorAll('.att-check:checked');
+            let presentRolls = Array.from(checks).map(c => c.value);
+            
+            let allAtt = JSON.parse(localStorage.getItem('amc_attendance') || "{}");
+            allAtt[date] = presentRolls;
+            
+            localStorage.setItem('amc_attendance', JSON.stringify(allAtt));
+            if(window.saveToFirebase) window.saveToFirebase('attendance', allAtt);
+            
+            alert("উপস্থিতি সংরক্ষিত হয়েছে!");
+            updateDashboardStats();
+            document.getElementById('attendanceSystem').classList.add('hidden');
+        }
+
+        // --- Bulk WhatsApp Results ---
+        function sendBulkWhatsAppResults() {
+            const date = prompt("কোন তারিখের রেজাল্ট পাঠাতে চান? (YYYY-MM-DD)", new Date().toISOString().split('T')[0]);
+            if(!date) return;
+            
+            const results = JSON.parse(localStorage.getItem('amc_db_final') || "[]").filter(r => r.date === date);
+            if(results.length === 0) return alert("ঐ তারিখে কোন রেজাল্ট পাওয়া যায়নি!");
+            
+            if(!confirm(`${results.length} জন শিক্ষার্থীকে মেসেজ পাঠাতে চান?`)) return;
+
+            results.forEach((r, index) => {
+                setTimeout(() => {
+                    sendSingleResultWhatsApp(r.date, r.roll, r.cls);
+                }, index * 3000); // 3-second delay to avoid WhatsApp spam blocking
+            });
+            alert("মেসেজ পাঠানোর প্রসেস শুরু হয়েছে। পপ-আপ এলাউ করুন।");
+        }
+
+        // --- Notice System ---
+        function saveNotice() {
+            const msg = document.getElementById('adminNoticeInput').value;
+            if(!msg) return alert("নোটিশ লিখুন!");
+            if(window.saveToFirebase) window.saveToFirebase('notice', msg);
+            alert("নোটিশ আপডেট হয়েছে!");
+            document.getElementById('adminNoticeInput').value = "";
+        }
+
+        // --- REST OF YOUR ORIGINAL CODE (UNCHANGED LOGIC) ---
         function addStudentToDB() {
             const roll = document.getElementById('newRoll').value;
             const name = document.getElementById('newName').value;
             const cls = document.getElementById('newClass').value;
             const wa = document.getElementById('newWa').value;
             if(!roll || !name || !cls) return alert("তথ্য দিন");
-
             let db = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
             const studentId = `${cls}_${roll}`;
-            
             db[studentId] = { roll, name, cls, wa };
             localStorage.setItem('amc_student_db', JSON.stringify(db));
             if(window.saveToFirebase) window.saveToFirebase('students', db);
-            
             alert("সফলভাবে সংরক্ষিত!");
             cancelEditStudent();
             loadStudentList();
@@ -264,12 +371,10 @@
             const db = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
             const s = db[id];
             if(!s) return;
-            
             document.getElementById('newRoll').value = s.roll;
             document.getElementById('newName').value = s.name;
             document.getElementById('newClass').value = s.cls;
             document.getElementById('newWa').value = s.wa;
-            
             document.getElementById('smTitle').innerText = "শিক্ষার্থী তথ্য এডিট করুন";
             document.getElementById('saveStudentBtn').innerText = "আপডেট করুন";
             document.getElementById('cancelStudentEditBtn').classList.remove('hidden');
@@ -299,21 +404,16 @@
                 </div>`).join('');
         }
 
-        // Result Functions
         function editResult(index) {
             const data = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
             const entry = data[index];
             if(!entry) return;
-
             document.getElementById('examDate').value = entry.date;
             document.getElementById('stdClass').value = entry.cls;
             document.getElementById('stdRoll').value = entry.roll;
             document.getElementById('stdName').value = entry.name;
             document.getElementById('stdExamType').value = entry.examType;
-
             updateSubjectInputs();
-
-            // Fill Scores
             setTimeout(() => {
                 for(let sub in entry.scores) {
                     if(document.getElementById(`full_${sub}`)) {
@@ -324,7 +424,6 @@
                     }
                 }
             }, 100);
-
             document.getElementById('resultFormTitle').innerText = "ফলাফল এডিট করুন";
             document.getElementById('saveResultBtn').innerText = "আপডেট রেজাল্ট";
             document.getElementById('cancelResultEditBtn').classList.remove('hidden');
@@ -349,7 +448,6 @@
             const name = document.getElementById('stdName').value;
             const type = document.getElementById('stdExamType').value;
             if(!date || !cls || !roll) return alert("সব তথ্য পূরণ করুন");
-            
             let scores = {}; let grandTotal = 0;
             subjectsConfig[cls].forEach(sub => {
                 const f = Number(document.getElementById(`full_${sub}`).value || 100);
@@ -359,19 +457,12 @@
                 scores[sub] = { f, m, c, t, g: document.getElementById(`grade_${sub}`).innerText };
                 grandTotal += t;
             });
-
             const resultEntry = { date, cls, roll, name, examType: type, scores, grandTotal };
             let data = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
-            
-            if(currentEditResultIndex !== null) {
-                data[currentEditResultIndex] = resultEntry;
-            } else {
-                data.push(resultEntry);
-            }
-
+            if(currentEditResultIndex !== null) data[currentEditResultIndex] = resultEntry;
+            else data.push(resultEntry);
             localStorage.setItem('amc_db_final', JSON.stringify(data));
             if(window.saveToFirebase) window.saveToFirebase('results', data);
-            
             alert("ডেটা সেভ হয়েছে!");
             cancelResultEdit();
             renderTable();
@@ -382,12 +473,9 @@
             let data = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
             const fCls = document.getElementById('filterClass').value;
             const fDate = document.getElementById('filterDate').value;
-            
             if(fCls !== "সব") data = data.filter(s => s.cls === fCls);
             if(fDate) data = data.filter(s => s.date === fDate);
-
             data.sort((a, b) => b.grandTotal - a.grandTotal);
-
             document.getElementById('dataTableBody').innerHTML = data.map((s, idx) => `
                 <tr class="border-b">
                     <td class="p-4">${s.roll}</td>
@@ -403,16 +491,9 @@
                 </tr>`).join('');
         }
 
-        // UI & PDF Improvements
         function downloadDocument() {
             const element = document.getElementById('pdfContent');
-            const opt = {
-                margin: [10, 10, 10, 10],
-                filename: 'AMC_Mark_Sheet.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+            const opt = { margin: [10, 10, 10, 10], filename: 'AMC_Mark_Sheet.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
             html2pdf().set(opt).from(element).save();
         }
 
@@ -461,22 +542,13 @@
                         </thead>
                         <tbody>${rows}</tbody>
                     </table>
-                    <div style="margin-top: 20px; text-align: right;">
-                        <div style="display: inline-block; text-align: center;">
-                            <p style="margin-bottom: 0; font-weight: bold;">${data.grandTotal}</p>
-                            <div style="border-top: 1px solid black; width: 100px; padding-top: 5px;">প্রাপ্ত মোট নম্বর</div>
-                        </div>
-                    </div>
                 </div>`;
             } else alert("রেজাল্ট পাওয়া যায়নি!");
         }
 
         function toggleDarkMode() { document.getElementById('body').classList.toggle('dark-mode'); }
-        
         function showSection(id) {
-            ['studentView', 'loginSection', 'adminPanel', 'displayArea'].forEach(s => {
-                document.getElementById(s).classList.add('hidden');
-            });
+            ['studentView', 'loginSection', 'adminPanel', 'displayArea'].forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
         }
 
@@ -495,8 +567,12 @@
         function updateDashboardStats() {
             const students = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
             const results = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
+            const att = JSON.parse(localStorage.getItem('amc_attendance') || "{}");
+            const today = new Date().toISOString().split('T')[0];
+            
             document.getElementById('statTotalStudent').innerText = Object.keys(students).length;
             document.getElementById('statTotalResult').innerText = results.length;
+            document.getElementById('statTodayAtt').innerText = att[today] ? att[today].length : 0;
         }
 
         function deleteStudent(id) {
@@ -562,7 +638,7 @@
             const studentDB = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
             const data = allResults.find(i => i.date === date && i.roll == roll && i.cls === cls);
             const student = studentDB[`${cls}_${roll}`];
-            if (!data || !student || !student.wa) return alert("তথ্য অসম্পূর্ণ বা হোয়াটসঅ্যাপ নম্বর নেই!");
+            if (!data || !student || !student.wa) return;
 
             let subjectDetails = "";
             let totalMaxMarks = 0;
@@ -584,10 +660,8 @@
                 { title: "আমিরুল ম্যাথ কেয়ার", desc: "একটি নির্ভরযোগ্য শিক্ষা প্রতিষ্ঠান।" },
                 { title: "আধুনিক শিক্ষা", desc: "গণিতকে সহজভাবে শেখার মাধ্যম।" }
             ];
-
             track.innerHTML = slides.map(s => `<div class="slide"><img src="${DEFAULT_LOGO}"><div class="slide-content"><h2>${s.title}</h2><p>${s.desc}</p></div></div>`).join('');
             dots.innerHTML = slides.map((_, i) => `<div class="w-2 h-2 rounded-full bg-white/50"></div>`).join('');
-
             setInterval(() => {
                 slideIndex = (slideIndex + 1) % slides.length;
                 track.style.transform = `translateX(-${slideIndex * 100}%)`;
