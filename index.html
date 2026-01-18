@@ -322,7 +322,6 @@
             document.getElementById('attendanceSystem').classList.add('hidden');
         }
 
-        // --- Bulk WhatsApp Results ---
         function sendBulkWhatsAppResults() {
             const date = prompt("কোন তারিখের রেজাল্ট পাঠাতে চান? (YYYY-MM-DD)", new Date().toISOString().split('T')[0]);
             if(!date) return;
@@ -335,12 +334,11 @@
             results.forEach((r, index) => {
                 setTimeout(() => {
                     sendSingleResultWhatsApp(r.date, r.roll, r.cls);
-                }, index * 3000); // 3-second delay to avoid WhatsApp spam blocking
+                }, index * 3000); 
             });
             alert("মেসেজ পাঠানোর প্রসেস শুরু হয়েছে। পপ-আপ এলাউ করুন।");
         }
 
-        // --- Notice System ---
         function saveNotice() {
             const msg = document.getElementById('adminNoticeInput').value;
             if(!msg) return alert("নোটিশ লিখুন!");
@@ -349,7 +347,6 @@
             document.getElementById('adminNoticeInput').value = "";
         }
 
-        // --- REST OF YOUR ORIGINAL CODE (UNCHANGED LOGIC) ---
         function addStudentToDB() {
             const roll = document.getElementById('newRoll').value;
             const name = document.getElementById('newName').value;
@@ -441,14 +438,18 @@
             document.getElementById('subjectInputs').innerHTML = '';
         }
 
+        // --- UPDATED saveData AND quickResetForm LOGIC ---
         function saveData() {
             const date = document.getElementById('examDate').value;
             const cls = document.getElementById('stdClass').value;
             const roll = document.getElementById('stdRoll').value;
             const name = document.getElementById('stdName').value;
             const type = document.getElementById('stdExamType').value;
+
             if(!date || !cls || !roll) return alert("সব তথ্য পূরণ করুন");
-            let scores = {}; let grandTotal = 0;
+
+            let scores = {}; 
+            let grandTotal = 0;
             subjectsConfig[cls].forEach(sub => {
                 const f = Number(document.getElementById(`full_${sub}`).value || 100);
                 const m = Number(document.getElementById(`mcq_${sub}`).value || 0);
@@ -457,17 +458,55 @@
                 scores[sub] = { f, m, c, t, g: document.getElementById(`grade_${sub}`).innerText };
                 grandTotal += t;
             });
+
             const resultEntry = { date, cls, roll, name, examType: type, scores, grandTotal };
             let data = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
-            if(currentEditResultIndex !== null) data[currentEditResultIndex] = resultEntry;
-            else data.push(resultEntry);
-            localStorage.setItem('amc_db_final', JSON.stringify(data));
-            if(window.saveToFirebase) window.saveToFirebase('results', data);
-            alert("ডেটা সেভ হয়েছে!");
-            cancelResultEdit();
+
+            if(currentEditResultIndex !== null) {
+                data[currentEditResultIndex] = resultEntry;
+                alert("রেজাল্ট আপডেট হয়েছে!");
+                cancelResultEdit(); 
+            } else {
+                data.push(resultEntry);
+                if(window.saveToFirebase) window.saveToFirebase('results', data);
+                localStorage.setItem('amc_db_final', JSON.stringify(data));
+                
+                // Form Partial Reset for continuous entry
+                quickResetForm();
+            }
+
             renderTable();
             updateDashboardStats();
         }
+
+        function quickResetForm() {
+            // Clear Roll and Name only
+            document.getElementById('stdRoll').value = "";
+            document.getElementById('stdName').value = "";
+            
+            // Clear all subject marks
+            const cls = document.getElementById('stdClass').value;
+            if(subjectsConfig[cls]) {
+                subjectsConfig[cls].forEach(sub => {
+                    if(document.getElementById(`mcq_${sub}`)) document.getElementById(`mcq_${sub}`).value = "";
+                    if(document.getElementById(`cq_${sub}`)) document.getElementById(`cq_${sub}`).value = "";
+                    if(document.getElementById(`grade_${sub}`)) document.getElementById(`grade_${sub}`).innerText = "-";
+                });
+            }
+
+            // Button Feedback
+            const btn = document.getElementById('saveResultBtn');
+            const originalText = btn.innerText;
+            btn.innerText = "সফলভাবে সেভ হয়েছে!";
+            btn.style.backgroundColor = "#10b981"; // Green
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.backgroundColor = ""; 
+                document.getElementById('stdRoll').focus(); // Focus on Roll for next entry
+            }, 1000);
+        }
+        // --- END OF UPDATED LOGIC ---
 
         function renderTable() {
             let data = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
