@@ -760,6 +760,8 @@
             const slides = [
                 { title: "আমিরুল ম্যাথ কেয়ার", desc: "একটি নির্ভরযোগ্য শিক্ষা প্রতিষ্ঠান।" },
                 { title: "আধুনিক শিক্ষা", desc: "গণিতকে সহজভাবে শেখার মাধ্যম।" }
+                { title: "নতুন ব্যাচে ভর্তি চলছে", desc: "সপ্তম শ্রেণী থেকে দশম শ্রেণী পর্যন্ত।"} 
+                { title: "আধুনিক ডিজিটাল ক্লাস", desc: "প্রজেক্টর এবং গ্রাফিক্স ট্যাবলেটের মাধ্যমে সহজ সমাধান।",img: "https://i.ibb.co/Lhy0W0P/1000018420.jpg"}
             ];
             track.innerHTML = slides.map(s => `<div class="slide"><img src="${DEFAULT_LOGO}"><div class="slide-content"><h2>${s.title}</h2><p>${s.desc}</p></div></div>`).join('');
             dots.innerHTML = slides.map((_, i) => `<div class="w-2 h-2 rounded-full bg-white/50"></div>`).join('');
