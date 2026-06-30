@@ -67,7 +67,7 @@
             </div>
             <div class="space-y-4">
                 <div>
-                    <label class="text-xs font-bold block mb-1">পরীক্ষার তারিখ</label>
+                    <label class="text-xs font-bold block mb-1">তারিখ / মাস</label>
                     <input type="date" id="searchDate" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none bg-gray-50 text-black">
                 </div>
                 <div>
@@ -77,14 +77,22 @@
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option><option value="৯ম">৯ম</option><option value="১০ম">১০ম</option><option value="SSC">SSC</option>
                     </select>
                 </div>
-                <div>
-                    <label class="text-xs font-bold block mb-1">পরীক্ষার ধরন</label>
-                    <select id="searchExamType" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none bg-gray-50 text-black">
-                        <option value="সাপ্তাহিক">সাপ্তাহিক পরীক্ষা</option>
-                        <option value="মাসিক">মাসিক পরীক্ষা</option>
-                        <option value="বার্ষিক">বার্ষিক পরীক্ষা</option>
-                        <option value="দৈনিক">দৈনিক পরীক্ষা</option>
-                    </select>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs font-bold block mb-1">পরীক্ষার ধরন</label>
+                        <select id="searchExamType" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none bg-gray-50 text-black">
+                            <option value="সাপ্তাহিক">সাপ্তাহিক পরীক্ষা</option>
+                            <option value="মাসিক">মাসিক পরীক্ষা</option>
+                            <option value="বার্ষিক">বার্ষিক পরীক্ষা</option>
+                            <option value="দৈনিক">দৈনিক পরীক্ষা</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold block mb-1">মাস (পেমেন্ট স্লিপের জন্য)</label>
+                        <select id="searchMonth" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none bg-gray-50 text-black">
+                            <option value="জানুয়ারি">জানুয়ারি</option><option value="ফেব্রুয়ারি">ফেব্রুয়ারি</option><option value="মার্চ">মার্চ</option><option value="এপ্রিল">এপ্রিল</option><option value="মে">মে</option><option value="জুন">জুন</option><option value="জুলাই">জুলাই</option><option value="আগস্ট">আগস্ট</option><option value="সেপ্টেম্বর">সেপ্টেম্বর</option><option value="অক্টোবর">অক্টোবর</option><option value="নভেম্বর">নভেম্বর</option><option value="ডিসেম্বর">ডিসেম্বর</option>
+                        </select>
+                    </div>
                 </div>
                 <div>
                     <label class="text-xs font-bold block mb-1">রোল নম্বর</label>
@@ -93,6 +101,9 @@
                 <div class="grid grid-cols-2 gap-4 pt-4">
                     <button onclick="checkResult()" class="brand-purple text-white py-4 rounded-2xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"><i class="fas fa-poll mr-2"></i>রেজাল্ট</button>
                     <button onclick="generateAdmit()" class="bg-orange-500 text-white py-4 rounded-2xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"><i class="fas fa-id-card mr-2"></i>অ্যাডমিট</button>
+                </div>
+                <div class="pt-2">
+                    <button onclick="viewPaymentSlipPortal()" class="w-full bg-emerald-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"><i class="fas fa-file-invoice-dollar mr-2"></i>অনলাইন পেমেন্ট স্লিপ প্রিন্ট</button>
                 </div>
             </div>
         </div>
@@ -149,12 +160,41 @@
             <button onclick="toggleSectionElement('attendanceSystem')" class="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl font-bold shadow-md transition flex items-center gap-2">
                 <i class="fas fa-calendar-check"></i>উপস্থিতি এন্ট্রি
             </button>
+            <button onclick="toggleSectionElement('paymentSystem')" class="bg-amber-600 hover:bg-amber-700 text-white px-5 py-3 rounded-xl font-bold shadow-md transition flex items-center gap-2">
+                <i class="fas fa-hand-holding-usd"></i>পেমেন্ট ম্যানেজার
+            </button>
             <button onclick="sendBulkWhatsAppResults()" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-3 rounded-xl font-bold shadow-md transition flex items-center gap-2">
                 <i class="fab fa-whatsapp"></i>গ্রুপ রেজাল্ট পাঠান
             </button>
             <button onclick="downloadStudentListPDF()" class="bg-gray-700 hover:bg-gray-800 text-white px-5 py-3 rounded-xl font-bold shadow-md transition flex items-center gap-2">
                 <i class="fas fa-file-download"></i>ছাত্র তালিকা PDF
             </button>
+        </div>
+
+        <div id="paymentSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-amber-600 hidden text-black transition-colors">
+            <h2 class="font-bold text-xl text-amber-800 mb-4"><i class="fas fa-receipt mr-2"></i>শিক্ষার্থী পেমেন্ট এন্ট্রি ও রশিদ জেনারেটর</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4 bg-amber-50 p-4 rounded-xl">
+                <select id="payClass" onchange="fetchPaymentStudentInfo()" class="p-2 border rounded outline-none font-bold">
+                    <option value="">শ্রেণী সিলেক্ট</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option><option value="৯ম">৯ম</option><option value="১০ম">১০ম</option><option value="SSC">SSC</option>
+                </select>
+                <input type="number" id="payRoll" placeholder="রোল নম্বর" oninput="fetchPaymentStudentInfo()" class="p-2 border rounded outline-none">
+                <input type="text" id="payName" placeholder="শিক্ষার্থীর নাম" readonly class="p-2 border rounded outline-none bg-gray-100 font-bold">
+                <select id="payMonth" class="p-2 border rounded outline-none font-bold">
+                    <option value="জানুয়ারি">জানুয়ারি</option><option value="ফেব্রুয়ারি">ফেব্রুয়ারি</option><option value="মার্চ">মার্চ</option><option value="এপ্রিল">এপ্রিল</option><option value="মে">মে</option><option value="জুন">জুন</option><option value="জুলাই">জুলাই</option><option value="আগস্ট">আগস্ট</option><option value="সেপ্টেম্বর">সেপ্টেম্বর</option><option value="অক্টোবর">অক্টোবর</option><option value="নভেম্বর">নভেম্বর</option><option value="ডিসেম্বর">ডিসেম্বর</option>
+                </select>
+                <input type="number" id="payAmount" placeholder="টাকার পরিমাণ (৳)" class="p-2 border rounded outline-none">
+                <select id="payMethod" class="p-2 border rounded outline-none font-bold">
+                    <option value="bKash">বিকাশ (bKash)</option>
+                    <option value="Nagad">নগদ (Nagad)</option>
+                    <option value="Cash">ক্যাশ (Cash)</option>
+                    <option value="Rocket">রকেট (Rocket)</option>
+                </select>
+                <input type="text" id="payTxnId" placeholder="TrxID (ঐচ্ছিক)" class="p-2 border rounded outline-none">
+                <input type="date" id="payDate" class="p-2 border rounded outline-none">
+                <button onclick="savePaymentToDB()" class="md:col-span-4 bg-amber-600 text-white font-bold py-2.5 rounded hover:bg-amber-700 transition">পেমেন্ট ডাটা সেভ ও স্লিপ তৈরি করুন</button>
+            </div>
+            <div class="max-h-60 overflow-y-auto border rounded-xl p-2 bg-gray-50" id="adminPaymentList"></div>
         </div>
 
         <div id="attendanceSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-green-600 hidden text-black transition-colors">
@@ -290,6 +330,12 @@
                 updateDashboardStats();
             }
         });
+        onValue(ref(db, 'payments'), (snapshot) => {
+            if (snapshot.exists()) {
+                localStorage.setItem('amc_payment_db', JSON.stringify(snapshot.val()));
+                if(sessionStorage.getItem('is_admin')) { loadPaymentList(); }
+            }
+        });
     </script>
 
     <script>
@@ -308,10 +354,10 @@
             "SSC": ["সাধারণ গণিত", "উচ্চতর গণিত", "ICT"]
         };
 
-        // সেকশন ডিসপ্লে ট্র্যাকার টগল
         function toggleSectionElement(id) {
             document.getElementById(id).classList.toggle('hidden');
             if(id === 'attendanceSystem') document.getElementById('attDate').valueAsDate = new Date();
+            if(id === 'paymentSystem') document.getElementById('payDate').valueAsDate = new Date();
         }
 
         function showSection(id) {
@@ -325,6 +371,155 @@
             } else {
                 showSection('studentView');
             }
+        }
+
+        // --- অনলাইন পেমেন্ট রিসিট মেকার লজিক ---
+        function fetchPaymentStudentInfo() {
+            const r = document.getElementById('payRoll').value;
+            const c = document.getElementById('payClass').value;
+            const db = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            const s = db[`${c}_${r}`];
+            document.getElementById('payName').value = s ? s.name : "";
+        }
+
+        function savePaymentToDB() {
+            const cls = document.getElementById('payClass').value;
+            const roll = document.getElementById('payRoll').value.trim();
+            const name = document.getElementById('payName').value;
+            const month = document.getElementById('payMonth').value;
+            const amount = document.getElementById('payAmount').value.trim();
+            const method = document.getElementById('payMethod').value;
+            const txnId = document.getElementById('payTxnId').value.trim() || 'N/A';
+            const date = document.getElementById('payDate').value;
+
+            if(!cls || !roll || !amount || !date) return Swal.fire('ফরম অসম্পূর্ণ!', 'শ্রেণী, রোল, টাকার পরিমাণ এবং তারিখ সঠিক ভাবে ইনপুট দিন!', 'warning');
+
+            let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]");
+            if (!Array.isArray(payments)) payments = [];
+
+            const newPay = { id: 'PAY_' + Date.now(), cls, roll, name: name || 'অজ্ঞাত শিক্ষার্থী', month, amount, method, txnId, date };
+            payments.push(newPay);
+
+            localStorage.setItem('amc_payment_db', JSON.stringify(payments));
+            if(window.saveToFirebase) window.saveToFirebase('payments', payments);
+
+            Swal.fire('সফল!', 'পেমেন্ট ডাটাবেজে লক করা হয়েছে।', 'success');
+            document.getElementById('payRoll').value = '';
+            document.getElementById('payName').value = '';
+            document.getElementById('payAmount').value = '';
+            document.getElementById('payTxnId').value = '';
+            
+            loadPaymentList();
+        }
+
+        function loadPaymentList() {
+            let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]");
+            if (!Array.isArray(payments)) payments = [];
+            const container = document.getElementById('adminPaymentList');
+            if(payments.length === 0) {
+                container.innerHTML = "<p class='text-center text-gray-500 text-xs py-2'>কোন পেমেন্ট রেকর্ড পাওয়া যায়নি।</p>";
+                return;
+            }
+            container.innerHTML = payments.slice().reverse().map(p => `
+                <div class="flex justify-between items-center p-3 border-b hover:bg-gray-100 transition-colors text-xs text-black">
+                    <div>
+                        <b>[${p.cls} - রোল ${p.roll}]</b> ${p.name} <br>
+                        <span class="text-amber-700 font-bold">${p.month}</span> মাসের ফি: ৳${p.amount} (${p.method}) - ${p.date}
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="viewSinglePaymentSlip('${p.id}')" class="text-amber-600 hover:text-amber-800" title="স্লিপ দেখুন"><i class="fas fa-file-invoice-dollar text-sm"></i></button>
+                        <button onclick="sharePaymentWhatsApp('${p.id}')" class="text-green-600 hover:text-green-800" title="হোয়াটসঅ্যাপে পাঠান"><i class="fab fa-whatsapp text-sm"></i></button>
+                        <button onclick="deletePaymentRecord('${p.id}')" class="text-red-500 hover:text-red-700" title="ডিলিট"><i class="fas fa-trash text-sm"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getPaymentSlipHTML(p) {
+            return `
+            <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 25px; border: 4px double #4c1d95; border-radius: 15px; background: #fff; position: relative;">
+                <div style="text-align:center; margin-bottom: 20px; border-bottom: 2px dashed #4c1d95; padding-bottom: 10px;">
+                    <img src="${siteLogo}" style="width:65px; height:65px; border-radius:50%; margin-bottom:5px; object-fit: cover; display: inline-block;">
+                    <h1 style="color:#4c1d95; margin:0; font-size: 24px; font-weight:800;">AMIRUL MATH CARE</h1>
+                    <p style="margin:2px 0; font-size:13px; font-weight:bold; color:#d97706; text-transform:uppercase;">টাকা প্রাপ্তির রশিদ / পেমেন্ট স্লিপ</p>
+                </div>
+                
+                <div style="margin:15px 0; font-size: 14px; background: #fafafa; padding: 15px; border-radius: 10px; border-left: 5px solid #10b981;">
+                    <table style="width:100%; border-collapse:collapse; font-size:14px;">
+                        <tr style="height:32px;"><td style="width:40%; font-weight:bold; color:#555;">শিক্ষার্থীর নাম:</td><td style="font-weight:700; color:#1e1b4b;">${p.name}</td></tr>
+                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">শ্রেণী:</td><td><b>${p.cls}</b></td></tr>
+                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">রোল নম্বর:</td><td><b>${p.roll}</b></td></tr>
+                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">পেমেন্টের উদ্দেশ্য:</td><td><span style="background:#fef3c7; padding:2px 8px; border-radius:5px; font-weight:bold; color:#b45309;">${p.month} মাসের বেতন/ফি</span></td></tr>
+                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">পরিশোধিত টাকা:</td><td><b style="color:#10b981; font-size: 16px;">৳${p.amount}/-</b></td></tr>
+                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">মাধ্যম ও ট্রানজেকশন ID:</td><td><b>${p.method}</b> (${p.txnId || 'N/A'})</td></tr>
+                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">পরিশোধের তারিখ:</td><td><b>${p.date}</b></td></tr>
+                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">পেমেন্ট স্ট্যাটাস:</td><td><span style="background:#d1fae5; color:#065f46; padding:3px 10px; border-radius:20px; font-weight:bold; font-size:12px;">✓ PAID (পরিশোধিত)</span></td></tr>
+                    </table>
+                </div>
+                
+                <div style="margin-top:50px; display:flex; justify-content:space-between; align-items:flex-end;">
+                    <div style="text-align:center; width:40%;"><p style="border-top:1px solid #ddd; padding-top:5px; font-size:12px; font-weight:bold; color:#666;">শিক্ষার্থীর স্বাক্ষর</p></div>
+                    <div style="text-align:center; width:40%;"><p style="border-top:1px solid #4c1d95; padding-top:5px; font-size:12px; font-weight:bold; color:#4c1d95;">কর্তৃপক্ষের স্বাক্ষর</p></div>
+                </div>
+            </div>`;
+        }
+
+        function viewSinglePaymentSlip(id) {
+            let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]");
+            let p = payments.find(item => item.id === id);
+            if(!p) return Swal.fire('ত্রুটি!', 'পেমেন্ট স্লিপের ডাটা পাওয়া যায়নি!', 'error');
+            showSection('displayArea');
+            document.getElementById('pdfContent').innerHTML = getPaymentSlipHTML(p);
+        }
+
+        function viewPaymentSlipPortal() {
+            const roll = document.getElementById('searchRoll').value;
+            const cls = document.getElementById('searchClass').value;
+            const month = document.getElementById('searchMonth').value;
+            if(!roll || !cls || !month) return Swal.fire('ফিল্ড খালি!', 'অনুগ্রহ করে রোল, শ্রেণী ও নির্দিষ্ট মাস নির্বাচন করুন।', 'warning');
+            
+            let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]");
+            if (!Array.isArray(payments)) payments = [];
+            let p = payments.find(item => item.roll == roll && item.cls === cls && item.month === month);
+            
+            if(p) {
+                showSection('displayArea');
+                document.getElementById('pdfContent').innerHTML = getPaymentSlipHTML(p);
+            } else {
+                Swal.fire('রেকর্ড পাওয়া যায়নি!', 'উক্ত রোল ও মাসের কোন পেমেন্ট স্লিপ পাওয়া যায়নি।', 'error');
+            }
+        }
+
+        function sharePaymentWhatsApp(id) {
+            let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]");
+            let p = payments.find(item => item.id === id);
+            if(!p) return;
+            const studentDB = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            const student = studentDB[`${p.cls}_${p.roll}`];
+            if (!student || !student.wa) return Swal.fire('হোয়াটসঅ্যাপ নম্বর নেই!', 'উক্ত শিক্ষার্থীর হোয়াটসঅ্যাপ নম্বর প্রোফাইলে সেভ করা নেই।', 'info');
+            
+            const message = `*AMIRUL MATH CARE - পেমেন্ট রসিদ*%0A--------------------------------%0A*নাম:* ${p.name}%0A*রোল:* ${p.roll} | *শ্রেণী:* ${p.cls}%0A*উদ্দেশ্য:* ${p.month} মাসের ফি%0A*পরিশোধিত পরিমাণ:* ৳${p.amount}/-%0A*মাধ্যম:* ${p.method}%0A*তারিখ:* ${p.date}%0A*স্ট্যাটাস:* PAID (পরিশোধিত) ✔%0A--------------------------------%0Aধন্যবাদ ও কৃতজ্ঞতা।`;
+            window.open(`https://wa.me/${student.wa}?text=${message}`, '_blank');
+        }
+
+        function deletePaymentRecord(id) {
+            Swal.fire({
+                title: 'ডিলিট করতে চান?',
+                text: "এই পেমেন্ট স্লিপ ডাটাবেজ থেকে মুছে যাবে!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'হ্যাঁ, মুছে ফেলুন'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]").filter(item => item.id !== id);
+                    localStorage.setItem('amc_payment_db', JSON.stringify(payments)); 
+                    if(window.saveToFirebase) window.saveToFirebase('payments', payments);
+                    loadPaymentList();
+                    Swal.fire('ডিলিট সম্পন্ন!', 'পেমেন্ট রেকর্ডটি মুছে ফেলা হয়েছে।', 'success');
+                }
+            });
         }
 
         // --- মেধা তালিকা PDF জেনারেটর ---
@@ -361,7 +556,7 @@
                             <tr style="background: #4c1d95; color: white; font-size: 13px;">
                                 <th style="padding: 10px; text-align: center; width: 15%;">মেরিট</th>
                                 <th style="padding: 10px; text-align: center; width: 20%;">রোল</th>
-                                <th style="padding: 10px; text-align: left;">শিক্ষার্থীর নাম</th>
+                                <th style="padding: 10px; text-align: left;">শিক্ষार्थियों নাম</th>
                                 <th style="padding: 10px; text-align: center; width: 25%;">মোট নম্বর</th>
                             </tr>
                         </thead>
@@ -399,7 +594,7 @@
                                 <th style="padding: 10px; text-align: center;">ক্রমিক</th>
                                 <th style="padding: 10px; text-align: center;">শ্রেণী</th>
                                 <th style="padding: 10px; text-align: center;">রোল</th>
-                                <th style="padding: 10px; text-align: left;">শিক্ষার্থীর নাম</th>
+                                <th style="padding: 10px; text-align: left;">শিক্ষार्थियों নাম</th>
                                 <th style="padding: 10px; text-align: center;">হোয়াটসঅ্যাপ নম্বর</th>
                             </tr>
                         </thead>
@@ -415,7 +610,7 @@
             const date = document.getElementById('searchDate').value;
             const type = document.getElementById('searchExamType').value;
             
-            if(!roll || !cls || !date) return Swal.fire('তথ্য অসম্পূর্ণ!', 'দয়া করে রোল, শ্রেণী এবং তারিখ সঠিকভাবে নির্বাচন করুন!', 'warning');
+            if(!roll || !cls || !date) return Swal.fire('정보 অসম্পূর্ণ!', 'দয়া করে রোল, শ্রেণী এবং তারিখ সঠিকভাবে নির্বাচন করুন!', 'warning');
             
             const students = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
             const student = students[`${cls}_${roll}`];
@@ -693,7 +888,7 @@
 
         function downloadDocument() { window.print(); }
 
-        // --- রেজাল্ট কার্ড কার্ড চেক ভিউ ---
+        // --- রেজাল্ট কার্ড চেক ভিউ ---
         function checkResult() {
             const roll = document.getElementById('searchRoll').value;
             const cls = document.getElementById('searchClass').value;
@@ -723,7 +918,7 @@
                         <p style="margin:2px 0; font-size:11px; background:#e0f2fe; color:#0369a1; display:inline-block; padding:2px 8px; border-radius:5px; font-weight:bold;">${data.examType} পরীক্ষা - ${data.date}</p>
                     </div>
                     <div style="margin-bottom: 15px; font-size: 13px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #f8fafc; padding: 12px; border-radius: 8px; border:1px solid #e2e8f0;">
-                        <div>শিক্ষার্থীর নাম: <b>${data.name}</b></div>
+                        <div>शिक्षার্থীর নাম: <b>${data.name}</b></div>
                         <div>অনুক্রমিক রোল: <b>${data.roll}</b></div>
                         <div>শ্রেণী শাখা: <b>${data.cls}</b></div>
                         <div>মেরিট পজিশন: <b style="color:#2563eb; font-size:14px;">#${getMerit(roll, cls, date)} তম</b></div>
@@ -751,7 +946,7 @@
             if (document.getElementById('adminPass').value === "1617798358Ma@56") {
                 sessionStorage.setItem('is_admin', 'true');
                 showSection('adminPanel');
-                updateDashboardStats(); renderTable(); loadStudentList();
+                updateDashboardStats(); renderTable(); loadStudentList(); loadPaymentList();
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 document.getElementById('adminLoginBtn').classList.add('hidden');
                 Swal.fire('স্বাগতম অ্যাডমিন!', 'ম্যানেজমেন্ট প্যানেলে সফল লগইন হয়েছে।', 'success');
@@ -777,7 +972,6 @@
             document.getElementById('statTodayAtt').innerText = todayPresent;
             document.getElementById('statAttPercentage').innerText = attendancePercentage + "%";
 
-            // Chart.js ইন্টিগ্রেশন
             const ctx = document.getElementById('attendanceChart').getContext('2d');
             if (attendanceChartInstance) attendanceChartInstance.destroy();
             attendanceChartInstance = new Chart(ctx, {
@@ -871,7 +1065,6 @@
             document.getElementById('stdName').value = s ? s.name : "";
         }
 
-        // হোয়াটসঅ্যাপ এপিআই মেসেজ বিল্ডার
         function sendSingleResultWhatsApp(date, roll, cls) {
             const allResults = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
             const studentDB = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
@@ -901,6 +1094,7 @@
             track.innerHTML = slides.map(s => `<div class="slide"><img src="${DEFAULT_LOGO}"><div class="slide-content"><h2>${s.title}</h2><p>${s.desc}</p></div></div>`).join('');
             dots.innerHTML = slides.map((_, i) => `<div class="w-2 h-2 rounded-full bg-white/50"></div>`).join('');
             setInterval(() => {
+                if(!track || !dots) return;
                 slideIndex = (slideIndex + 1) % slides.length;
                 track.style.transform = `translateX(-${slideIndex * 100}%)`;
                 Array.from(dots.children).forEach((d, i) => d.className = i === slideIndex ? 'w-5 h-2 rounded-full bg-yellow-400' : 'w-2 h-2 rounded-full bg-white/50');
@@ -914,4 +1108,4 @@
         };
     </script>
 </body>
-</html> 
+</html>
