@@ -10,16 +10,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&display=swap');
         body { font-family: 'Hind Siliguri', sans-serif; background-color: #f0f2f5; transition: all 0.3s ease; }
         .dark-mode { background-color: #1a202c; color: #e2e8f0; }
         .dark-mode .bg-white { background-color: #2d3748; color: white; }
-        .dark-mode input, .dark-mode select { background-color: #4a5568 !important; color: white !important; border-color: #4a5568 !important; }
+        .dark-mode input, .dark-mode select, .dark-mode textarea { background-color: #4a5568 !important; color: white !important; border-color: #4a5568 !important; }
         .brand-purple { background-color: #4c1d95; }
         
         @media print {
             body { background: white !important; color: black !important; }
-            .no-print, nav, #studentView, #loginSection, #adminPanel, .slider-container, button { display: none !important; }
+            .no-print, nav, #studentView, #loginSection, #adminPanel, .slider-container, button, .contact-section { display: none !important; }
             #displayArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
             #pdfContent { border: none !important; box-shadow: none !important; width: 100% !important; max-width: none !important; }
         }
@@ -29,8 +29,8 @@
         .slide { min-width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .slide img { width: 100%; height: 100%; object-fit: cover; opacity: 0.35; }
         .slide-content { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; color: white; }
-        .slide-content h2 { font-size: 1.75rem; font-weight: 800; margin-bottom: 10px; color: #fbbf24; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); }
-        .slide-content p { font-size: 1.05rem; font-weight: 500; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .slide-content h2 { font-size: 1.75rem; font-weight: 600; margin-bottom: 10px; color: #fbbf24; }
+        .slide-content p { font-size: 1.05rem; font-weight: 400; }
         #pdfContent { color: black !important; background: white !important; width: 100%; }
     </style>
 </head>
@@ -38,20 +38,20 @@
 
     <div class="bg-yellow-100 border-b border-yellow-200 py-2 no-print dark:bg-yellow-900 transition-colors">
         <div class="container mx-auto px-4 flex items-center">
-            <span class="bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded mr-3 animate-pulse uppercase tracking-wider">Notice</span>
-            <marquee id="mainNotice" class="text-sm font-semibold text-black dark:text-yellow-100">আমিরুল ম্যাথ কেয়ারে আপনাকে স্বাগত। আধুনিক পদ্ধতিতে গণিত শিখুন।</marquee>
+            <span class="bg-red-600 text-white text-[11px] px-2 py-0.5 rounded mr-3 animate-pulse tracking-wider">নোটিশ</span>
+            <marquee id="mainNotice" class="text-sm text-black dark:text-yellow-100">আমিরুল ম্যাথ কেয়ারে আপনাকে স্বাগত। আধুনিক পদ্ধতিতে গণিত শিখুন।</marquee>
         </div>
     </div>
 
     <nav class="brand-purple p-4 text-white flex justify-between items-center sticky top-0 z-50 shadow-xl border-b-4 border-yellow-500 no-print">
         <div class="flex items-center gap-3" onclick="location.reload()" style="cursor: pointer;">
             <img id="navLogo" src="https://i.ibb.co/Lhy0W0P/1000018420.jpg" alt="Logo" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-lg">
-            <h1 class="text-lg md:text-xl font-black tracking-tighter uppercase">AMIRUL MATH CARE</h1>
+            <h1 class="text-lg md:text-xl font-medium">AMIRUL MATH CARE</h1>
         </div>
         <div class="flex gap-2 items-center">
             <button onclick="toggleDarkMode()" class="p-2 w-9 h-9 flex items-center justify-center rounded-full hover:bg-purple-700 transition" title="ডার্ক মোড টগল"><i class="fas fa-moon"></i></button>
-            <button id="logoutBtn" onclick="logout()" class="hidden bg-red-500 hover:bg-red-600 px-4 py-1.5 rounded-full text-xs font-bold transition shadow-md">লগ আউট</button>
-            <button id="adminLoginBtn" onclick="showSection('loginSection')" class="bg-yellow-400 text-purple-900 hover:bg-yellow-500 px-5 py-1.5 rounded-full font-bold text-xs transition shadow-md">অ্যাডমিন প্যানেল</button>
+            <button id="logoutBtn" onclick="logout()" class="hidden bg-red-500 hover:bg-red-600 px-4 py-1.5 rounded-full text-xs transition shadow-md">লগ আউট</button>
+            <button id="adminLoginBtn" onclick="showSection('loginSection')" class="bg-yellow-400 text-purple-900 hover:bg-yellow-500 px-5 py-1.5 rounded-full text-xs transition shadow-md">অ্যাডমিন প্যানেল</button>
         </div>
     </nav>
 
@@ -60,27 +60,28 @@
             <div id="sliderTrack" class="slider-track"></div>
             <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-2" id="sliderDots"></div>
         </div>
-        <div class="bg-white p-8 rounded-3xl shadow-2xl border-t-8 border-purple-800 transition-colors">
+        
+        <div class="bg-white p-8 rounded-3xl shadow-2xl border-t-8 border-purple-800 transition-colors mb-6">
             <div class="text-center mb-6">
                 <i class="fas fa-graduation-cap text-4xl text-purple-700 mb-2"></i>
-                <h3 class="font-bold text-gray-800 dark:text-white text-2xl">শিক্ষার্থী পোর্টাল</h3>
+                <h3 class="text-gray-800 dark:text-white text-2xl font-medium">শিক্ষার্থী পোর্টাল</h3>
             </div>
             <div class="space-y-4">
                 <div>
-                    <label class="text-xs font-bold block mb-1">তারিখ / মাস</label>
-                    <input type="date" id="searchDate" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none bg-gray-50 text-black">
+                    <label class="text-xs block mb-1 text-gray-600 dark:text-gray-300">তারিখ / মাস</label>
+                    <input type="date" id="searchDate" class="w-full p-3 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black">
                 </div>
                 <div>
-                    <label class="text-xs font-bold block mb-1">শ্রেণী</label>
-                    <select id="searchClass" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none bg-gray-50 text-black">
+                    <label class="text-xs block mb-1 text-gray-600 dark:text-gray-300">শ্রেণী</label>
+                    <select id="searchClass" class="w-full p-3 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black">
                         <option value="">শ্রেণী নির্বাচন করুন</option>
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option><option value="৯ম">৯ম</option><option value="১০ম">১০ম</option><option value="SSC">SSC</option>
                     </select>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="text-xs font-bold block mb-1">পরীক্ষার ধরন</label>
-                        <select id="searchExamType" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none bg-gray-50 text-black">
+                        <label class="text-xs block mb-1 text-gray-600 dark:text-gray-300">পরীক্ষার ধরন</label>
+                        <select id="searchExamType" class="w-full p-3 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black">
                             <option value="সাপ্তাহিক">সাপ্তাহিক পরীক্ষা</option>
                             <option value="মাসিক">মাসিক পরীক্ষা</option>
                             <option value="বার্ষিক">বার্ষিক পরীক্ষা</option>
@@ -88,22 +89,44 @@
                         </select>
                     </div>
                     <div>
-                        <label class="text-xs font-bold block mb-1">মাস (পেমেন্ট স্লিপের জন্য)</label>
-                        <select id="searchMonth" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none bg-gray-50 text-black">
+                        <label class="text-xs block mb-1 text-gray-600 dark:text-gray-300">মাস (পেমেন্ট স্লিপের জন্য)</label>
+                        <select id="searchMonth" class="w-full p-3 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black">
                             <option value="জানুয়ারি">জানুয়ারি</option><option value="ফেব্রুয়ারি">ফেব্রুয়ারি</option><option value="মার্চ">মার্চ</option><option value="এপ্রিল">এপ্রিল</option><option value="মে">মে</option><option value="জুন">জুন</option><option value="জুলাই">জুলাই</option><option value="আগস্ট">আগস্ট</option><option value="সেপ্টেম্বর">সেপ্টেম্বর</option><option value="অক্টোবর">অক্টোবর</option><option value="নভেম্বর">নভেম্বর</option><option value="ডিসেম্বর">ডিসেম্বর</option>
                         </select>
                     </div>
                 </div>
                 <div>
-                    <label class="text-xs font-bold block mb-1">রোল নম্বর</label>
-                    <input type="text" id="searchRoll" placeholder="রোল নম্বর লিখুন" class="w-full p-3 border-2 border-gray-100 rounded-xl outline-none bg-gray-50 text-black">
+                    <label class="text-xs block mb-1 text-gray-600 dark:text-gray-300">রোল নম্বর</label>
+                    <input type="text" id="searchRoll" placeholder="রোল নম্বর লিখুন" class="w-full p-3 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black">
                 </div>
                 <div class="grid grid-cols-2 gap-4 pt-4">
-                    <button onclick="checkResult()" class="brand-purple text-white py-4 rounded-2xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"><i class="fas fa-poll mr-2"></i>রেজাল্ট</button>
-                    <button onclick="generateAdmit()" class="bg-orange-500 text-white py-4 rounded-2xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"><i class="fas fa-id-card mr-2"></i>অ্যাডমিট</button>
+                    <button onclick="checkResult()" class="brand-purple text-white py-4 rounded-2xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"><i class="fas fa-poll mr-2"></i>রেজাল্ট</button>
+                    <button onclick="generateAdmit()" class="bg-orange-500 text-white py-4 rounded-2xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"><i class="fas fa-id-card mr-2"></i>অ্যাডমিট</button>
                 </div>
                 <div class="pt-2">
-                    <button onclick="viewPaymentSlipPortal()" class="w-full bg-emerald-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"><i class="fas fa-file-invoice-dollar mr-2"></i>অনলাইন পেমেন্ট স্লিপ প্রিন্ট</button>
+                    <button onclick="viewPaymentSlipPortal()" class="w-full bg-emerald-600 text-white py-4 rounded-2xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"><i class="fas fa-file-invoice-dollar mr-2"></i>অনলাইন পেমেন্ট স্লিপ প্রিন্ট</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-xl border-t-8 border-yellow-500 transition-colors mb-6">
+            <h3 class="text-gray-800 dark:text-white text-xl mb-4 text-center font-medium"><i class="fas fa-question-circle mr-2 text-purple-700"></i>সাধারণ জিজ্ঞাসা (FAQ)</h3>
+            <div id="faqAccordionContainer" class="space-y-3"></div>
+        </div>
+
+        <div class="contact-section bg-white p-6 rounded-3xl shadow-xl border-t-8 border-green-600 transition-colors">
+            <h3 class="text-gray-800 dark:text-white text-xl mb-4 text-center font-medium"><i class="fas fa-phone-alt mr-2 text-green-600"></i>যোগাযোগ করুন</h3>
+            <div class="space-y-3 text-sm text-gray-700 dark:text-gray-300 text-center">
+                <p>যেকোনো তথ্যের জন্য আমাদের সাথে সরাসরি বা হোয়াটসঅ্যাপে যোগাযোগ করুন।</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+                    <a href="tel:+8801773167795" class="flex items-center justify-center gap-2 bg-purple-50 dark:bg-gray-700 px-4 py-2.5 rounded-xl border border-purple-200 dark:border-gray-600 hover:bg-purple-100 transition">
+                        <i class="fas fa-phone text-purple-700 dark:text-purple-400"></i>
+                        <span>+8801773167795</span>
+                    </a>
+                    <a href="https://wa.me/8801774275248" target="_blank" class="flex items-center justify-center gap-2 bg-green-50 dark:bg-gray-700 px-4 py-2.5 rounded-xl border border-green-200 dark:border-gray-600 hover:bg-green-100 transition">
+                        <i class="fab fa-whatsapp text-green-600 text-base"></i>
+                        <span>01774275248 (WhatsApp)</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -111,11 +134,11 @@
 
     <div id="loginSection" class="container mx-auto mt-12 p-6 max-w-md hidden no-print">
         <div class="bg-white p-10 rounded-2xl shadow-2xl text-center border-t-4 border-purple-700 transition-colors">
-            <h2 class="text-2xl font-bold mb-6 text-black dark:text-white">অ্যাডমিন লগইন</h2>
+            <h2 class="text-2xl mb-6 text-black dark:text-white font-medium">অ্যাডমিন লগইন</h2>
             <input type="password" id="adminPass" placeholder="পাসওয়ার্ড" class="w-full p-4 border rounded-xl mb-6 text-center text-xl outline-none text-black">
             <div class="flex gap-3">
-                <button onclick="adminLogin()" class="flex-1 bg-purple-700 text-white py-4 rounded-xl font-bold shadow-md hover:bg-purple-800 transition">লগইন</button>
-                <button onclick="showSection('studentView')" class="flex-1 bg-gray-500 text-white py-4 rounded-xl font-bold shadow-md hover:bg-gray-600 transition">ফিরে যান</button>
+                <button onclick="adminLogin()" class="flex-1 bg-purple-700 text-white py-4 rounded-xl shadow-md hover:bg-purple-800 transition">লগইন</button>
+                <button onclick="showSection('studentView')" class="flex-1 bg-gray-500 text-white py-4 rounded-xl shadow-md hover:bg-gray-600 transition">ফিরে যান</button>
             </div>
         </div>
     </div>
@@ -123,29 +146,29 @@
     <div id="adminPanel" class="container mx-auto mt-6 p-4 hidden no-print">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div class="bg-white p-4 rounded-2xl shadow-md border-b-4 border-blue-500 text-center text-black transition-colors">
-                <p class="text-xs text-gray-500 font-bold">মোট শিক্ষার্থী</p>
-                <h3 id="statTotalStudent" class="text-2xl font-black text-blue-600 mt-1">0</h3>
+                <p class="text-xs text-gray-500">মোট শিক্ষার্থী</p>
+                <h3 id="statTotalStudent" class="text-2xl text-blue-600 mt-1 font-medium">0</h3>
             </div>
             <div class="bg-white p-4 rounded-2xl shadow-md border-b-4 border-green-500 text-center text-black transition-colors">
-                <p class="text-xs text-gray-500 font-bold">আজ উপস্থিত</p>
-                <h3 id="statTodayAtt" class="text-2xl font-black text-green-600 mt-1">0</h3>
+                <p class="text-xs text-gray-500">আজ উপস্থিত</p>
+                <h3 id="statTodayAtt" class="text-2xl text-green-600 mt-1 font-medium">0</h3>
             </div>
             <div class="bg-white p-4 rounded-2xl shadow-md border-b-4 border-purple-500 text-center text-black transition-colors">
-                <p class="text-xs text-gray-500 font-bold">মোট রেজাল্ট এন্ট্রি</p>
-                <h3 id="statTotalResult" class="text-2xl font-black text-purple-600 mt-1">0</h3>
+                <p class="text-xs text-gray-500">মোট রেজাল্ট এন্ট্রি</p>
+                <h3 id="statTotalResult" class="text-2xl text-purple-600 mt-1 font-medium">0</h3>
             </div>
             <div class="bg-white p-4 rounded-2xl shadow-md border-b-4 border-rose-500 text-center text-black transition-colors">
-                <p class="text-xs text-gray-500 font-bold">আজকের উপস্থিতির হার</p>
-                <h3 id="statAttPercentage" class="text-2xl font-black text-rose-600 mt-1">0%</h3>
+                <p class="text-xs text-gray-500">আজকের উপস্থিতির হার</p>
+                <h3 id="statAttPercentage" class="text-2xl text-rose-600 mt-1 font-medium">0%</h3>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-xl text-black">
-                <h2 class="font-bold text-lg text-purple-900 mb-3"><i class="fas fa-bullhorn mr-2 text-yellow-500"></i>লাইভ নোটিশ বোর্ড আপডেট</h2>
+                <h2 class="text-lg text-purple-900 mb-3 font-medium"><i class="fas fa-bullhorn mr-2 text-yellow-500"></i>লাইভ নোটিশ বোর্ড আপডেট</h2>
                 <div class="flex gap-2">
                     <input type="text" id="adminNoticeInput" placeholder="নতুন চলমান নোটিশ এখানে লিখুন..." class="flex-1 p-3 border rounded-xl outline-none focus:border-purple-600">
-                    <button onclick="saveNotice()" class="bg-yellow-500 hover:bg-yellow-600 text-purple-950 px-6 py-3 rounded-xl font-bold shadow-md transition">আপডেট</button>
+                    <button onclick="saveNotice()" class="bg-yellow-500 hover:bg-yellow-600 text-purple-950 px-6 py-3 rounded-xl shadow-md transition">আপডেট</button>
                 </div>
             </div>
             <div class="bg-white p-4 rounded-2xl shadow-xl flex flex-col items-center justify-center min-h-[160px]">
@@ -154,37 +177,50 @@
         </div>
 
         <div class="mb-6 flex flex-wrap gap-2">
-            <button onclick="toggleSectionElement('studentManager')" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-bold shadow-md transition flex items-center gap-2">
+            <button onclick="toggleSectionElement('studentManager')" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fas fa-users-cog"></i>স্টুডেন্ট ডাটাবেজ
             </button>
-            <button onclick="toggleSectionElement('attendanceSystem')" class="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl font-bold shadow-md transition flex items-center gap-2">
+            <button onclick="toggleSectionElement('attendanceSystem')" class="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fas fa-calendar-check"></i>উপস্থিতি এন্ট্রি
             </button>
-            <button onclick="toggleSectionElement('paymentSystem')" class="bg-amber-600 hover:bg-amber-700 text-white px-5 py-3 rounded-xl font-bold shadow-md transition flex items-center gap-2">
+            <button onclick="toggleSectionElement('paymentSystem')" class="bg-amber-600 hover:bg-amber-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fas fa-hand-holding-usd"></i>পেমেন্ট ম্যানেজার
             </button>
-            <button onclick="sendBulkWhatsAppResults()" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-3 rounded-xl font-bold shadow-md transition flex items-center gap-2">
+            <button onclick="toggleSectionElement('faqManagerSystem')" class="bg-violet-600 hover:bg-violet-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-question-circle"></i>FAQ কন্ট্রোলার
+            </button>
+            <button onclick="sendBulkWhatsAppResults()" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fab fa-whatsapp"></i>গ্রুপ রেজাল্ট পাঠান
             </button>
-            <button onclick="downloadStudentListPDF()" class="bg-gray-700 hover:bg-gray-800 text-white px-5 py-3 rounded-xl font-bold shadow-md transition flex items-center gap-2">
+            <button onclick="downloadStudentListPDF()" class="bg-gray-700 hover:bg-gray-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fas fa-file-download"></i>ছাত্র তালিকা PDF
             </button>
         </div>
 
+        <div id="faqManagerSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-violet-600 hidden text-black transition-colors">
+            <h2 class="text-xl text-violet-800 mb-4 font-medium"><i class="fas fa-edit mr-2"></i>হোম পেজ FAQ (প্রশ্ন ও উত্তর) নিয়ন্ত্রণ প্যানেল</h2>
+            <div class="bg-violet-50 p-4 rounded-xl mb-4 space-y-3">
+                <input type="text" id="faqQuestionInput" placeholder="এখানে প্রশ্নটি লিখুন (যেমন: ক্লাস কখন শুরু হয়?)" class="w-full p-2 border rounded outline-none">
+                <textarea id="faqAnswerInput" rows="2" placeholder="এখানে প্রশ্নের উত্তরটি লিখুন..." class="w-full p-2 border rounded outline-none"></textarea>
+                <button onclick="addFaqToDB()" class="w-full bg-violet-600 text-white py-2.5 rounded hover:bg-violet-700 transition shadow">নতুন প্রশ্ন-উত্তর যুক্ত করুন</button>
+            </div>
+            <div class="max-h-60 overflow-y-auto border rounded-xl p-2 bg-gray-50" id="adminFaqList"></div>
+        </div>
+
         <div id="paymentSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-amber-600 hidden text-black transition-colors">
-            <h2 class="font-bold text-xl text-amber-800 mb-4"><i class="fas fa-receipt mr-2"></i>শিক্ষার্থী পেমেন্ট এন্ট্রি ও রশিদ জেনারেটর</h2>
+            <h2 class="text-xl text-amber-800 mb-4 font-medium"><i class="fas fa-receipt mr-2"></i>শিক্ষার্থী পেমেন্ট এন্ট্রি ও রশিদ জেনারেটর</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4 bg-amber-50 p-4 rounded-xl">
-                <select id="payClass" onchange="fetchPaymentStudentInfo()" class="p-2 border rounded outline-none font-bold">
+                <select id="payClass" onchange="fetchPaymentStudentInfo()" class="p-2 border rounded outline-none">
                     <option value="">শ্রেণী সিলেক্ট</option>
                     <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option><option value="৯ম">৯ম</option><option value="১০ম">১০ম</option><option value="SSC">SSC</option>
                 </select>
                 <input type="number" id="payRoll" placeholder="রোল নম্বর" oninput="fetchPaymentStudentInfo()" class="p-2 border rounded outline-none">
-                <input type="text" id="payName" placeholder="শিক্ষার্থীর নাম" readonly class="p-2 border rounded outline-none bg-gray-100 font-bold">
-                <select id="payMonth" class="p-2 border rounded outline-none font-bold">
+                <input type="text" id="payName" placeholder="শিক্ষার্থীর নাম" readonly class="p-2 border rounded outline-none bg-gray-100">
+                <select id="payMonth" class="p-2 border rounded outline-none">
                     <option value="জানুয়ারি">জানুয়ারি</option><option value="ফেব্রুয়ারি">ফেব্রুয়ারি</option><option value="মার্চ">মার্চ</option><option value="এপ্রিল">এপ্রিল</option><option value="মে">মে</option><option value="জুন">জুন</option><option value="জুলাই">জুলাই</option><option value="আগস্ট">আগস্ট</option><option value="সেপ্টেম্বর">সেপ্টেম্বর</option><option value="অক্টোবর">অক্টোবর</option><option value="নভেম্বর">নভেম্বর</option><option value="ডিসেম্বর">ডিসেম্বর</option>
                 </select>
                 <input type="number" id="payAmount" placeholder="টাকার পরিমাণ (৳)" class="p-2 border rounded outline-none">
-                <select id="payMethod" class="p-2 border rounded outline-none font-bold">
+                <select id="payMethod" class="p-2 border rounded outline-none">
                     <option value="bKash">বিকাশ (bKash)</option>
                     <option value="Nagad">নগদ (Nagad)</option>
                     <option value="Cash">ক্যাশ (Cash)</option>
@@ -192,76 +228,76 @@
                 </select>
                 <input type="text" id="payTxnId" placeholder="TrxID (ঐচ্ছিক)" class="p-2 border rounded outline-none">
                 <input type="date" id="payDate" class="p-2 border rounded outline-none">
-                <button onclick="savePaymentToDB()" class="md:col-span-4 bg-amber-600 text-white font-bold py-2.5 rounded hover:bg-amber-700 transition">পেমেন্ট ডাটা সেভ ও স্লিপ তৈরি করুন</button>
+                <button onclick="savePaymentToDB()" class="md:col-span-4 bg-amber-600 text-white py-2.5 rounded hover:bg-amber-700 transition">পেমেন্ট ডাটা সেভ ও স্লিপ তৈরি করুন</button>
             </div>
             <div class="max-h-60 overflow-y-auto border rounded-xl p-2 bg-gray-50" id="adminPaymentList"></div>
         </div>
 
         <div id="attendanceSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-green-600 hidden text-black transition-colors">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="font-bold text-xl text-green-800">দৈনিক উপস্থিতি ট্র্যাকার</h2>
+                <h2 class="text-xl text-green-800 font-medium">দৈনিক উপস্থিতি ট্র্যাকার</h2>
                 <input type="date" id="attDate" class="p-2 border rounded-lg">
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <select id="attClass" class="p-3 border rounded-xl font-bold" onchange="loadStudentsForAttendance()">
+                <select id="attClass" class="p-3 border rounded-xl" onchange="loadStudentsForAttendance()">
                     <option value="">শ্রেণী নির্বাচন করুন</option>
                     <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option><option value="৯ম">৯ম</option><option value="১০ম">১০ম</option><option value="SSC">SSC</option>
                 </select>
-                <div class="text-right py-2"><span class="text-sm font-semibold text-gray-600">উপস্থিত শিক্ষার্থীদের চেক করুন:</span></div>
+                <div class="text-right py-2"><span class="text-sm text-gray-600">উপস্থিত শিক্ষার্থীদের চেক করুন:</span></div>
             </div>
             <div id="attendanceList" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-80 overflow-y-auto mb-4 border p-4 rounded-xl bg-gray-50"></div>
-            <button onclick="saveAttendanceData()" class="w-full bg-green-700 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-green-800 transition">উপস্থিতি ডাটাবেজে সংরক্ষণ করুন</button>
+            <button onclick="saveAttendanceData()" class="w-full bg-green-700 text-white py-3.5 rounded-xl shadow-lg hover:bg-green-800 transition">উপস্থিতি ডাটাবেজে সংরক্ষণ করুন</button>
         </div>
 
         <div id="studentManager" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-blue-600 hidden text-black transition-colors">
-            <h2 id="smTitle" class="font-bold text-xl text-blue-800 mb-4">শিক্ষার্থী ডাটাবেজ এন্ট্রি</h2>
+            <h2 id="smTitle" class="text-xl text-blue-800 mb-4 font-medium">শিক্ষার্থী ডাটাবেজ এন্ট্রি</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4 bg-blue-50 p-4 rounded-xl">
                 <input type="number" id="newRoll" placeholder="রোল" class="p-2 border rounded outline-none">
                 <input type="text" id="newName" placeholder="নাম" class="p-2 border rounded outline-none">
-                <select id="newClass" class="p-2 border rounded outline-none font-bold">
+                <select id="newClass" class="p-2 border rounded outline-none">
                     <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option><option value="৯ম">৯ম</option><option value="১০ম">১০ম</option><option value="SSC">SSC</option>
                 </select>
                 <input type="text" id="newWa" placeholder="হোয়াটসঅ্যাপ (Ex: 88017...)" class="p-2 border rounded outline-none">
-                <button onclick="addStudentToDB()" id="saveStudentBtn" class="md:col-span-4 bg-green-600 text-white font-bold py-2.5 rounded hover:bg-green-700 transition">সংরক্ষণ করুন</button>
-                <button onclick="cancelEditStudent()" id="cancelStudentEditBtn" class="md:col-span-4 bg-gray-500 text-white font-bold py-2.5 rounded hidden hover:bg-gray-600 transition">বাতিল করুন</button>
+                <button onclick="addStudentToDB()" id="saveStudentBtn" class="md:col-span-4 bg-green-600 text-white py-2.5 rounded hover:bg-green-700 transition">সংরক্ষণ করুন</button>
+                <button onclick="cancelEditStudent()" id="cancelStudentEditBtn" class="md:col-span-4 bg-gray-500 text-white py-2.5 rounded hidden hover:bg-gray-600 transition">বাতিল করুন</button>
             </div>
             <div class="max-h-80 overflow-y-auto border rounded-xl p-2 bg-gray-50" id="dbList"></div>
         </div>
 
         <div class="bg-white p-8 rounded-2xl shadow-lg mb-6 border-l-8 border-purple-600 text-black transition-colors">
-            <h2 id="resultFormTitle" class="text-xl font-bold mb-6 text-purple-900">রেজাল্ট এন্ট্রি ফর্ম (MCQ + CQ)</h2>
+            <h2 id="resultFormTitle" class="text-xl text-purple-900 mb-6 font-medium">রেজাল্ট এন্ট্রি ফর্ম (MCQ + CQ)</h2>
             <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
-                <div><label class="text-xs font-bold block mb-1">তারিখ</label><input type="date" id="examDate" class="w-full p-2 border rounded-lg"></div>
+                <div><label class="text-xs block mb-1 text-gray-600">তারিখ</label><input type="date" id="examDate" class="w-full p-2 border rounded-lg"></div>
                 <div>
-                    <label class="text-xs font-bold block mb-1">শ্রেণী</label>
-                    <select id="stdClass" onchange="fetchStudentInfo(); updateSubjectInputs();" class="w-full p-2 border rounded-lg font-bold">
+                    <label class="text-xs block mb-1 text-gray-600">শ্রেণী</label>
+                    <select id="stdClass" onchange="fetchStudentInfo(); updateSubjectInputs();" class="w-full p-2 border rounded-lg">
                         <option value="">সিলেক্ট</option>
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option><option value="৯ম">৯ম</option><option value="১০ম">১০ম</option><option value="SSC">SSC</option>
                     </select>
                 </div>
-                <div><label class="text-xs font-bold block mb-1">রোল</label><input type="number" id="stdRoll" oninput="fetchStudentInfo()" class="w-full p-2 border-2 border-blue-400 rounded-lg outline-none"></div>
+                <div><label class="text-xs block mb-1 text-gray-600">রোল</label><input type="number" id="stdRoll" oninput="fetchStudentInfo()" class="w-full p-2 border border-purple-300 rounded-lg outline-none"></div>
                 <div>
-                    <label class="text-xs font-bold block mb-1">পরীক্ষার ধরন</label>
-                    <select id="stdExamType" class="w-full p-2 border rounded-lg font-bold bg-yellow-50">
+                    <label class="text-xs block mb-1 text-gray-600">পরীক্ষার ধরন</label>
+                    <select id="stdExamType" class="w-full p-2 border rounded-lg bg-yellow-50">
                         <option value="সাপ্তাহিক">সাপ্তাহিক</option><option value="মাসিক">মাসিক</option><option value="বার্ষিক">বার্ষিক</option><option value="দৈনিক">দৈনিক পরীক্ষা</option>
                     </select>
                 </div>
-                <div class="col-span-2"><label class="text-xs font-bold block mb-1">নাম</label><input type="text" id="stdName" class="w-full p-2 border rounded-lg bg-gray-100" readonly></div>
+                <div class="col-span-2"><label class="text-xs block mb-1 text-gray-600">নাম</label><input type="text" id="stdName" class="w-full p-2 border rounded-lg bg-gray-100" readonly></div>
             </div>
             <div id="subjectInputs" class="bg-purple-50 p-4 rounded-xl mb-6 min-h-[50px]"></div>
             <div class="flex gap-2">
-                <button id="saveResultBtn" onclick="saveData()" class="flex-1 brand-purple text-white py-4 rounded-xl font-bold shadow-xl transition hover:opacity-95">সেভ করুন</button>
-                <button id="cancelResultEditBtn" onclick="cancelResultEdit()" class="hidden flex-1 bg-gray-500 text-white py-4 rounded-xl font-bold shadow-xl transition">বাতিল</button>
+                <button id="saveResultBtn" onclick="saveData()" class="flex-1 brand-purple text-white py-4 rounded-xl shadow-xl transition hover:opacity-95">সেভ করুন</button>
+                <button id="cancelResultEditBtn" onclick="cancelResultEdit()" class="hidden flex-1 bg-gray-500 text-white py-4 rounded-xl shadow-xl transition">বাতিল</button>
             </div>
         </div>
 
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden border text-black transition-colors">
             <div class="p-4 brand-purple text-white flex flex-wrap justify-between items-center gap-2">
-                <h3 class="font-bold"><i class="fas fa-database mr-2"></i>রেজাল্ট ডাটাবেজ</h3>
+                <h3 class="font-medium"><i class="fas fa-database mr-2"></i>রেজাল্ট ডাটাবেজ</h3>
                 <div class="flex flex-wrap gap-2">
-                    <button onclick="downloadMeritListPDF()" class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded text-xs font-bold shadow"><i class="fas fa-file-pdf mr-1"></i>মেধা তালিকা PDF</button>
+                    <button onclick="downloadMeritListPDF()" class="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded text-xs shadow"><i class="fas fa-file-pdf mr-1"></i>মেধা তালিকা PDF</button>
                     <input type="date" id="filterDate" onchange="renderTable()" class="text-black p-1 rounded text-xs">
-                    <select id="filterClass" onchange="renderTable()" class="text-black p-1 rounded text-xs font-bold">
+                    <select id="filterClass" onchange="renderTable()" class="text-black p-1 rounded text-xs">
                         <option value="সব">সব শ্রেণী</option>
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option><option value="৯ম">৯ম</option><option value="১০ম">১০ম</option><option value="SSC">SSC</option>
                     </select>
@@ -281,8 +317,8 @@
     <div id="displayArea" class="container mx-auto p-4 flex flex-col items-center hidden">
         <div id="pdfContent" class="bg-white p-6 rounded-lg shadow-md border w-full max-w-lg mb-6"></div>
         <div class="flex gap-4 w-full max-w-lg no-print">
-            <button onclick="downloadDocument()" class="flex-1 bg-green-600 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-green-700 transition"><i class="fas fa-print mr-2"></i>প্রিন্ট / PDF সেভ</button>
-            <button onclick="closeDisplayArea()" class="flex-1 bg-gray-500 text-white py-3 rounded-xl font-bold shadow-lg hover:bg-gray-600 transition">ফিরে যান</button>
+            <button onclick="downloadDocument()" class="flex-1 bg-green-600 text-white py-3 rounded-xl shadow-lg hover:bg-green-700 transition"><i class="fas fa-print mr-2"></i>প্রিন্ট / PDF সেভ</button>
+            <button onclick="closeDisplayArea()" class="flex-1 bg-gray-500 text-white py-3 rounded-xl shadow-lg hover:bg-gray-600 transition">ফিরে যান</button>
         </div>
     </div>
 
@@ -305,7 +341,6 @@
 
         window.saveToFirebase = (path, data) => set(ref(db, path), data);
 
-        // রিয়েল-টাইম ডাটা সিঙ্ক্রোনাইজেশন লিসেনারস
         onValue(ref(db, 'results'), (snapshot) => {
             if (snapshot.exists()) {
                 localStorage.setItem('amc_db_final', JSON.stringify(snapshot.val()));
@@ -335,6 +370,21 @@
                 localStorage.setItem('amc_payment_db', JSON.stringify(snapshot.val()));
                 if(sessionStorage.getItem('is_admin')) { loadPaymentList(); }
             }
+        });
+        onValue(ref(db, 'faqs'), (snapshot) => {
+            if (snapshot.exists()) {
+                localStorage.setItem('amc_faq_db', JSON.stringify(snapshot.val()));
+            } else {
+                if(!localStorage.getItem('amc_faq_db')) {
+                    const defaultFaq = [
+                        { id: 'FAQ_1', q: "আমিরুল ম্যাথ কেয়ারে কোন কোন ক্লাস পড়ানো হয়?", a: "এখানে মূলত ৬ষ্ঠ থেকে ১০ম শ্রেণী এবং SSC ব্যাচের সাধারণ গণিত ও উচ্চতর গণিত যত্নসহকারে পড়ানো হয়।" },
+                        { id: 'FAQ_2', q: "অনলাইনে পরীক্ষার রেজাল্ট কীভাবে দেখবো?", a: "শিক্ষার্থী পোর্টালে আপনার পরীক্ষার তারিখ, শ্রেণী, পরীক্ষার ধরন এবং রোল নম্বর দিয়ে 'রেজাল্ট' বাটনে ক্লিক করলেই আপনার মার্কশিট দেখতে পাবেন।" }
+                    ];
+                    localStorage.setItem('amc_faq_db', JSON.stringify(defaultFaq));
+                }
+            }
+            loadFaqAccordion();
+            if(sessionStorage.getItem('is_admin')) loadAdminFaqList();
         });
     </script>
 
@@ -373,7 +423,95 @@
             }
         }
 
-        // --- অনলাইন পেমেন্ট রিসিট মেকার লজিক ---
+        function addFaqToDB() {
+            const q = document.getElementById('faqQuestionInput').value.trim();
+            const a = document.getElementById('faqAnswerInput').value.trim();
+            if(!q || !a) return Swal.fire('ফরম অসম্পূর্ণ!', 'দয়া করে প্রশ্ন এবং উত্তর উভয়ই ইনপুট দিন।', 'warning');
+
+            let faqs = JSON.parse(localStorage.getItem('amc_faq_db') || "[]");
+            const newFaq = { id: 'FAQ_' + Date.now(), q, a };
+            faqs.push(newFaq);
+
+            localStorage.setItem('amc_faq_db', JSON.stringify(faqs));
+            if(window.saveToFirebase) window.saveToFirebase('faqs', faqs);
+
+            Swal.fire('সফল!', 'নতুন FAQ সফলভাবে লাইভ করা হয়েছে।', 'success');
+            document.getElementById('faqQuestionInput').value = '';
+            document.getElementById('faqAnswerInput').value = '';
+            loadAdminFaqList();
+            loadFaqAccordion();
+        }
+
+        function loadAdminFaqList() {
+            let faqs = JSON.parse(localStorage.getItem('amc_faq_db') || "[]");
+            const container = document.getElementById('adminFaqList');
+            if(faqs.length === 0) {
+                container.innerHTML = "<p class='text-center text-gray-500 text-xs py-2'>কোন প্রশ্ন উত্তর সেট করা নেই।</p>";
+                return;
+            }
+            container.innerHTML = faqs.map(f => `
+                <div class="flex justify-between items-start p-3 border-b hover:bg-gray-100 transition-colors text-xs text-black">
+                    <div class="flex-1 pr-2">
+                        <b class="text-purple-900">প্রশ্ন: ${f.q}</b> <br>
+                        <span class="text-gray-600">উত্তর: ${f.a}</span>
+                    </div>
+                    <button onclick="deleteFaqRecord('${f.id}')" class="text-red-500 hover:text-red-700 p-1" title="মুছে ফেলুন"><i class="fas fa-trash text-sm"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function loadFaqAccordion() {
+            let faqs = JSON.parse(localStorage.getItem('amc_faq_db') || "[]");
+            const container = document.getElementById('faqAccordionContainer');
+            if(faqs.length === 0) {
+                container.innerHTML = "<p class='text-center text-gray-400 text-sm py-4'>বর্তমানে কোনো প্রশ্ন উপলব্ধ নেই।</p>";
+                return;
+            }
+            container.innerHTML = faqs.map((f, index) => `
+                <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm bg-gray-50 dark:bg-gray-800 transition-all">
+                    <button onclick="toggleFaqAccordion(${index})" class="w-full text-left p-4 text-sm text-purple-950 dark:text-yellow-400 flex justify-between items-center bg-purple-50 dark:bg-gray-700/50 hover:bg-purple-100 transition-colors">
+                        <span>${f.q}</span>
+                        <i id="faqIcon_${index}" class="fas fa-chevron-down text-xs text-purple-700 dark:text-yellow-400 transition-transform duration-300"></i>
+                    </button>
+                    <div id="faqAnsBlock_${index}" class="hidden p-4 text-xs text-gray-700 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 leading-relaxed bg-white dark:bg-gray-800">
+                        ${f.a}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleFaqAccordion(index) {
+            const block = document.getElementById(`faqAnsBlock_${index}`);
+            const icon = document.getElementById(`faqIcon_${index}`);
+            block.classList.toggle('hidden');
+            if(block.classList.contains('hidden')) {
+                icon.style.transform = "rotate(0deg)";
+            } else {
+                icon.style.transform = "rotate(180deg)";
+            }
+        }
+
+        function deleteFaqRecord(id) {
+            Swal.fire({
+                title: 'প্রশ্নটি মুছে ফেলতে চান?',
+                text: "ডিলিট করার পর এটি হোম পেজ থেকে চলে যাবে!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'হ্যাঁ, মুছুন!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let faqs = JSON.parse(localStorage.getItem('amc_faq_db') || "[]").filter(item => item.id !== id);
+                    localStorage.setItem('amc_faq_db', JSON.stringify(faqs)); 
+                    if(window.saveToFirebase) window.saveToFirebase('faqs', faqs);
+                    loadAdminFaqList();
+                    loadFaqAccordion();
+                    Swal.fire('মুছে ফেলা হয়েছে!', 'প্রশ্নটি ডাটাবেজ থেকে রিমুভ করা হয়েছে।', 'success');
+                }
+            });
+        }
+
         function fetchPaymentStudentInfo() {
             const r = document.getElementById('payRoll').value;
             const c = document.getElementById('payClass').value;
@@ -424,7 +562,7 @@
                 <div class="flex justify-between items-center p-3 border-b hover:bg-gray-100 transition-colors text-xs text-black">
                     <div>
                         <b>[${p.cls} - রোল ${p.roll}]</b> ${p.name} <br>
-                        <span class="text-amber-700 font-bold">${p.month}</span> মাসের ফি: ৳${p.amount} (${p.method}) - ${p.date}
+                        <span class="text-amber-700 font-medium">${p.month}</span> মাসের ফি: ৳${p.amount} (${p.method}) - ${p.date}
                     </div>
                     <div class="flex gap-3">
                         <button onclick="viewSinglePaymentSlip('${p.id}')" class="text-amber-600 hover:text-amber-800" title="স্লিপ দেখুন"><i class="fas fa-file-invoice-dollar text-sm"></i></button>
@@ -440,26 +578,26 @@
             <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 25px; border: 4px double #4c1d95; border-radius: 15px; background: #fff; position: relative;">
                 <div style="text-align:center; margin-bottom: 20px; border-bottom: 2px dashed #4c1d95; padding-bottom: 10px;">
                     <img src="${siteLogo}" style="width:65px; height:65px; border-radius:50%; margin-bottom:5px; object-fit: cover; display: inline-block;">
-                    <h1 style="color:#4c1d95; margin:0; font-size: 24px; font-weight:800;">AMIRUL MATH CARE</h1>
-                    <p style="margin:2px 0; font-size:13px; font-weight:bold; color:#d97706; text-transform:uppercase;">টাকা প্রাপ্তির রশিদ / পেমেন্ট স্লিপ</p>
+                    <h1 style="color:#4c1d95; margin:0; font-size: 24px; font-weight:600;">AMIRUL MATH CARE</h1>
+                    <p style="margin:2px 0; font-size:13px; color:#d97706; text-transform:uppercase;">টাকা প্রাপ্তির রশিদ / পেমেন্ট স্লিপ</p>
                 </div>
                 
                 <div style="margin:15px 0; font-size: 14px; background: #fafafa; padding: 15px; border-radius: 10px; border-left: 5px solid #10b981;">
                     <table style="width:100%; border-collapse:collapse; font-size:14px;">
-                        <tr style="height:32px;"><td style="width:40%; font-weight:bold; color:#555;">শিক্ষার্থীর নাম:</td><td style="font-weight:700; color:#1e1b4b;">${p.name}</td></tr>
-                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">শ্রেণী:</td><td><b>${p.cls}</b></td></tr>
-                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">রোল নম্বর:</td><td><b>${p.roll}</b></td></tr>
-                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">পেমেন্টের উদ্দেশ্য:</td><td><span style="background:#fef3c7; padding:2px 8px; border-radius:5px; font-weight:bold; color:#b45309;">${p.month} মাসের বেতন/ফি</span></td></tr>
-                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">পরিশোধিত টাকা:</td><td><b style="color:#10b981; font-size: 16px;">৳${p.amount}/-</b></td></tr>
-                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">মাধ্যম ও ট্রানজেকশন ID:</td><td><b>${p.method}</b> (${p.txnId || 'N/A'})</td></tr>
-                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">পরিশোধের তারিখ:</td><td><b>${p.date}</b></td></tr>
-                        <tr style="height:32px;"><td style="font-weight:bold; color:#555;">পেমেন্ট স্ট্যাটাস:</td><td><span style="background:#d1fae5; color:#065f46; padding:3px 10px; border-radius:20px; font-weight:bold; font-size:12px;">✓ PAID (পরিশোধিত)</span></td></tr>
+                        <tr style="height:32px;"><td style="width:40%; color:#555;">শিক্ষার্থীর নাম:</td><td style="color:#1e1b4b;">${p.name}</td></tr>
+                        <tr style="height:32px;"><td style="color:#555;">শ্রেণী:</td><td><b>${p.cls}</b></td></tr>
+                        <tr style="height:32px;"><td style="color:#555;">রোল নম্বর:</td><td><b>${p.roll}</b></td></tr>
+                        <tr style="height:32px;"><td style="color:#555;">পেমেন্টের উদ্দেশ্য:</td><td><span style="background:#fef3c7; padding:2px 8px; border-radius:5px; color:#b45309;">${p.month} মাসের বেতন/ফি</span></td></tr>
+                        <tr style="height:32px;"><td style="color:#555;">পরিশোধিত টাকা:</td><td><b style="color:#10b981; font-size: 16px;">৳${p.amount}/-</b></td></tr>
+                        <tr style="height:32px;"><td style="color:#555;">মাধ্যম ও ট্রানজেকশন ID:</td><td><b>${p.method}</b> (${p.txnId || 'N/A'})</td></tr>
+                        <tr style="height:32px;"><td style="color:#555;">পরিশোধের তারিখ:</td><td><b>${p.date}</b></td></tr>
+                        <tr style="height:32px;"><td style="color:#555;">পেমেন্ট স্ট্যাটাস:</td><td><span style="background:#d1fae5; color:#065f46; padding:3px 10px; border-radius:20px; font-size:12px;">✓ PAID (পরিশোধিত)</span></td></tr>
                     </table>
                 </div>
                 
                 <div style="margin-top:50px; display:flex; justify-content:space-between; align-items:flex-end;">
-                    <div style="text-align:center; width:40%;"><p style="border-top:1px solid #ddd; padding-top:5px; font-size:12px; font-weight:bold; color:#666;">শিক্ষার্থীর স্বাক্ষর</p></div>
-                    <div style="text-align:center; width:40%;"><p style="border-top:1px solid #4c1d95; padding-top:5px; font-size:12px; font-weight:bold; color:#4c1d95;">কর্তৃপক্ষের স্বাক্ষর</p></div>
+                    <div style="text-align:center; width:40%;"><p style="border-top:1px solid #ddd; padding-top:5px; font-size:12px; color:#666;">শিক্ষার্থীর স্বাক্ষর</p></div>
+                    <div style="text-align:center; width:40%;"><p style="border-top:1px solid #4c1d95; padding-top:5px; font-size:12px; color:#4c1d95;">কর্তৃপক্ষের স্বাক্ষর</p></div>
                 </div>
             </div>`;
         }
@@ -486,7 +624,7 @@
                 showSection('displayArea');
                 document.getElementById('pdfContent').innerHTML = getPaymentSlipHTML(p);
             } else {
-                Swal.fire('রেকর্ড পাওয়া যায়নি!', 'উক্ত রোল ও মাসের কোন পেমেন্ট স্লিপ পাওয়া যায়নি।', 'error');
+                Swal.fire('রেকርድ পাওয়া যায়নি!', 'উক্ত রোল ও মাসের কোন পেমেন্ট স্লিপ পাওয়া যায়নি।', 'error');
             }
         }
 
@@ -522,7 +660,6 @@
             });
         }
 
-        // --- মেধা তালিকা PDF জেনারেটর ---
         function downloadMeritListPDF() {
             const fCls = document.getElementById('filterClass').value;
             const fDate = document.getElementById('filterDate').value;
@@ -539,16 +676,16 @@
                 <tr style="border-bottom: 1px solid #ddd; font-size: 13px;">
                     <td style="padding: 10px; text-align: center;">${idx + 1}</td>
                     <td style="padding: 10px; text-align: center;">${s.roll}</td>
-                    <td style="padding: 10px; font-weight: bold;">${s.name}</td>
-                    <td style="padding: 10px; text-align: center; font-weight: bold; color: #4c1d95;">${s.grandTotal}</td>
+                    <td style="padding: 10px;">${s.name}</td>
+                    <td style="padding: 10px; text-align: center; color: #4c1d95;">${s.grandTotal}</td>
                 </tr>`).join('');
 
             document.getElementById('pdfContent').innerHTML = `
                 <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 15px;">
                     <div style="text-align:center; margin-bottom: 20px; border-bottom: 2px dashed #4c1d95; padding-bottom: 15px;">
                         <img src="${siteLogo}" style="width:55px; height:55px; border-radius:50%; margin-bottom:5px; object-fit: cover;">
-                        <h1 style="color:#4c1d95; margin:0; font-size: 20px; font-weight: 800;">AMIRUL MATH CARE</h1>
-                        <p style="margin:4px 0; font-size:14px; font-weight:bold; color:#555;">মেধা তালিকা (Merit List)</p>
+                        <h1 style="color:#4c1d95; margin:0; font-size: 20px; font-weight: 600;">AMIRUL MATH CARE</h1>
+                        <p style="margin:4px 0; font-size:14px; color:#555;">মেধা তালিকা (Merit List)</p>
                         <p style="margin:2px 0; font-size:12px; background:#f0f0f0; display:inline-block; padding:3px 10px; border-radius:10px;">শ্রেণী: ${fCls} | তারিখ: ${fDate}</p>
                     </div>
                     <table style="width:100%; border-collapse: collapse;">
@@ -556,7 +693,7 @@
                             <tr style="background: #4c1d95; color: white; font-size: 13px;">
                                 <th style="padding: 10px; text-align: center; width: 15%;">মেরিট</th>
                                 <th style="padding: 10px; text-align: center; width: 20%;">রোল</th>
-                                <th style="padding: 10px; text-align: left;">শিক্ষार्थियों নাম</th>
+                                <th style="padding: 10px; text-align: left;">শিক্ষার্থীদের নাম</th>
                                 <th style="padding: 10px; text-align: center; width: 25%;">মোট নম্বর</th>
                             </tr>
                         </thead>
@@ -565,7 +702,6 @@
                 </div>`;
         }
 
-        // --- শিক্ষার্থীর তালিকা PDF জেনারেটর ---
         function downloadStudentListPDF() {
             const students = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
             const data = Object.values(students).sort((a, b) => a.cls.localeCompare(b.cls) || a.roll - b.roll);
@@ -576,17 +712,17 @@
             let rows = data.map((s, idx) => `
                 <tr style="border-bottom: 1px solid #ddd; font-size: 12px;">
                     <td style="padding: 8px; text-align: center;">${idx + 1}</td>
-                    <td style="padding: 8px; text-align: center; font-weight: bold;">${s.cls}</td>
+                    <td style="padding: 8px; text-align: center;">${s.cls}</td>
                     <td style="padding: 8px; text-align: center;">${s.roll}</td>
-                    <td style="padding: 8px; font-weight: bold;">${s.name}</td>
+                    <td style="padding: 8px;">${s.name}</td>
                     <td style="padding: 8px; text-align: center;">${s.wa || 'N/A'}</td>
                 </tr>`).join('');
 
             document.getElementById('pdfContent').innerHTML = `
                 <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 15px;">
                     <div style="text-align:center; margin-bottom: 20px; border-bottom: 2px dashed #1e293b; padding-bottom: 12px;">
-                        <h1 style="color:#4c1d95; margin:0; font-size: 20px; font-weight: 800;">AMIRUL MATH CARE</h1>
-                        <p style="margin:4px 0; font-size:14px; font-weight:bold;">রজিস্ট্রেশনকৃত সকল শিক্ষার্থীর মূল তালিকা</p>
+                        <h1 style="color:#4c1d95; margin:0; font-size: 20px; font-weight: 600;">AMIRUL MATH CARE</h1>
+                        <p style="margin:4px 0; font-size:14px;">রজিস্ট্রেশনকৃত সকল শিক্ষার্থীর মূল তালিকা</p>
                     </div>
                     <table style="width:100%; border-collapse: collapse;">
                         <thead>
@@ -603,14 +739,13 @@
                 </div>`;
         }
 
-        // --- অ্যাডমিট কার্ড জেনারেশন সিস্টেম ---
         function generateAdmit() {
             const roll = document.getElementById('searchRoll').value;
             const cls = document.getElementById('searchClass').value;
             const date = document.getElementById('searchDate').value;
             const type = document.getElementById('searchExamType').value;
             
-            if(!roll || !cls || !date) return Swal.fire('정보 অসম্পূর্ণ!', 'দয়া করে রোল, শ্রেণী এবং তারিখ সঠিকভাবে নির্বাচন করুন!', 'warning');
+            if(!roll || !cls || !date) return Swal.fire('তথ্য অসম্পূর্ণ!', 'দয়া করে রোল, শ্রেণী এবং তারিখ সঠিকভাবে নির্বাচন করুন!', 'warning');
             
             const students = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
             const student = students[`${cls}_${roll}`];
@@ -621,44 +756,43 @@
                 <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 25px; border: 4px double #4c1d95; border-radius: 15px; position: relative; background: #fff;">
                     <div style="text-align:center; margin-bottom: 20px;">
                         <img src="${siteLogo}" style="width:65px; height:65px; border-radius:50%; margin-bottom:5px; object-fit: cover;">
-                        <h1 style="color:#4c1d95; margin:0; font-size: 22px; font-weight:800; letter-spacing:-0.5px;">AMIRUL MATH CARE</h1>
-                        <p style="margin:2px 0; font-size:13px; font-weight:bold; letter-spacing:1px; text-transform:uppercase; color:#d97706;">Official Admit Card</p>
+                        <h1 style="color:#4c1d95; margin:0; font-size: 22px; font-weight:600;">AMIRUL MATH CARE</h1>
+                        <p style="margin:2px 0; font-size:13px; color:#d97706;">Official Admit Card</p>
                     </div>
                     
                     <div style="margin:20px 0; font-size: 14px; background: #f8fafc; padding: 15px; border-radius: 10px; border-left: 5px solid #4c1d95;">
                         <table style="width:100%; border-collapse:collapse; font-size:14px;">
-                            <tr style="height:30px;"><td style="width:35%; font-weight:bold;">শিক্ষার্থীর নাম:</td><td style="font-weight:700; color:#1e1b4b;">${studentName}</td></tr>
-                            <tr style="height:30px;"><td style="font-weight:bold;">রোল নম্বর:</td><td><b>${roll}</b></td></tr>
-                            <tr style="height:30px;"><td style="font-weight:bold;">শ্রেণী:</td><td><b>${cls}</b></td></tr>
-                            <tr style="height:30px;"><td style="font-weight:bold;">পরীক্ষার ধরন:</td><td><span style="background:#fef3c7; padding:2px 8px; border-radius:5px; font-weight:bold; color:#b45309;">${type}</span></td></tr>
-                            <tr style="height:30px;"><td style="font-weight:bold;">অনুমোদিত তারিখ:</td><td><b>${date}</b></td></tr>
+                            <tr style="height:30px;"><td style="width:35%;">শিক্ষার্থীর নাম:</td><td style="color:#1e1b4b;">${studentName}</td></tr>
+                            <tr style="height:30px;"><td>রোল নম্বর:</td><td><b>${roll}</b></td></tr>
+                            <tr style="height:30px;"><td>শ্রেণী:</td><td><b>${cls}</b></td></tr>
+                            <tr style="height:30px;"><td>পরীক্ষার ধরন:</td><td><span style="background:#fef3c7; padding:2px 8px; border-radius:5px; color:#b45309;">${type}</span></td></tr>
+                            <tr style="height:30px;"><td>অনুমোদিত তারিখ:</td><td><b>${date}</b></td></tr>
                         </table>
                     </div>
                     
                     <div style="margin-top:40px; font-size:11px; color:#666; line-height:1.5;">
-                        <p style="margin:2px 0; font-weight:600; color:red;">* নির্দেশনাবলী:</p>
+                        <p style="margin:2px 0; color:red;">* নির্দেশনাবলী:</p>
                         <p style="margin:2px 0;">১. পরীক্ষার নির্দিষ্ট সময়ের অন্তত ১৫ মিনিট পূর্বে কেন্দ্রে উপস্থিত হতে হবে।</p>
                         <p style="margin:2px 0;">২. জ্যামিতি বক্স ও ক্যালকুলেটর ব্যতিত অতিরিক্ত খাতা বা ডিভাইস আনা সম্পূর্ণ নিষিদ্ধ।</p>
                     </div>
                     <div style="margin-top:40px; display:flex; justify-content:space-between; align-items:flex-end;">
-                        <div style="text-align:center; width:40%;"><p style="border-top:1px solid #ddd; padding-top:5px; font-size:12px; font-weight:bold;">শিক্ষার্থীর স্বাক্ষর</p></div>
-                        <div style="text-align:center; width:40%;"><p style="border-top:1px solid #4c1d95; padding-top:5px; font-size:12px; font-weight:bold; color:#4c1d95;">পরিচালকের স্বাক্ষর</p></div>
+                        <div style="text-align:center; width:40%;"><p style="border-top:1px solid #ddd; padding-top:5px; font-size:12px;">শিক্ষার্থীর স্বাক্ষর</p></div>
+                        <div style="text-align:center; width:40%;"><p style="border-top:1px solid #4c1d95; padding-top:5px; font-size:12px; color:#4c1d95;">পরিচালকের স্বাক্ষর</p></div>
                     </div>
                 </div>`;
         }
 
-        // --- উপস্থিতি ট্র্যাকার সিস্টেম লজিক ---
         function loadStudentsForAttendance() {
             const cls = document.getElementById('attClass').value;
             const container = document.getElementById('attendanceList');
             const students = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
             if(!cls) { container.innerHTML = ""; return; }
             let filtered = Object.values(students).filter(s => s.cls === cls);
-            if(filtered.length === 0) { container.innerHTML = "<p class='col-span-2 text-center text-red-500 font-bold p-4'>ঐ শ্রেণীতে কোন শিক্ষার্থী নিবন্ধিত পাওয়া যায়নি!</p>"; return; }
+            if(filtered.length === 0) { container.innerHTML = "<p class='col-span-2 text-center text-red-500 p-4'>ঐ শ্রেণীতে কোন শিক্ষার্থী নিবন্ধিত পাওয়া যায়নি!</p>"; return; }
             container.innerHTML = filtered.map(s => `
                 <label class="flex items-center gap-3 p-3 bg-white border rounded-lg cursor-pointer hover:bg-green-50 transition-colors shadow-sm">
                     <input type="checkbox" class="att-check w-5 h-5 accent-green-600 rounded" value="${s.cls}_${s.roll}">
-                    <span class="font-bold text-gray-700">রোল: ${s.roll}</span>
+                    <span class="text-gray-700">রোল: ${s.roll}</span>
                     <span class="text-sm text-gray-600">${s.name}</span>
                 </label>
             `).join('');
@@ -679,7 +813,6 @@
             document.getElementById('attendanceSystem').classList.add('hidden');
         }
 
-        // --- হোয়াটসঅ্যাপ গ্রুপ ব্রডকাস্ট সিস্টেম ---
         function sendBulkWhatsAppResults() {
             const date = prompt("কোন তারিখের রেজাল্ট গ্রুপ মেম্বারদের পাঠাতে চান? (YYYY-MM-DD format)", new Date().toISOString().split('T')[0]);
             if(!date) return;
@@ -712,7 +845,6 @@
             document.getElementById('adminNoticeInput').value = "";
         }
 
-        // --- স্টুডেন্ট প্রোফাইল এন্ট্রি প্রোসেস ---
         function addStudentToDB() {
             const roll = document.getElementById('newRoll').value.trim();
             const name = document.getElementById('newName').value.trim();
@@ -761,7 +893,7 @@
             let db = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
             document.getElementById('dbList').innerHTML = Object.keys(db).map(id => `
                 <div class="flex justify-between items-center p-3 border-b hover:bg-gray-100 transition-colors">
-                    <div class="text-xs text-gray-800"><b>[${db[id].cls}]</b> Roll: ${db[id].roll} - <span class="font-bold">${db[id].name}</span> (${db[id].wa || 'No WA'})</div>
+                    <div class="text-xs text-gray-800"><b>[${db[id].cls}]</b> Roll: ${db[id].roll} - <span>${db[id].name}</span> (${db[id].wa || 'No WA'})</div>
                     <div class="flex gap-4">
                         <button onclick="editStudent('${id}')" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i></button>
                         <button onclick="deleteStudent('${id}')" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
@@ -769,7 +901,6 @@
                 </div>`).join('');
         }
 
-        // --- রেজাল্ট ম্যানেজমেন্ট সিস্টেম ---
         function editResult(index) {
             const data = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
             const entry = data[index];
@@ -874,10 +1005,10 @@
             document.getElementById('dataTableBody').innerHTML = data.map((s, idx) => `
                 <tr class="border-b hover:bg-gray-50 transition-colors">
                     <td class="p-4">${s.roll}</td>
-                    <td class="p-4 font-bold text-xs text-gray-800">${s.name}</td>
+                    <td class="p-4 text-xs text-gray-800">${s.name}</td>
                     <td class="p-4">${s.cls}</td>
-                    <td class="p-4 font-bold text-purple-900">${s.grandTotal}</td>
-                    <td class="p-4 text-blue-600 font-black">#${getMerit(s.roll, s.cls, s.date)}</td>
+                    <td class="p-4 text-purple-900">${s.grandTotal}</td>
+                    <td class="p-4 text-blue-600 font-medium">#${getMerit(s.roll, s.cls, s.date)}</td>
                     <td class="p-4 flex justify-center gap-4 no-print">
                         <button onclick="editResult(${idx})" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i></button>
                         <button onclick="sendSingleResultWhatsApp('${s.date}', '${s.roll}', '${s.cls}')" class="text-green-600 hover:text-green-800"><i class="fab fa-whatsapp text-base"></i></button>
@@ -888,7 +1019,6 @@
 
         function downloadDocument() { window.print(); }
 
-        // --- রেজাল্ট কার্ড চেক ভিউ ---
         function checkResult() {
             const roll = document.getElementById('searchRoll').value;
             const cls = document.getElementById('searchClass').value;
@@ -902,23 +1032,23 @@
                 let rows = '';
                 for(let s in data.scores) {
                     rows += `<tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 12px 10px; text-align: left; font-weight:600;">${s} <span style="font-size:10px; color:#666;">(${data.scores[s].f})</span></td>
+                        <td style="padding: 12px 10px; text-align: left;">${s} <span style="font-size:10px; color:#666;">(${data.scores[s].f})</span></td>
                         <td style="padding: 12px 10px; text-align: center;">${data.scores[s].m}</td>
                         <td style="padding: 12px 10px; text-align: center;">${data.scores[s].c}</td>
-                        <td style="padding: 12px 10px; text-align: center; font-weight: bold;">${data.scores[s].t}</td>
-                        <td style="padding: 12px 10px; text-align: center; font-weight: bold; color: #4c1d95;">${data.scores[s].g}</td>
+                        <td style="padding: 12px 10px; text-align: center;">${data.scores[s].t}</td>
+                        <td style="padding: 12px 10px; text-align: center; color: #4c1d95;">${data.scores[s].g}</td>
                     </tr>`;
                 }
                 document.getElementById('pdfContent').innerHTML = `
                 <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 10px;">
                     <div style="text-align:center; margin-bottom: 20px;">
                         <img src="${siteLogo}" style="width:60px; height:60px; border-radius:50%; margin-bottom:10px; object-fit:cover;">
-                        <h1 style="color:#4c1d95; margin:0; font-size: 22px; font-weight:800;">AMIRUL MATH CARE</h1>
-                        <p style="margin:2px 0; font-size:13px; font-weight:bold; color:#4b5563;">একাডেমিক ট্রান্সক্রিপ্ট / ফলাফল পত্র</p>
-                        <p style="margin:2px 0; font-size:11px; background:#e0f2fe; color:#0369a1; display:inline-block; padding:2px 8px; border-radius:5px; font-weight:bold;">${data.examType} পরীক্ষা - ${data.date}</p>
+                        <h1 style="color:#4c1d95; margin:0; font-size: 22px; font-weight:600;">AMIRUL MATH CARE</h1>
+                        <p style="margin:2px 0; font-size:13px; color:#4b5563;">একাডেমিক ট্রান্সক্রিপ্ট / ফলাফল পত্র</p>
+                        <p style="margin:2px 0; font-size:11px; background:#e0f2fe; color:#0369a1; display:inline-block; padding:2px 8px; border-radius:5px;">${data.examType} পরীক্ষা - ${data.date}</p>
                     </div>
                     <div style="margin-bottom: 15px; font-size: 13px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #f8fafc; padding: 12px; border-radius: 8px; border:1px solid #e2e8f0;">
-                        <div>शिक्षার্থীর নাম: <b>${data.name}</b></div>
+                        <div>शिक्षार्थियों নাম: <b>${data.name}</b></div>
                         <div>অনুক্রমিক রোল: <b>${data.roll}</b></div>
                         <div>শ্রেণী শাখা: <b>${data.cls}</b></div>
                         <div>মেরিট পজিশন: <b style="color:#2563eb; font-size:14px;">#${getMerit(roll, cls, date)} তম</b></div>
@@ -941,21 +1071,19 @@
 
         function toggleDarkMode() { document.getElementById('body').classList.toggle('dark-mode'); }
 
-        // অ্যাডমিন প্যানেল অথেন্টিকেশন
         function adminLogin() {
             if (document.getElementById('adminPass').value === "1617798358Ma@56") {
                 sessionStorage.setItem('is_admin', 'true');
                 showSection('adminPanel');
-                updateDashboardStats(); renderTable(); loadStudentList(); loadPaymentList();
+                updateDashboardStats(); renderTable(); loadStudentList(); loadPaymentList(); loadAdminFaqList();
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 document.getElementById('adminLoginBtn').classList.add('hidden');
                 Swal.fire('স্বাগতম অ্যাডমিন!', 'ম্যানেজমেন্ট প্যানেলে সফল লগইন হয়েছে।', 'success');
-            } else Swal.fire('প্রবেশাধিকার প্রত্যাখ্যাত!', 'ভুল অ্যাডমিন সিক্রেট পাসওয়ার্ড!', 'error');
+            } else Swal.fire('প্রवेशাধিকার প্রত্যাখ্যাত!', 'ভুল অ্যাডমিন সিকረት পাসওয়ার্ড!', 'error');
         }
 
         function logout() { sessionStorage.removeItem('is_admin'); location.reload(); }
 
-        // ড্যাশবোর্ড কাউন্টার এবং চার্ট রেন্ডারিং
         function updateDashboardStats() {
             const students = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
             const results = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
@@ -1033,9 +1161,9 @@
             const cls = document.getElementById('stdClass').value;
             const container = document.getElementById('subjectInputs');
             if(!subjectsConfig[cls]) return;
-            let html = `<div class="grid grid-cols-5 gap-2 text-[11px] font-bold mb-2 border-b pb-2 text-purple-900"><div>বিষয় সমুহ</div><div>ফুল মার্ক</div><div>MCQ প্রাপ্তি</div><div>CQ প্রাপ্তি</div><div class="text-center">গ্রেড</div></div>`;
+            let html = `<div class="grid grid-cols-5 gap-2 text-[11px] mb-2 border-b pb-2 text-purple-900"><div>বিষয় সমুহ</div><div>ফুল মার্ক</div><div>MCQ প্রাপ্তি</div><div>CQ প্রাপ্তি</div><div class="text-center">গ্রেড</div></div>`;
             subjectsConfig[cls].forEach(sub => {
-                html += `<div class="grid grid-cols-5 gap-2 mb-2 items-center"><div class="text-xs font-bold text-gray-700">${sub}</div><input type="number" id="full_${sub}" value="100" class="border p-1 rounded text-center text-xs outline-none"><input type="number" id="mcq_${sub}" oninput="calcGrade('${sub}')" class="border p-1 rounded text-center text-xs outline-none"><input type="number" id="cq_${sub}" oninput="calcGrade('${sub}')" class="border p-1 rounded text-center text-xs outline-none"><div id="grade_${sub}" class="text-center font-black text-purple-700 text-sm">-</div></div>`;
+                html += `<div class="grid grid-cols-5 gap-2 mb-2 items-center"><div class="text-xs text-gray-700">${sub}</div><input type="number" id="full_${sub}" value="100" class="border p-1 rounded text-center text-xs outline-none"><input type="number" id="mcq_${sub}" oninput="calcGrade('${sub}')" class="border p-1 rounded text-center text-xs outline-none"><input type="number" id="cq_${sub}" oninput="calcGrade('${sub}')" class="border p-1 rounded text-center text-xs outline-none"><div id="grade_${sub}" class="text-center text-purple-700 text-sm font-medium">-</div></div>`;
             });
             container.innerHTML = html;
         }
@@ -1105,6 +1233,7 @@
             startAutoSlider();
             const n = localStorage.getItem('amc_notice'); if(n) document.getElementById("mainNotice").innerText = n;
             document.getElementById('navLogo').src = siteLogo;
+            loadFaqAccordion();
         };
     </script>
 </body>
