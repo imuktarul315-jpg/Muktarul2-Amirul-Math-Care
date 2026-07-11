@@ -432,7 +432,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // গ্লোবাল ফাংশন বাইন্ডিং মডিউল স্কোপ সমস্যার সমাধানের জন্য
         window.saveToFirebase = (path, data) => set(ref(db, path), data);
 
         // Realtime Data Sync
@@ -518,6 +517,7 @@
         let currentEditResultIndex = null;
         let attendanceChartInstance = null;
         let galleryIndex = 0;
+        let galleryInterval = null; 
         let base64ImageString = ""; 
         const DEFAULT_LOGO = "https://i.ibb.co/Lhy0W0P/1000018420.jpg";
         let siteLogo = localStorage.getItem('amc_site_logo') || DEFAULT_LOGO;
@@ -646,7 +646,7 @@
             if(window.saveToFirebase) window.saveToFirebase('routines', routines);
         }
 
-        // --- 4. Dynamic Photo Gallery & Upload Functions ---
+        // --- 4. Dynamic Photo Gallery & Upload Functions (Auto-Scroll Enabled) ---
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -670,6 +670,10 @@
         function loadGallerySlider() {
             let imgs = JSON.parse(localStorage.getItem('amc_gallery') || "[]");
             const track = document.getElementById('galleryTrack');
+            
+            // পূর্বের ইন্টারভাল ক্লিয়ার করা
+            if(galleryInterval) clearInterval(galleryInterval);
+            
             if(imgs.length === 0) {
                 track.innerHTML = `<div class="gallery-slide flex items-center justify-center text-gray-400 text-xs">কোনো ছবি আপলোড করা নেই</div>`;
                 return;
@@ -677,6 +681,13 @@
             track.innerHTML = imgs.map(img => `<div class="gallery-slide"><img src="${img.url}" alt="Gallery Image"></div>`).join('');
             galleryIndex = 0;
             track.style.transform = `translateX(0%)`;
+            
+            // ৩ সেকেন্ড পর পর স্বয়ংক্রিয় স্ক্রলিং শুরু
+            if(imgs.length > 1) {
+                galleryInterval = setInterval(() => {
+                    nextGallerySlide();
+                }, 3000);
+            }
         }
 
         function nextGallerySlide() {
@@ -789,7 +800,7 @@
             if(window.saveToFirebase) window.saveToFirebase('faqs', faqs);
         }
 
-        // --- Payment Manager Functions ---
+        // --- Payment Manager Functions (Paid Watermark Integrated) ---
         function fetchPaymentStudentInfo() {
             const r = document.getElementById('payRoll').value;
             const c = document.getElementById('payClass').value;
@@ -844,20 +855,26 @@
 
         function getPaymentSlipHTML(p) {
             return `
-            <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 25px; border: 4px double #4c1d95; border-radius: 15px; background: #fff;">
-                <div style="text-align:center; margin-bottom: 20px; border-bottom: 2px dashed #4c1d95; padding-bottom: 10px;">
-                    <img src="${siteLogo}" style="width:65px; height:65px; border-radius:50%; object-fit: cover; display: inline-block;">
-                    <h1 style="color:#4c1d95; margin:0; font-size: 24px; font-weight:600;">AMIRUL MATH CARE</h1>
-                    <p style="margin:2px 0; font-size:13px; color:#d97706;">টাকা প্রাপ্তির রশিদ</p>
+            <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 25px; border: 4px double #4c1d95; border-radius: 15px; background: #fff; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 85px; font-weight: 800; color: rgba(16, 185, 129, 0.14); border: 8px solid rgba(16, 185, 129, 0.14); padding: 5px 25px; border-radius: 15px; text-transform: uppercase; letter-spacing: 5px; pointer-events: none; user-select: none; z-index: 0;">
+                    PAID
                 </div>
-                <table style="width:100%; font-size:14px; line-height:2;">
-                    <tr><td>শিক্ষার্থীর নাম:</td><td><b>${p.name}</b></td></tr>
-                    <tr><td>শ্রেণী & রোল:</td><td><b>${p.cls} (রোল: ${p.roll})</b></td></tr>
-                    <tr><td>ফি বিবরণ:</td><td><b>${p.month} মাস</b></td></tr>
-                    <tr><td>পরিশোধিত টাকা:</td><td style="color:#10b981;"><b>৳${p.amount}/-</b></td></tr>
-                    <tr><td>মাধ্যম & ট্রাক আইডি:</td><td><b>${p.method} (${p.txnId})</b></td></tr>
-                    <tr><td>তারিখ:</td><td><b>${p.date}</b></td></tr>
-                </table>
+                
+                <div style="position: relative; z-index: 1;">
+                    <div style="text-align:center; margin-bottom: 20px; border-bottom: 2px dashed #4c1d95; padding-bottom: 10px;">
+                        <img src="${siteLogo}" style="width:65px; height:65px; border-radius:50%; object-fit: cover; display: inline-block;">
+                        <h1 style="color:#4c1d95; margin:0; font-size: 24px; font-weight:600;">AMIRUL MATH CARE</h1>
+                        <p style="margin:2px 0; font-size:13px; color:#d97706;">টাকা প্রাপ্তির রশিদ</p>
+                    </div>
+                    <table style="width:100%; font-size:14px; line-height:2;">
+                        <tr><td style="width:40%;">শিক্ষার্থীর নাম:</td><td><b>${p.name}</b></td></tr>
+                        <tr><td>শ্রেণী & রোল:</td><td><b>${p.cls} (রোল: ${p.roll})</b></td></tr>
+                        <tr><td>ফি বিবরণ:</td><td><b>${p.month} মাস</b></td></tr>
+                        <tr><td>পরিশোধিত টাকা:</td><td style="color:#10b981;"><b>৳${p.amount}/-</b></td></tr>
+                        <tr><td>মাধ্যম & ট্রাক আইডি:</td><td><b>${p.method} (${p.txnId})</b></td></tr>
+                        <tr><td>তারিখ:</td><td><b>${p.date}</b></td></tr>
+                    </table>
+                </div>
             </div>`;
         }
 
@@ -865,7 +882,7 @@
             const roll = document.getElementById('searchRoll').value;
             const cls = document.getElementById('searchClass').value;
             const month = document.getElementById('searchMonth').value;
-            if(!roll || !cls || !month) return Swal.fire('ফিল্ড खाली!', 'অনুগ্রহ করে রোল, শ্রেণী ও নির্দিষ্ট মাস নির্বাচন করুন।', 'warning');
+            if(!roll || !cls || !month) return Swal.fire('ফিল্ড খালি!', 'অনুগ্রহ করে রোল, শ্রেণী ও নির্দিষ্ট মাস নির্বাচন করুন।', 'warning');
             
             let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]");
             let p = payments.find(item => item.roll == roll && item.cls === cls && item.month === month);
@@ -1107,7 +1124,7 @@
                     rows += `<tr><td style="padding:8px;">${s}</td><td style="padding:8px; text-align:center;">${data.scores[s].m}</td><td style="padding:8px; text-align:center;">${data.scores[s].c}</td><td style="padding:8px; text-align:center;">${data.scores[s].t}</td><td style="padding:8px; text-align:center;">${data.scores[s].g}</td></tr>`;
                 }
                 document.getElementById('pdfContent').innerHTML = `<h3 style="text-align:center; color:#4c1d95; font-size:18px; margin-bottom:5px;">AMIRUL MATH CARE - মার্কশিট</h3><p style="text-align:center; font-size:13px; margin-bottom:10px;">নাম: ${data.name} | রোল: ${roll} | মেধা স্থান: #${getMerit(roll, cls, date)}</p><table border="1" style="width:100%; border-collapse:collapse;"><thead><tr style="background:#4c1d95; color:white;"><th>বিষয়</th><th>MCQ</th><th>CQ</th><th>মোট</th><th>গ্রেড</th></tr></thead><tbody>${rows}</tbody></table>`;
-            } else Swal.fire('ত্রুটি!', 'ফлаফল পাওয়া যায়নি!', 'error');
+            } else Swal.fire('ত্রুটি!', 'ফলাফল পাওয়া যায়নি!', 'error');
         }
 
         function toggleDarkMode() { document.getElementById('body').classList.toggle('dark-mode'); }
