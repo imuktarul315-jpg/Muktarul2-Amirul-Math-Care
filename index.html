@@ -108,7 +108,6 @@
             font-size: 1.05rem;
         }
 
-        /* ===== FIXED GALLERY CSS ===== */
         .gallery-container {
             position: relative;
             width: 100%;
@@ -139,7 +138,6 @@
             object-fit: cover;
             display: block;
         }
-        /* ===== END FIXED GALLERY CSS ===== */
 
         #pdfContent {
             color: black !important;
@@ -256,6 +254,40 @@
                     <button onclick="viewPaymentSlipPortal()" class="w-full bg-emerald-600 text-white py-4 rounded-2xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
                         <i class="fas fa-file-invoice-dollar mr-2"></i>অনলাইন পেমেন্ট স্লিপ প্রিন্ট
                     </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LIVE PROGRESS CHART -->
+        <div class="bg-white p-6 rounded-3xl shadow-xl border-t-8 border-teal-600 transition-colors mb-6">
+            <h3 class="text-gray-800 dark:text-white text-xl mb-4 text-center font-medium">
+                <i class="fas fa-chart-line mr-2 text-teal-600"></i>শিক্ষার্থী অগ্রগতি গ্রাফ
+            </h3>
+            <div class="space-y-3">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs block mb-1 text-gray-600 dark:text-gray-300">শ্রেণী</label>
+                        <select id="progressClass" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black text-sm">
+                            <option value="">সিলেক্ট</option>
+                            <option value="৬ষ্ঠ">৬ষ্ঠ</option>
+                            <option value="৭ম">৭ম</option>
+                            <option value="৮ম">৮ম</option>
+                            <option value="৯ম">৯ম</option>
+                            <option value="১০ম">১০ম</option>
+                            <option value="SSC">SSC</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs block mb-1 text-gray-600 dark:text-gray-300">রোল</label>
+                        <input type="text" id="progressRoll" placeholder="রোল" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black text-sm">
+                    </div>
+                </div>
+                <button onclick="showLiveProgressChart()" class="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-xl shadow-md transition">
+                    <i class="fas fa-chart-area mr-2"></i>অগ্রগতি দেখুন
+                </button>
+                <div class="mt-3 bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
+                    <canvas id="liveProgressChart" height="220"></canvas>
+                    <p id="progressChartMsg" class="text-center text-xs text-gray-500 mt-2">রোল ও শ্রেণী দিয়ে অগ্রগতি দেখুন</p>
                 </div>
             </div>
         </div>
@@ -796,6 +828,8 @@
         let currentEditStudentId = null;
         let currentEditResultIndex = null;
         let attendanceChartInstance = null;
+        let liveProgressChartInstance = null;
+        let markSheetProgressChartInstance = null;
         let galleryIndex = 0;
         let galleryInterval = null;
         let heroIndex = 0;
@@ -803,8 +837,6 @@
         let base64ImageString = "";
         const DEFAULT_LOGO = "https://i.ibb.co/Lhy0W0P/1000018420.jpg";
         let siteLogo = localStorage.getItem('amc_site_logo') || DEFAULT_LOGO;
-
-        // Placeholder for broken gallery images
         const GALLERY_PLACEHOLDER = "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80";
 
         const subjectsConfig = {
@@ -1060,7 +1092,7 @@
             if (window.saveToFirebase) window.saveToFirebase('routines', routines);
         }
 
-        // ==================== GALLERY (FIXED) ====================
+        // ==================== GALLERY ====================
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1105,7 +1137,6 @@
                 return;
             }
 
-            // Build slides with error handling so broken images still show something
             track.innerHTML = imgs.map((img, idx) => {
                 const url = (img && img.url) ? img.url : GALLERY_PLACEHOLDER;
                 return `
@@ -1120,8 +1151,6 @@
 
             galleryIndex = 0;
             track.style.transform = `translateX(0%)`;
-
-            // Force reflow to ensure images start loading
             void track.offsetWidth;
 
             if (imgs.length > 1) {
@@ -1215,12 +1244,22 @@
             imgs.push({ id: 'I_' + Date.now(), url: finalImageUrl });
 
             if (window.saveToFirebase) {
-                window.saveToFirebase('gallery', imgs);
+                window.saveToFirebase('gallery', imgs)
+                    .then(() => {
+                        Swal.fire('সফল!', 'ছবি আপলোড সম্পন্ন হয়েছে।', 'success');
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        localStorage.setItem('amc_gallery', JSON.stringify(imgs));
+                        loadGallerySlider();
+                        loadAdminGalleryList();
+                        Swal.fire('সতর্কতা', 'Firebase-এ বড় ছবি সেভ করা যায়নি। লোকাল স্টোরেজে রাখা হয়েছে। ছোট ছবি বা লিঙ্ক ব্যবহার করুন।', 'warning');
+                    });
             } else {
-                // Fallback if Firebase not ready
                 localStorage.setItem('amc_gallery', JSON.stringify(imgs));
                 loadGallerySlider();
                 loadAdminGalleryList();
+                Swal.fire('সফল!', 'ছবি আপলোড সম্পন্ন হয়েছে।', 'success');
             }
 
             document.getElementById('galleryImgUrl').value = '';
@@ -1229,8 +1268,6 @@
             document.getElementById('galleryPreviewImg').src = "";
             document.getElementById('uploadStatusText').innerText = "ডিভাইস থেকে ছবি সিলেক্ট করুন";
             base64ImageString = "";
-
-            Swal.fire('সফল!', 'ছবি আপলোড সম্পন্ন হয়েছে।', 'success');
         }
 
         function deleteGalleryImage(id) {
@@ -1361,7 +1398,7 @@
                 <div class="flex justify-between items-center p-3 border-b hover:bg-gray-100 transition-colors text-xs text-black">
                     <div>
                         <b>[${p.cls} - রোল ${p.roll}]</b> ${p.name}<br>
-                        <span class="text-amber-700 font-medium">${p.month}</span> ফি: ৳${p.amount} (${p.method})
+                        <span class="text-amber-700 font-medium">${p.month}</span> ফি: ৳ ${p.amount} (${p.method})
                     </div>
                     <div class="flex gap-3 text-sm">
                         <button onclick="viewSinglePaymentSlip('${p.id}')" class="text-amber-600"><i class="fas fa-file-invoice-dollar"></i></button>
@@ -1431,7 +1468,7 @@
             if (!student || !student.wa) {
                 return Swal.fire('হোয়াটসঅ্যাপ নম্বর নেই!', 'হোয়াটসঅ্যাপ নম্বর পাওয়া যায়নি।', 'info');
             }
-            const message = `*AMIRUL MATH CARE - পেমেন্ট রসিদ*%0A--------------------------------%0A*নাম:* ${p.name}%0A*রোল:* ${p.roll} | *শ্রেণী:* ${p.cls}%0A*টাকা পরিমাণ:* ৳${p.amount}/-%0A*স্ট্যাটাস:* PAID ✔`;
+            const message = `*AMIRUL MATH CARE - পেমেন্ট রসিদ*%0A--------------------------------%0A*নাম:* ${p.name}%0A*রোল:* ${p.roll} | *শ্রেণী:* ${p.cls}%0A*টাকা পরিমাণ:* ৳ ${p.amount}/-%0A*স্ট্যাটাস:* PAID ✔`;
             window.open(`https://wa.me/${student.wa}?text=${message}`, '_blank');
         }
 
@@ -1611,7 +1648,7 @@
                 details += `%0A- *${sub}:* ${r.scores[sub].t} (MCQ: ${r.scores[sub].m}, CQ: ${r.scores[sub].c})`;
             }
 
-            const message = `*AMIRUL MATH CARE - রেজাল্ট আপডেট*%0A--------------------------------%0A*নাম:* ${r.name}%0A*রোল:* ${r.roll} | *শ্রেণী:* ${r.cls}%0A*তারিখ:* ${r.date}%0A*পরীক্ষার ধরন:* ${r.examType}%0A%0A*প্রাপ্ত নম্বর:*${details}%0A--------------------------------%0A*মোট প্রাপ্ত নম্বর:* ${r.grandTotal}`;
+            const message = `*AMIRUL MATH CARE - রেজাল্ট আপডেট*%0A--------------------------------%0A*নাম:* ${r.name}%0A*রোল:* ${r.roll} | *শ্রেণী:* ${r.cls}%0A*তারিখ:* ${r.date}%0A*পরীক্ষার ধরন:* ${r.examType}%0A%0A*প্রাপ্ত নম্বর:* ${details}%0A--------------------------------%0A*মোট প্রাপ্ত নম্বর:* ${r.grandTotal}`;
             window.open(`https://wa.me/${student.wa}?text=${message}`, '_blank');
         }
 
@@ -1866,6 +1903,102 @@
             }).join('');
         }
 
+        // ==================== PROGRESS CHART ====================
+        function getStudentProgressData(cls, roll) {
+            const results = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
+            return results
+                .filter(r => r.cls === cls && String(r.roll) === String(roll))
+                .sort((a, b) => a.date.localeCompare(b.date));
+        }
+
+        function createProgressChart(canvasId, progressData, studentName) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return null;
+
+            const labels = progressData.map(r => r.date);
+            const totals = progressData.map(r => r.grandTotal);
+            const examTypes = progressData.map(r => r.examType || '');
+
+            const chart = new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'মোট নম্বর',
+                        data: totals,
+                        borderColor: '#0d9488',
+                        backgroundColor: 'rgba(13, 148, 136, 0.15)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#4c1d95',
+                        pointBorderColor: '#fff',
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: studentName ? `${studentName} এর অগ্রগতি` : 'অগ্রগতি চার্ট',
+                            font: { size: 14, family: "'Hind Siliguri', sans-serif" },
+                            color: '#4c1d95'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    const idx = context.dataIndex;
+                                    return examTypes[idx] ? `ধরন: ${examTypes[idx]}` : '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'নম্বর' }
+                        },
+                        x: {
+                            title: { display: true, text: 'তারিখ' }
+                        }
+                    }
+                }
+            });
+            return chart;
+        }
+
+        function showLiveProgressChart() {
+            const cls = document.getElementById('progressClass').value;
+            const roll = document.getElementById('progressRoll').value.trim();
+            const msgEl = document.getElementById('progressChartMsg');
+
+            if (!cls || !roll) {
+                return Swal.fire('ফিল্ড খালি!', 'শ্রেণী ও রোল নম্বর দিন।', 'warning');
+            }
+
+            const progressData = getStudentProgressData(cls, roll);
+            if (progressData.length === 0) {
+                if (liveProgressChartInstance) {
+                    liveProgressChartInstance.destroy();
+                    liveProgressChartInstance = null;
+                }
+                msgEl.innerText = 'এই শিক্ষার্থীর কোনো রেজাল্ট পাওয়া যায়নি।';
+                return;
+            }
+
+            const studentName = progressData[0].name || 'শিক্ষার্থী';
+            msgEl.innerText = `${studentName} (${cls} - রোল ${roll}) • মোট ${progressData.length}টি পরীক্ষা`;
+
+            if (liveProgressChartInstance) {
+                liveProgressChartInstance.destroy();
+            }
+            liveProgressChartInstance = createProgressChart('liveProgressChart', progressData, studentName);
+        }
+
         function checkResult() {
             const roll = document.getElementById('searchRoll').value;
             const cls = document.getElementById('searchClass').value;
@@ -1892,6 +2025,8 @@
                         </tr>`;
                 }
 
+                const progressData = getStudentProgressData(cls, roll);
+
                 document.getElementById('pdfContent').innerHTML = `
                     <div style="font-family:'Hind Siliguri', sans-serif; padding:10px;">
                         <div style="text-align:center; border-bottom:2px solid #4c1d95; padding-bottom:10px; margin-bottom:15px;">
@@ -1916,10 +2051,32 @@
                             </thead>
                             <tbody>${detailsRows}</tbody>
                         </table>
-                        <div style="text-align:right; font-size:16px; color:#4c1d95; padding:5px; border-top:2px solid #4c1d95;">
+                        <div style="text-align:right; font-size:16px; color:#4c1d95; padding:5px; border-top:2px solid #4c1d95; margin-bottom:20px;">
                             <b>সর্বমোট নম্বর: ${res.grandTotal}</b>
                         </div>
+
+                        <div style="margin-top:20px; border-top:2px dashed #0d9488; padding-top:15px;">
+                            <h3 style="text-align:center; color:#0d9488; font-size:16px; margin-bottom:10px;">
+                                <i class="fas fa-chart-line"></i> শিক্ষার্থীর অগ্রগতি গ্রাফ
+                            </h3>
+                            <div style="background:#f0fdfa; border-radius:12px; padding:10px;">
+                                <canvas id="markSheetProgressChart" height="200"></canvas>
+                            </div>
+                            <p style="text-align:center; font-size:11px; color:#666; margin-top:8px;">
+                                মোট ${progressData.length}টি পরীক্ষার ভিত্তিতে অগ্রগতি দেখানো হয়েছে
+                            </p>
+                        </div>
                     </div>`;
+
+                setTimeout(() => {
+                    if (markSheetProgressChartInstance) {
+                        markSheetProgressChartInstance.destroy();
+                    }
+                    if (progressData.length > 0) {
+                        markSheetProgressChartInstance = createProgressChart('markSheetProgressChart', progressData, res.name);
+                    }
+                }, 150);
+
             } else {
                 Swal.fire('ফলাফল পাওয়া যায়নি!', 'প্রদত্ত তথ্যের ভিত্তিতে কোন ফলাফল পাওয়া যায়নি।', 'error');
             }
@@ -1932,8 +2089,6 @@
             if (document.getElementById('searchDate')) document.getElementById('searchDate').value = today;
 
             initHeroSlider();
-
-            // Immediately load from localStorage (so gallery shows even before Firebase responds)
             loadMultiNotices();
             loadRoutines();
             loadGallerySlider();
