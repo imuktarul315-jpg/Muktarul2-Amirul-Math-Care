@@ -144,6 +144,16 @@
             background: white !important;
             width: 100%;
         }
+
+        /* Live Active Users Badge */
+        .live-users-badge {
+            background: linear-gradient(135deg, #059669, #10b981);
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+            50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+        }
     </style>
 </head>
 
@@ -166,6 +176,11 @@
             <h1 class="text-lg md:text-xl font-medium">AMIRUL MATH CARE</h1>
         </div>
         <div class="flex gap-2 items-center">
+            <!-- LIVE ACTIVE USERS -->
+            <div class="live-users-badge text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md">
+                <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                <span id="liveActiveCount">০</span> জন অনলাইন
+            </div>
             <button onclick="toggleDarkMode()" class="p-2 w-9 h-9 flex items-center justify-center rounded-full hover:bg-purple-700 transition" title="ডার্ক মোড টগল">
                 <i class="fas fa-moon"></i>
             </button>
@@ -432,7 +447,7 @@
             </div>
         </div>
 
-        <!-- Notice + Chart -->
+        <!-- Security Log + Notice + Chart -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div class="md:col-span-2 bg-white p-6 rounded-2xl shadow-xl text-black">
                 <h2 class="text-lg text-purple-900 mb-3 font-medium">
@@ -449,6 +464,21 @@
             </div>
             <div class="bg-white p-4 rounded-2xl shadow-xl flex flex-col items-center justify-center min-h-[160px]">
                 <canvas id="attendanceChart" width="120" height="120"></canvas>
+            </div>
+        </div>
+
+        <!-- ANTI-HACKING SECURITY LOG -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-red-600 text-black">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl text-red-800 font-medium">
+                    <i class="fas fa-shield-alt mr-2"></i>এন্টি-হ্যাকিং সিকিউরিটি লগ (লাইভ লোকেশন)
+                </h2>
+                <button onclick="clearSecurityLogs()" class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-lg hover:bg-red-200">
+                    লগ ক্লিয়ার
+                </button>
+            </div>
+            <div id="securityLogContainer" class="max-h-72 overflow-y-auto space-y-2 text-xs border rounded-xl p-3 bg-gray-50">
+                <p class="text-center text-gray-400 py-4">কোনো সিকিউরিটি ইভেন্ট নেই</p>
             </div>
         </div>
 
@@ -750,7 +780,7 @@
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, onDisconnect, remove, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC4j1NqdqdYoHlKj_mtX5Kcz_X0M9DhMdI",
@@ -766,7 +796,46 @@
         const db = getDatabase(app);
 
         window.saveToFirebase = (path, data) => set(ref(db, path), data);
+        window.firebaseRef = ref;
+        window.firebaseSet = set;
+        window.firebaseOnValue = onValue;
+        window.firebaseOnDisconnect = onDisconnect;
+        window.firebaseRemove = remove;
+        window.firebasePush = push;
+        window.firebaseServerTimestamp = serverTimestamp;
+        window.firebaseDb = db;
 
+        // ==================== LIVE PRESENCE SYSTEM ====================
+        const presenceId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        const presenceRef = ref(db, 'presence/' + presenceId);
+
+        // Set presence
+        set(presenceRef, {
+            online: true,
+            lastSeen: serverTimestamp(),
+            userAgent: navigator.userAgent.substring(0, 120)
+        });
+
+        // Remove on disconnect
+        onDisconnect(presenceRef).remove();
+
+        // Listen to total online users
+        onValue(ref(db, 'presence'), (snapshot) => {
+            const count = snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
+            const el = document.getElementById('liveActiveCount');
+            if (el) el.innerText = count;
+        });
+
+        // Keepalive every 45 seconds
+        setInterval(() => {
+            set(presenceRef, {
+                online: true,
+                lastSeen: serverTimestamp(),
+                userAgent: navigator.userAgent.substring(0, 120)
+            });
+        }, 45000);
+
+        // Existing listeners
         onValue(ref(db, 'results'), (snapshot) => {
             localStorage.setItem('amc_db_final', snapshot.exists() ? JSON.stringify(snapshot.val()) : "[]");
             renderTable();
@@ -820,6 +889,12 @@
             loadFaqAccordion();
             if (sessionStorage.getItem('is_admin')) loadAdminFaqList();
         });
+
+        // Security Logs listener
+        onValue(ref(db, 'securityLogs'), (snapshot) => {
+            localStorage.setItem('amc_security_logs', snapshot.exists() ? JSON.stringify(snapshot.val()) : "[]");
+            if (sessionStorage.getItem('is_admin')) loadSecurityLogs();
+        });
     </script>
 
     <!-- Main Script -->
@@ -848,6 +923,134 @@
             "SSC": ["সাধারণ গণিত", "উচ্চতর গণিত", "ICT"]
         };
 
+        function safeId(sub) {
+            return sub.replace(/\s+/g, '_').replace(/[^\w\u0980-\u09FF]/g, '');
+        }
+
+        // ==================== ANTI-HACKING SYSTEM ====================
+        async function getVisitorLocationInfo() {
+            try {
+                // Free IP geolocation (no API key needed)
+                const res = await fetch('https://ipapi.co/json/', { timeout: 5000 });
+                if (!res.ok) throw new Error('IP API failed');
+                const data = await res.json();
+                return {
+                    ip: data.ip || 'Unknown',
+                    city: data.city || 'Unknown',
+                    region: data.region || '',
+                    country: data.country_name || data.country || 'Unknown',
+                    lat: data.latitude || null,
+                    lon: data.longitude || null,
+                    org: data.org || data.asn || '',
+                    timezone: data.timezone || ''
+                };
+            } catch (e) {
+                // Fallback
+                try {
+                    const res2 = await fetch('https://api.ipify.org?format=json');
+                    const d = await res2.json();
+                    return { ip: d.ip || 'Unknown', city: 'Unknown', region: '', country: 'Unknown', lat: null, lon: null, org: '', timezone: '' };
+                } catch {
+                    return { ip: 'Unknown', city: 'Unknown', region: '', country: 'Unknown', lat: null, lon: null, org: '', timezone: '' };
+                }
+            }
+        }
+
+        async function logSecurityEvent(type, details = '') {
+            try {
+                const loc = await getVisitorLocationInfo();
+                const logEntry = {
+                    id: 'SEC_' + Date.now(),
+                    type: type, // 'login_success', 'login_fail', 'suspicious', 'page_load'
+                    details: details,
+                    timestamp: new Date().toLocaleString('bn-BD'),
+                    timeISO: new Date().toISOString(),
+                    ip: loc.ip,
+                    city: loc.city,
+                    region: loc.region,
+                    country: loc.country,
+                    lat: loc.lat,
+                    lon: loc.lon,
+                    org: loc.org,
+                    userAgent: navigator.userAgent.substring(0, 150),
+                    screen: `${screen.width}x${screen.height}`,
+                    language: navigator.language
+                };
+
+                let logs = JSON.parse(localStorage.getItem('amc_security_logs') || "[]");
+                logs.unshift(logEntry);
+                // Keep only last 100 logs
+                if (logs.length > 100) logs = logs.slice(0, 100);
+
+                if (window.saveToFirebase) {
+                    window.saveToFirebase('securityLogs', logs);
+                } else {
+                    localStorage.setItem('amc_security_logs', JSON.stringify(logs));
+                }
+            } catch (err) {
+                console.warn('Security log failed:', err);
+            }
+        }
+
+        function loadSecurityLogs() {
+            const container = document.getElementById('securityLogContainer');
+            if (!container) return;
+
+            let logs = JSON.parse(localStorage.getItem('amc_security_logs') || "[]");
+            if (logs.length === 0) {
+                container.innerHTML = "<p class='text-center text-gray-400 py-4'>কোনো সিকিউরিটি ইভেন্ট নেই</p>";
+                return;
+            }
+
+            container.innerHTML = logs.map(log => {
+                let badgeColor = 'bg-gray-500';
+                let icon = 'fa-info-circle';
+                if (log.type === 'login_success') { badgeColor = 'bg-green-600'; icon = 'fa-check-circle'; }
+                if (log.type === 'login_fail') { badgeColor = 'bg-red-600'; icon = 'fa-exclamation-triangle'; }
+                if (log.type === 'suspicious') { badgeColor = 'bg-orange-600'; icon = 'fa-skull-crossbones'; }
+
+                const mapLink = (log.lat && log.lon) 
+                    ? `<a href="https://www.google.com/maps?q=${log.lat},${log.lon}" target="_blank" class="text-blue-600 underline ml-1">ম্যাপ দেখুন</a>` 
+                    : '';
+
+                return `
+                <div class="p-3 bg-white border rounded-lg shadow-sm">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="${badgeColor} text-white text-[10px] px-2 py-0.5 rounded-full">
+                            <i class="fas ${icon} mr-1"></i>${log.type.toUpperCase()}
+                        </span>
+                        <span class="text-[10px] text-gray-500">${log.timestamp}</span>
+                    </div>
+                    <p class="text-gray-800 font-medium">${log.details || '—'}</p>
+                    <div class="mt-1 text-[11px] text-gray-600 space-y-0.5">
+                        <div><i class="fas fa-map-marker-alt text-red-500 mr-1"></i> 
+                            ${log.city}, ${log.region} ${log.country} ${mapLink}
+                        </div>
+                        <div><i class="fas fa-network-wired mr-1"></i> IP: <b>${log.ip}</b> ${log.org ? `(${log.org})` : ''}</div>
+                        <div class="truncate"><i class="fas fa-desktop mr-1"></i> ${log.userAgent}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function clearSecurityLogs() {
+            Swal.fire({
+                title: 'নিশ্চিত?',
+                text: 'সব সিকিউরিটি লগ মুছে ফেলা হবে!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, মুছুন',
+                cancelButtonText: 'না'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (window.saveToFirebase) window.saveToFirebase('securityLogs', []);
+                    localStorage.setItem('amc_security_logs', "[]");
+                    loadSecurityLogs();
+                    Swal.fire('মুছে ফেলা হয়েছে', '', 'success');
+                }
+            });
+        }
+
         // ==================== UI HELPERS ====================
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
@@ -874,8 +1077,8 @@
             }
         }
 
-        // ==================== AUTH ====================
-        function adminLogin() {
+        // ==================== AUTH (with security logging) ====================
+        async function adminLogin() {
             const pass = document.getElementById('adminPass').value;
             if (pass === "amc123") {
                 sessionStorage.setItem('is_admin', 'true');
@@ -885,7 +1088,10 @@
                 loadStudentList();
                 loadPaymentList();
                 updateDashboardStats();
+                loadSecurityLogs();
+                await logSecurityEvent('login_success', 'অ্যাডমিন সফলভাবে লগইন করেছে');
             } else {
+                await logSecurityEvent('login_fail', 'ভুল পাসওয়ার্ড দিয়ে লগইন চেষ্টা করা হয়েছে');
                 Swal.fire('ভুল পাসওয়ার্ড', 'সঠিক পাসওয়ার্ড দিন!', 'error');
             }
         }
@@ -1735,19 +1941,19 @@
                     <div class="grid grid-cols-4 gap-2 text-xs">
                         <div>
                             <label class="block mb-1">পূর্ণমান</label>
-                            <input type="number" id="full_${sub}" value="100" class="w-full p-1.5 border rounded">
+                            <input type="number" id="full_${safeId(sub)}" value="100" class="w-full p-1.5 border rounded">
                         </div>
                         <div>
                             <label class="block mb-1">MCQ</label>
-                            <input type="number" id="mcq_${sub}" oninput="calcSubGrade('${sub}')" class="w-full p-1.5 border rounded">
+                            <input type="number" id="mcq_${safeId(sub)}" oninput="calcSubGrade('${sub}')" class="w-full p-1.5 border rounded">
                         </div>
                         <div>
                             <label class="block mb-1">CQ</label>
-                            <input type="number" id="cq_${sub}" oninput="calcSubGrade('${sub}')" class="w-full p-1.5 border rounded">
+                            <input type="number" id="cq_${safeId(sub)}" oninput="calcSubGrade('${sub}')" class="w-full p-1.5 border rounded">
                         </div>
                         <div>
                             <label class="block mb-1">গ্রেড</label>
-                            <span id="grade_${sub}" class="font-bold text-purple-700 block mt-1.5">N/A</span>
+                            <span id="grade_${safeId(sub)}" class="font-bold text-purple-700 block mt-1.5">N/A</span>
                         </div>
                     </div>
                 </div>
@@ -1755,9 +1961,10 @@
         }
 
         function calcSubGrade(sub) {
-            const m = Number(document.getElementById(`mcq_${sub}`).value || 0);
-            const c = Number(document.getElementById(`cq_${sub}`).value || 0);
-            const f = Number(document.getElementById(`full_${sub}`).value || 100);
+            const sid = safeId(sub);
+            const m = Number(document.getElementById(`mcq_${sid}`).value || 0);
+            const c = Number(document.getElementById(`cq_${sid}`).value || 0);
+            const f = Number(document.getElementById(`full_${sid}`).value || 100);
             const total = m + c;
             const pct = (total / f) * 100;
             let g = 'F';
@@ -1767,7 +1974,7 @@
             else if (pct >= 50) g = 'B';
             else if (pct >= 40) g = 'C';
             else if (pct >= 33) g = 'D';
-            document.getElementById(`grade_${sub}`).innerText = g;
+            document.getElementById(`grade_${sid}`).innerText = g;
         }
 
         function saveData() {
@@ -1785,13 +1992,14 @@
             let grandTotal = 0;
 
             subjectsConfig[cls].forEach(sub => {
-                const f = Number(document.getElementById(`full_${sub}`).value || 100);
-                const m = Number(document.getElementById(`mcq_${sub}`).value || 0);
-                const c = Number(document.getElementById(`cq_${sub}`).value || 0);
+                const sid = safeId(sub);
+                const f = Number(document.getElementById(`full_${sid}`).value || 100);
+                const m = Number(document.getElementById(`mcq_${sid}`).value || 0);
+                const c = Number(document.getElementById(`cq_${sid}`).value || 0);
                 const t = m + c;
                 scores[sub] = {
                     f, m, c, t,
-                    g: document.getElementById(`grade_${sub}`).innerText
+                    g: document.getElementById(`grade_${sid}`).innerText
                 };
                 grandTotal += t;
             });
@@ -1824,10 +2032,11 @@
             updateSubjectInputs();
 
             for (let sub in target.scores) {
-                if (document.getElementById(`full_${sub}`)) document.getElementById(`full_${sub}`).value = target.scores[sub].f;
-                if (document.getElementById(`mcq_${sub}`)) document.getElementById(`mcq_${sub}`).value = target.scores[sub].m;
-                if (document.getElementById(`cq_${sub}`)) document.getElementById(`cq_${sub}`).value = target.scores[sub].c;
-                if (document.getElementById(`grade_${sub}`)) document.getElementById(`grade_${sub}`).innerText = target.scores[sub].g;
+                const sid = safeId(sub);
+                if (document.getElementById(`full_${sid}`)) document.getElementById(`full_${sid}`).value = target.scores[sub].f;
+                if (document.getElementById(`mcq_${sid}`)) document.getElementById(`mcq_${sid}`).value = target.scores[sub].m;
+                if (document.getElementById(`cq_${sid}`)) document.getElementById(`cq_${sid}`).value = target.scores[sub].c;
+                if (document.getElementById(`grade_${sid}`)) document.getElementById(`grade_${sid}`).innerText = target.scores[sub].g;
             }
 
             document.getElementById('saveResultBtn').innerText = "আপডেট রেজাল্ট";
@@ -1854,9 +2063,10 @@
             const cls = document.getElementById('stdClass').value;
             if (subjectsConfig[cls]) {
                 subjectsConfig[cls].forEach(sub => {
-                    if (document.getElementById(`mcq_${sub}`)) document.getElementById(`mcq_${sub}`).value = "";
-                    if (document.getElementById(`cq_${sub}`)) document.getElementById(`cq_${sub}`).value = "";
-                    if (document.getElementById(`grade_${sub}`)) document.getElementById(`grade_${sub}`).innerText = "N/A";
+                    const sid = safeId(sub);
+                    if (document.getElementById(`mcq_${sid}`)) document.getElementById(`mcq_${sid}`).value = "";
+                    if (document.getElementById(`cq_${sid}`)) document.getElementById(`cq_${sid}`).value = "";
+                    if (document.getElementById(`grade_${sid}`)) document.getElementById(`grade_${sid}`).innerText = "N/A";
                 });
             }
 
@@ -2093,6 +2303,11 @@
             loadRoutines();
             loadGallerySlider();
             loadFaqAccordion();
+
+            // Log page visit (light security log)
+            setTimeout(() => {
+                logSecurityEvent('page_load', 'হোমপেজ ভিজিট');
+            }, 1500);
         });
     </script>
 </body>
