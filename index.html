@@ -145,7 +145,6 @@
             width: 100%;
         }
 
-        /* Live Active Users Badge */
         .live-users-badge {
             background: linear-gradient(135deg, #059669, #10b981);
             animation: pulse-green 2s infinite;
@@ -153,6 +152,20 @@
         @keyframes pulse-green {
             0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
             50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+        }
+
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+        .option-btn:hover {
+            transform: translateY(-2px);
+        }
+        .option-selected {
+            border-color: #4c1d95 !important;
+            background-color: #ede9fe !important;
+        }
+        .dark-mode .option-selected {
+            background-color: #4c1d95 !important;
         }
     </style>
 </head>
@@ -176,7 +189,6 @@
             <h1 class="text-lg md:text-xl font-medium">AMIRUL MATH CARE</h1>
         </div>
         <div class="flex gap-2 items-center">
-            <!-- LIVE ACTIVE USERS -->
             <div class="live-users-badge text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md">
                 <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
                 <span id="liveActiveCount">০</span> জন অনলাইন
@@ -269,6 +281,30 @@
                     <button onclick="viewPaymentSlipPortal()" class="w-full bg-emerald-600 text-white py-4 rounded-2xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
                         <i class="fas fa-file-invoice-dollar mr-2"></i>অনলাইন পেমেন্ট স্লিপ প্রিন্ট
                     </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ONLINE EXAM SECTION -->
+        <div class="bg-white p-6 rounded-3xl shadow-xl border-t-8 border-indigo-700 transition-colors mb-6">
+            <h3 class="text-gray-800 dark:text-white text-xl mb-4 text-center font-medium">
+                <i class="fas fa-laptop-code mr-2 text-indigo-600"></i>অনলাইন পরীক্ষা
+            </h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs block mb-1 text-gray-600 dark:text-gray-300">শ্রেণী নির্বাচন করুন</label>
+                    <select id="onlineExamClass" onchange="loadAvailableExams()" class="w-full p-3 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black">
+                        <option value="">শ্রেণী সিলেক্ট করুন</option>
+                        <option value="৬ষ্ঠ">৬ষ্ঠ</option>
+                        <option value="৭ম">৭ম</option>
+                        <option value="৮ম">৮ম</option>
+                        <option value="৯ম">৯ম</option>
+                        <option value="১০ম">১০ম</option>
+                        <option value="SSC">SSC</option>
+                    </select>
+                </div>
+                <div id="availableExamsList" class="space-y-2 max-h-60 overflow-y-auto">
+                    <p class="text-center text-gray-400 text-sm py-4">শ্রেণী নির্বাচন করুন</p>
                 </div>
             </div>
         </div>
@@ -502,12 +538,68 @@
             <button onclick="toggleSectionElement('faqManagerSystem')" class="bg-violet-600 hover:bg-violet-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fas fa-question-circle"></i>FAQ কন্ট্রোলার
             </button>
+            <button onclick="toggleSectionElement('examManagerSystem')" class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-laptop-code"></i>অনলাইন পরীক্ষা ম্যানেজার
+            </button>
             <button onclick="sendBulkWhatsAppResults()" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fab fa-whatsapp"></i>গ্রুপ রেজাল্ট পাঠান
             </button>
             <button onclick="downloadStudentListPDF()" class="bg-gray-700 hover:bg-gray-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fas fa-file-download"></i>ছাত্র তালিকা PDF
             </button>
+        </div>
+
+        <!-- ONLINE EXAM MANAGER -->
+        <div id="examManagerSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-pink-600 hidden text-black transition-colors">
+            <h2 class="text-xl text-pink-800 mb-4 font-medium">
+                <i class="fas fa-laptop-code mr-2"></i>অনলাইন পরীক্ষা ম্যানেজার
+            </h2>
+
+            <div class="bg-pink-50 p-5 rounded-xl mb-6 space-y-4">
+                <h3 class="font-medium text-pink-900" id="examFormTitle">নতুন পরীক্ষা তৈরি করুন</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <input type="text" id="examTitle" placeholder="পরীক্ষার শিরোনাম (উদা: SSC মডেল টেস্ট - ১)" class="p-2.5 border rounded-xl outline-none">
+                    <select id="examClass" class="p-2.5 border rounded-xl outline-none">
+                        <option value="">শ্রেণী সিলেক্ট</option>
+                        <option value="৬ষ্ঠ">৬ষ্ঠ</option>
+                        <option value="৭ম">৭ম</option>
+                        <option value="৮ম">৮ম</option>
+                        <option value="৯ম">৯ম</option>
+                        <option value="১০ম">১০ম</option>
+                        <option value="SSC">SSC</option>
+                    </select>
+                    <input type="number" id="examDuration" placeholder="সময় (মিনিট)" class="p-2.5 border rounded-xl outline-none" value="30">
+                    <input type="text" id="examPdfUrl" placeholder="প্রশ্নপত্রের PDF লিঙ্ক (ঐচ্ছিক)" class="p-2.5 border rounded-xl outline-none">
+                </div>
+
+                <div class="border-t pt-4">
+                    <h4 class="text-sm font-medium mb-2 text-pink-800">প্রশ্ন যোগ করুন</h4>
+                    <div id="questionsBuilder" class="space-y-4"></div>
+                    <button onclick="addQuestionField()" class="mt-3 bg-pink-200 text-pink-900 px-4 py-2 rounded-lg text-sm hover:bg-pink-300 transition">
+                        <i class="fas fa-plus mr-1"></i> নতুন প্রশ্ন যোগ করুন
+                    </button>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button onclick="saveExamToDB()" id="saveExamBtn" class="flex-1 bg-pink-600 text-white py-3 rounded-xl hover:bg-pink-700 transition shadow">
+                        পরীক্ষা সেভ করুন
+                    </button>
+                    <button onclick="cancelExamEdit()" id="cancelExamEditBtn" class="hidden flex-1 bg-gray-500 text-white py-3 rounded-xl hover:bg-gray-600 transition">
+                        বাতিল
+                    </button>
+                </div>
+            </div>
+
+            <div class="max-h-80 overflow-y-auto border rounded-xl p-3 bg-gray-50" id="adminExamList">
+                <p class="text-center text-gray-400 text-sm py-4">কোনো পরীক্ষা নেই</p>
+            </div>
+
+            <div class="mt-6">
+                <h3 class="font-medium text-pink-900 mb-3">শিক্ষার্থীদের পরীক্ষার ফলাফল</h3>
+                <div id="examAttemptsList" class="max-h-60 overflow-y-auto border rounded-xl p-3 bg-gray-50 space-y-2">
+                    <p class="text-center text-gray-400 text-sm py-4">এখনো কোনো অ্যাটেম্প্ট নেই</p>
+                </div>
+            </div>
         </div>
 
         <!-- Routine Manager -->
@@ -777,6 +869,44 @@
         </div>
     </div>
 
+    <!-- ONLINE EXAM TAKING INTERFACE -->
+    <div id="examTakingArea" class="container mx-auto mt-6 p-4 max-w-2xl hidden no-print">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border-t-8 border-indigo-700">
+            <div class="bg-indigo-700 text-white p-5">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 id="examTakingTitle" class="text-xl font-medium">পরীক্ষা</h2>
+                        <p id="examTakingMeta" class="text-sm opacity-90 mt-1"></p>
+                    </div>
+                    <div class="text-right">
+                        <div id="examTimer" class="text-2xl font-bold">30:00</div>
+                        <div class="text-xs opacity-80">সময় বাকি</div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="w-full bg-indigo-900 rounded-full h-2">
+                        <div id="examProgressBar" class="bg-yellow-400 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <p id="examProgressText" class="text-xs mt-1 text-center opacity-90">প্রশ্ন 1 / 10</p>
+                </div>
+            </div>
+
+            <div class="p-6" id="examQuestionContainer"></div>
+
+            <div class="p-5 border-t flex justify-between gap-3">
+                <button id="examPrevBtn" onclick="prevExamQuestion()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition disabled:opacity-40">
+                    <i class="fas fa-arrow-left mr-2"></i>পূর্ববর্তী
+                </button>
+                <button id="examNextBtn" onclick="nextExamQuestion()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition">
+                    পরবর্তী <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+                <button id="examSubmitBtn" onclick="submitOnlineExam()" class="hidden px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition">
+                    <i class="fas fa-check-circle mr-2"></i>সাবমিট করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -796,6 +926,27 @@
         const db = getDatabase(app);
 
         window.saveToFirebase = (path, data) => set(ref(db, path), data);
+        // Temporary stubs until main script loads (onValue callbacks run later)
+        if (typeof window.safeSetItem !== 'function') {
+            window.safeSetItem = function(key, value) {
+                try { localStorage.setItem(key, value); return true; }
+                catch(e) {
+                    if (e && (e.name === 'QuotaExceededError' || e.code === 22)) {
+                        console.warn('QuotaExceeded (early)', key);
+                        try { localStorage.removeItem(key); } catch(_){}
+                        return false;
+                    }
+                    return false;
+                }
+            };
+        }
+        if (typeof window.ensureArray !== 'function') {
+            window.ensureArray = function(data) {
+                if (Array.isArray(data)) return data;
+                if (data && typeof data === 'object') return Object.values(data);
+                return [];
+            };
+        }
         window.firebaseRef = ref;
         window.firebaseSet = set;
         window.firebaseOnValue = onValue;
@@ -805,28 +956,23 @@
         window.firebaseServerTimestamp = serverTimestamp;
         window.firebaseDb = db;
 
-        // ==================== LIVE PRESENCE SYSTEM ====================
         const presenceId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         const presenceRef = ref(db, 'presence/' + presenceId);
 
-        // Set presence
         set(presenceRef, {
             online: true,
             lastSeen: serverTimestamp(),
             userAgent: navigator.userAgent.substring(0, 120)
         });
 
-        // Remove on disconnect
         onDisconnect(presenceRef).remove();
 
-        // Listen to total online users
         onValue(ref(db, 'presence'), (snapshot) => {
             const count = snapshot.exists() ? Object.keys(snapshot.val()).length : 0;
             const el = document.getElementById('liveActiveCount');
             if (el) el.innerText = count;
         });
 
-        // Keepalive every 45 seconds
         setInterval(() => {
             set(presenceRef, {
                 online: true,
@@ -835,14 +981,18 @@
             });
         }, 45000);
 
-        // Existing listeners
         onValue(ref(db, 'results'), (snapshot) => {
-            localStorage.setItem('amc_db_final', snapshot.exists() ? JSON.stringify(snapshot.val()) : "[]");
-            renderTable();
+            let val = snapshot.exists() ? snapshot.val() : [];
+            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+            safeSetItem('amc_db_final', JSON.stringify(arr));
+            updateDashboardStats();
+            if (sessionStorage.getItem('is_admin')) loadResultList();
         });
 
         onValue(ref(db, 'students'), (snapshot) => {
-            localStorage.setItem('amc_student_db', snapshot.exists() ? JSON.stringify(snapshot.val()) : "{}");
+            let val = snapshot.exists() ? snapshot.val() : {};
+            if (typeof val !== 'object' || Array.isArray(val)) val = {};
+            safeSetItem('amc_student_db', JSON.stringify(val));
             if (sessionStorage.getItem('is_admin')) {
                 loadStudentList();
                 updateDashboardStats();
@@ -851,55 +1001,88 @@
 
         onValue(ref(db, 'notice'), (snapshot) => {
             if (snapshot.exists()) {
-                localStorage.setItem('amc_notice', snapshot.val());
-                document.getElementById('mainNotice').innerText = snapshot.val();
+                const v = snapshot.val();
+                try { localStorage.setItem('amc_notice', v); } catch(e) {}
+                const el = document.getElementById('mainNotice');
+                if (el) el.innerText = v;
             }
         });
 
         onValue(ref(db, 'multiNotices'), (snapshot) => {
-            localStorage.setItem('amc_multi_notices', snapshot.exists() ? JSON.stringify(snapshot.val()) : "[]");
+            let val = snapshot.exists() ? snapshot.val() : [];
+            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+            safeSetItem('amc_multi_notices', JSON.stringify(arr));
             loadMultiNotices();
             if (sessionStorage.getItem('is_admin')) loadAdminNoticeList();
         });
 
         onValue(ref(db, 'routines'), (snapshot) => {
-            localStorage.setItem('amc_routines', snapshot.exists() ? JSON.stringify(snapshot.val()) : "[]");
+            let val = snapshot.exists() ? snapshot.val() : [];
+            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+            safeSetItem('amc_routines', JSON.stringify(arr));
             loadRoutines();
             if (sessionStorage.getItem('is_admin')) loadAdminRoutineList();
         });
 
         onValue(ref(db, 'gallery'), (snapshot) => {
-            localStorage.setItem('amc_gallery', snapshot.exists() ? JSON.stringify(snapshot.val()) : "[]");
+            let val = snapshot.exists() ? snapshot.val() : [];
+            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+            safeSetItem('amc_gallery', JSON.stringify(arr));
             loadGallerySlider();
             if (sessionStorage.getItem('is_admin')) loadAdminGalleryList();
         });
 
         onValue(ref(db, 'attendance'), (snapshot) => {
-            localStorage.setItem('amc_attendance', snapshot.exists() ? JSON.stringify(snapshot.val()) : "{}");
+            let val = snapshot.exists() ? snapshot.val() : {};
+            if (typeof val !== 'object' || Array.isArray(val)) val = {};
+            safeSetItem('amc_attendance', JSON.stringify(val));
             updateDashboardStats();
         });
 
         onValue(ref(db, 'payments'), (snapshot) => {
-            localStorage.setItem('amc_payment_db', snapshot.exists() ? JSON.stringify(snapshot.val()) : "[]");
+            let val = snapshot.exists() ? snapshot.val() : [];
+            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+            safeSetItem('amc_payment_db', JSON.stringify(arr));
             if (sessionStorage.getItem('is_admin')) loadPaymentList();
         });
 
         onValue(ref(db, 'faqs'), (snapshot) => {
-            localStorage.setItem('amc_faq_db', snapshot.exists() ? JSON.stringify(snapshot.val()) : "[]");
+            let val = snapshot.exists() ? snapshot.val() : [];
+            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+            safeSetItem('amc_faq_db', JSON.stringify(arr));
             loadFaqAccordion();
             if (sessionStorage.getItem('is_admin')) loadAdminFaqList();
         });
 
-        // Security Logs listener
         onValue(ref(db, 'securityLogs'), (snapshot) => {
-            localStorage.setItem('amc_security_logs', snapshot.exists() ? JSON.stringify(snapshot.val()) : "[]");
+            let val = snapshot.exists() ? snapshot.val() : [];
+            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+            safeSetItem('amc_security_logs', JSON.stringify(arr));
             if (sessionStorage.getItem('is_admin')) loadSecurityLogs();
+        });
+
+        onValue(ref(db, 'exams'), (snapshot) => {
+            let val = snapshot.exists() ? snapshot.val() : [];
+            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+            safeSetItem('amc_exams', JSON.stringify(arr));
+            if (sessionStorage.getItem('is_admin')) {
+                loadAdminExamList();
+            }
+            loadAvailableExams();
+        });
+
+        onValue(ref(db, 'examAttempts'), (snapshot) => {
+            let val = snapshot.exists() ? snapshot.val() : [];
+            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+            safeSetItem('amc_exam_attempts', JSON.stringify(arr));
+            if (sessionStorage.getItem('is_admin')) {
+                loadExamAttemptsList();
+            }
         });
     </script>
 
     <!-- Main Script -->
     <script>
-        // ==================== GLOBAL VARIABLES ====================
         let currentEditStudentId = null;
         let currentEditResultIndex = null;
         let attendanceChartInstance = null;
@@ -911,8 +1094,79 @@
         let heroInterval = null;
         let base64ImageString = "";
         const DEFAULT_LOGO = "https://i.ibb.co/Lhy0W0P/1000018420.jpg";
+
+        // ===== Safe Storage Helpers (Quota + Array/Object normalization) =====
+        function safeSetItem(key, value) {
+            try {
+                localStorage.setItem(key, value);
+                return true;
+            } catch (e) {
+                if (e && (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014)) {
+                    console.warn('QuotaExceeded for', key, '- attempting recovery');
+                    if (key === 'amc_gallery') {
+                        try {
+                            const parsed = JSON.parse(value);
+                            let arr = Array.isArray(parsed) ? parsed : (parsed && typeof parsed === 'object' ? Object.values(parsed) : []);
+                            // Keep only non-base64 images and last 8
+                            arr = arr.filter(img => img && img.url && !String(img.url).startsWith('data:')).slice(-8);
+                            localStorage.setItem(key, JSON.stringify(arr));
+                            return true;
+                        } catch (_) {}
+                    }
+                    // Last resort: clear this key
+                    try { localStorage.removeItem(key); } catch (_) {}
+                    return false;
+                }
+                console.error(e);
+                return false;
+            }
+        }
+
+        function ensureArray(data) {
+            if (Array.isArray(data)) return data;
+            if (data && typeof data === 'object') return Object.values(data);
+            return [];
+        }
+
+        function getArrayFromStorage(key) {
+            try {
+                const raw = localStorage.getItem(key);
+                if (!raw) return [];
+                return ensureArray(JSON.parse(raw));
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function getObjectFromStorage(key) {
+            try {
+                const raw = localStorage.getItem(key);
+                if (!raw) return {};
+                const data = JSON.parse(raw);
+                if (data && typeof data === 'object' && !Array.isArray(data)) return data;
+                return {};
+            } catch (e) {
+                return {};
+            }
+        }
+        // Expose globally (override any early stubs)
+        window.safeSetItem = safeSetItem;
+        window.ensureArray = ensureArray;
+        window.getArrayFromStorage = getArrayFromStorage;
+        window.getObjectFromStorage = getObjectFromStorage;
+        // ===== End Helpers =====
+
+
         let siteLogo = localStorage.getItem('amc_site_logo') || DEFAULT_LOGO;
         const GALLERY_PLACEHOLDER = "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80";
+
+        let currentExam = null;
+        let currentQuestionIndex = 0;
+        let studentAnswers = {};
+        let examTimerInterval = null;
+        let examTimeLeft = 0;
+        let currentEditExamId = null;
+        let questionFieldCount = 0;
 
         const subjectsConfig = {
             "৬ষ্ঠ": ["গণিত"],
@@ -927,10 +1181,8 @@
             return sub.replace(/\s+/g, '_').replace(/[^\w\u0980-\u09FF]/g, '');
         }
 
-        // ==================== ANTI-HACKING SYSTEM ====================
         async function getVisitorLocationInfo() {
             try {
-                // Free IP geolocation (no API key needed)
                 const res = await fetch('https://ipapi.co/json/', { timeout: 5000 });
                 if (!res.ok) throw new Error('IP API failed');
                 const data = await res.json();
@@ -945,7 +1197,6 @@
                     timezone: data.timezone || ''
                 };
             } catch (e) {
-                // Fallback
                 try {
                     const res2 = await fetch('https://api.ipify.org?format=json');
                     const d = await res2.json();
@@ -961,7 +1212,7 @@
                 const loc = await getVisitorLocationInfo();
                 const logEntry = {
                     id: 'SEC_' + Date.now(),
-                    type: type, // 'login_success', 'login_fail', 'suspicious', 'page_load'
+                    type: type,
                     details: details,
                     timestamp: new Date().toLocaleString('bn-BD'),
                     timeISO: new Date().toISOString(),
@@ -977,15 +1228,14 @@
                     language: navigator.language
                 };
 
-                let logs = JSON.parse(localStorage.getItem('amc_security_logs') || "[]");
+                let logs = getArrayFromStorage('amc_security_logs');
                 logs.unshift(logEntry);
-                // Keep only last 100 logs
                 if (logs.length > 100) logs = logs.slice(0, 100);
 
                 if (window.saveToFirebase) {
                     window.saveToFirebase('securityLogs', logs);
                 } else {
-                    localStorage.setItem('amc_security_logs', JSON.stringify(logs));
+                    safeSetItem('amc_security_logs', JSON.stringify(logs));
                 }
             } catch (err) {
                 console.warn('Security log failed:', err);
@@ -996,7 +1246,7 @@
             const container = document.getElementById('securityLogContainer');
             if (!container) return;
 
-            let logs = JSON.parse(localStorage.getItem('amc_security_logs') || "[]");
+            let logs = getArrayFromStorage('amc_security_logs');
             if (logs.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-400 py-4'>কোনো সিকিউরিটি ইভেন্ট নেই</p>";
                 return;
@@ -1017,7 +1267,7 @@
                 <div class="p-3 bg-white border rounded-lg shadow-sm">
                     <div class="flex justify-between items-start mb-1">
                         <span class="${badgeColor} text-white text-[10px] px-2 py-0.5 rounded-full">
-                            <i class="fas ${icon} mr-1"></i>${log.type.toUpperCase()}
+                            <i class="fas ${icon} mr-1"></i> ${log.type.toUpperCase()}
                         </span>
                         <span class="text-[10px] text-gray-500">${log.timestamp}</span>
                     </div>
@@ -1044,14 +1294,13 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     if (window.saveToFirebase) window.saveToFirebase('securityLogs', []);
-                    localStorage.setItem('amc_security_logs', "[]");
+                    safeSetItem('amc_security_logs', "[]");
                     loadSecurityLogs();
                     Swal.fire('মুছে ফেলা হয়েছে', '', 'success');
                 }
             });
         }
 
-        // ==================== UI HELPERS ====================
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
         }
@@ -1060,11 +1309,17 @@
             document.getElementById(id).classList.toggle('hidden');
             if (id === 'attendanceSystem') document.getElementById('attDate').valueAsDate = new Date();
             if (id === 'paymentSystem') document.getElementById('payDate').valueAsDate = new Date();
+            if (id === 'examManagerSystem') {
+                loadAdminExamList();
+                loadExamAttemptsList();
+                if (questionFieldCount === 0) addQuestionField();
+            }
         }
 
         function showSection(id) {
-            ['studentView', 'loginSection', 'adminPanel', 'displayArea'].forEach(s => {
-                document.getElementById(s).classList.add('hidden');
+            ['studentView', 'loginSection', 'adminPanel', 'displayArea', 'examTakingArea'].forEach(s => {
+                const el = document.getElementById(s);
+                if (el) el.classList.add('hidden');
             });
             document.getElementById(id).classList.remove('hidden');
         }
@@ -1077,7 +1332,6 @@
             }
         }
 
-        // ==================== AUTH (with security logging) ====================
         async function adminLogin() {
             const pass = document.getElementById('adminPass').value;
             if (pass === "amc123") {
@@ -1089,6 +1343,8 @@
                 loadPaymentList();
                 updateDashboardStats();
                 loadSecurityLogs();
+                loadAdminExamList();
+                loadExamAttemptsList();
                 await logSecurityEvent('login_success', 'অ্যাডমিন সফলভাবে লগইন করেছে');
             } else {
                 await logSecurityEvent('login_fail', 'ভুল পাসওয়ার্ড দিয়ে লগইন চেষ্টা করা হয়েছে');
@@ -1103,11 +1359,10 @@
             showSection('studentView');
         }
 
-        // ==================== DASHBOARD ====================
         function updateDashboardStats() {
-            const students = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
-            const results = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
-            const attendance = JSON.parse(localStorage.getItem('amc_attendance') || "{}");
+            const students = getObjectFromStorage('amc_student_db');
+            const results = getArrayFromStorage('amc_db_final');
+            const attendance = getObjectFromStorage('amc_attendance');
 
             const totalStudents = Object.keys(students).length;
             const todayStr = new Date().toISOString().split('T')[0];
@@ -1145,7 +1400,6 @@
             });
         }
 
-        // ==================== HERO SLIDER ====================
         function initHeroSlider() {
             const slides = [
                 { title: "আমিরুল ম্যাথ কেয়ার", text: "আধুনিক পদ্ধতিতে গণিত শিখুন" },
@@ -1195,9 +1449,8 @@
             });
         }
 
-        // ==================== NOTICE ====================
         function loadMultiNotices() {
-            let notices = JSON.parse(localStorage.getItem('amc_multi_notices') || "[]");
+            let notices = getArrayFromStorage('amc_multi_notices');
             const container = document.getElementById('multiNoticeContainer');
             if (notices.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-400 text-xs py-4'>বর্তমানে কোনো নোটিশ প্রকাশ করা হয়নি।</p>";
@@ -1212,7 +1465,7 @@
         }
 
         function loadAdminNoticeList() {
-            let notices = JSON.parse(localStorage.getItem('amc_multi_notices') || "[]");
+            let notices = getArrayFromStorage('amc_multi_notices');
             const container = document.getElementById('adminNoticeList');
             container.innerHTML = notices.map(n => `
                 <div class="flex justify-between items-center p-2 bg-gray-50 rounded border text-xs text-black mb-1">
@@ -1229,7 +1482,7 @@
             if (scrollMsg && window.saveToFirebase) window.saveToFirebase('notice', scrollMsg);
 
             if (textMsg) {
-                let notices = JSON.parse(localStorage.getItem('amc_multi_notices') || "[]");
+                let notices = getArrayFromStorage('amc_multi_notices');
                 notices.push({
                     id: 'N_' + Date.now(),
                     text: textMsg,
@@ -1244,13 +1497,12 @@
         }
 
         function deleteNoticeRecord(id) {
-            let notices = JSON.parse(localStorage.getItem('amc_multi_notices') || "[]").filter(n => n.id !== id);
+            let notices = getArrayFromStorage('amc_multi_notices').filter(n => n.id !== id);
             if (window.saveToFirebase) window.saveToFirebase('multiNotices', notices);
         }
 
-        // ==================== ROUTINE ====================
         function loadRoutines() {
-            let routines = JSON.parse(localStorage.getItem('amc_routines') || "[]");
+            let routines = getArrayFromStorage('amc_routines');
             const container = document.getElementById('routineContainer');
             if (routines.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-400 text-xs py-4'>বর্তমানে কোনো নতুন রুটিন উপলব্ধ নেই।</p>";
@@ -1268,7 +1520,7 @@
         }
 
         function loadAdminRoutineList() {
-            let routines = JSON.parse(localStorage.getItem('amc_routines') || "[]");
+            let routines = getArrayFromStorage('amc_routines');
             const container = document.getElementById('adminRoutineList');
             container.innerHTML = routines.map(r => `
                 <div class="flex justify-between items-center p-2 bg-gray-50 rounded border text-xs text-black mb-1">
@@ -1284,7 +1536,7 @@
             const details = document.getElementById('routineDetails').value.trim();
             if (!title || !details) return Swal.fire('ফরম অসম্পূর্ণ!', 'দয়া করে রুটিনের তথ্য প্রদান করুন।', 'warning');
 
-            let routines = JSON.parse(localStorage.getItem('amc_routines') || "[]");
+            let routines = getArrayFromStorage('amc_routines');
             routines.push({ id: 'R_' + Date.now(), title, cls, details });
             if (window.saveToFirebase) window.saveToFirebase('routines', routines);
 
@@ -1294,11 +1546,10 @@
         }
 
         function deleteRoutineRecord(id) {
-            let routines = JSON.parse(localStorage.getItem('amc_routines') || "[]").filter(r => r.id !== id);
+            let routines = getArrayFromStorage('amc_routines').filter(r => r.id !== id);
             if (window.saveToFirebase) window.saveToFirebase('routines', routines);
         }
 
-        // ==================== GALLERY ====================
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1322,8 +1573,7 @@
         function loadGallerySlider() {
             let imgs = [];
             try {
-                imgs = JSON.parse(localStorage.getItem('amc_gallery') || "[]");
-                if (!Array.isArray(imgs)) imgs = [];
+                imgs = getArrayFromStorage('amc_gallery');
             } catch (e) {
                 imgs = [];
             }
@@ -1367,8 +1617,7 @@
         function nextGallerySlide() {
             let imgs = [];
             try {
-                imgs = JSON.parse(localStorage.getItem('amc_gallery') || "[]");
-                if (!Array.isArray(imgs)) imgs = [];
+                imgs = getArrayFromStorage('amc_gallery');
             } catch (e) {
                 imgs = [];
             }
@@ -1382,8 +1631,7 @@
         function prevGallerySlide() {
             let imgs = [];
             try {
-                imgs = JSON.parse(localStorage.getItem('amc_gallery') || "[]");
-                if (!Array.isArray(imgs)) imgs = [];
+                imgs = getArrayFromStorage('amc_gallery');
             } catch (e) {
                 imgs = [];
             }
@@ -1397,8 +1645,7 @@
         function loadAdminGalleryList() {
             let imgs = [];
             try {
-                imgs = JSON.parse(localStorage.getItem('amc_gallery') || "[]");
-                if (!Array.isArray(imgs)) imgs = [];
+                imgs = getArrayFromStorage('amc_gallery');
             } catch (e) {
                 imgs = [];
             }
@@ -1432,6 +1679,10 @@
             let finalImageUrl = "";
 
             if (base64ImageString !== "") {
+                // Prevent huge base64 from filling localStorage / Firebase RTDB
+                if (base64ImageString.length > 400000) { // ~300KB limit
+                    return Swal.fire('ছবি অনেক বড়!', 'অনুগ্রহ করে ছোট ছবি (৩০০ কেবির নিচে) ব্যবহার করুন অথবা ছবির লিঙ্ক দিন (ImgBB, Google Drive ইত্যাদি)।', 'warning');
+                }
                 finalImageUrl = base64ImageString;
             } else if (urlInput !== "") {
                 finalImageUrl = urlInput;
@@ -1441,8 +1692,7 @@
 
             let imgs = [];
             try {
-                imgs = JSON.parse(localStorage.getItem('amc_gallery') || "[]");
-                if (!Array.isArray(imgs)) imgs = [];
+                imgs = getArrayFromStorage('amc_gallery');
             } catch (e) {
                 imgs = [];
             }
@@ -1456,13 +1706,13 @@
                     })
                     .catch(err => {
                         console.error(err);
-                        localStorage.setItem('amc_gallery', JSON.stringify(imgs));
+                        safeSetItem('amc_gallery', JSON.stringify(imgs));
                         loadGallerySlider();
                         loadAdminGalleryList();
                         Swal.fire('সতর্কতা', 'Firebase-এ বড় ছবি সেভ করা যায়নি। লোকাল স্টোরেজে রাখা হয়েছে। ছোট ছবি বা লিঙ্ক ব্যবহার করুন।', 'warning');
                     });
             } else {
-                localStorage.setItem('amc_gallery', JSON.stringify(imgs));
+                safeSetItem('amc_gallery', JSON.stringify(imgs));
                 loadGallerySlider();
                 loadAdminGalleryList();
                 Swal.fire('সফল!', 'ছবি আপলোড সম্পন্ন হয়েছে।', 'success');
@@ -1479,8 +1729,7 @@
         function deleteGalleryImage(id) {
             let imgs = [];
             try {
-                imgs = JSON.parse(localStorage.getItem('amc_gallery') || "[]");
-                if (!Array.isArray(imgs)) imgs = [];
+                imgs = getArrayFromStorage('amc_gallery');
             } catch (e) {
                 imgs = [];
             }
@@ -1488,13 +1737,12 @@
             if (window.saveToFirebase) window.saveToFirebase('gallery', imgs);
         }
 
-        // ==================== FAQ ====================
         function addFaqToDB() {
             const q = document.getElementById('faqQuestionInput').value.trim();
             const a = document.getElementById('faqAnswerInput').value.trim();
             if (!q || !a) return Swal.fire('ফরম অসম্পূর্ণ!', 'দয়া করে প্রশ্ন এবং উত্তর উভয়ই ইনপুট দিন।', 'warning');
 
-            let faqs = JSON.parse(localStorage.getItem('amc_faq_db') || "[]");
+            let faqs = getArrayFromStorage('amc_faq_db');
             faqs.push({ id: 'FAQ_' + Date.now(), q, a });
             if (window.saveToFirebase) window.saveToFirebase('faqs', faqs);
 
@@ -1504,7 +1752,7 @@
         }
 
         function loadAdminFaqList() {
-            let faqs = JSON.parse(localStorage.getItem('amc_faq_db') || "[]");
+            let faqs = getArrayFromStorage('amc_faq_db');
             const container = document.getElementById('adminFaqList');
             if (faqs.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-500 text-xs py-2'>কোনো প্রশ্ন সেট করা নেই।</p>";
@@ -1522,7 +1770,7 @@
         }
 
         function loadFaqAccordion() {
-            let faqs = JSON.parse(localStorage.getItem('amc_faq_db') || "[]");
+            let faqs = getArrayFromStorage('amc_faq_db');
             const container = document.getElementById('faqAccordionContainer');
             if (faqs.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-400 text-sm py-4'>বর্তমানে কোনো প্রশ্ন উপলব্ধ নেই।</p>";
@@ -1549,11 +1797,10 @@
         }
 
         function deleteFaqRecord(id) {
-            let faqs = JSON.parse(localStorage.getItem('amc_faq_db') || "[]").filter(item => item.id !== id);
+            let faqs = getArrayFromStorage('amc_faq_db').filter(item => item.id !== id);
             if (window.saveToFirebase) window.saveToFirebase('faqs', faqs);
         }
 
-        // ==================== PAYMENT ====================
         function fetchPaymentStudentInfo() {
             const r = document.getElementById('payRoll').value.trim();
             const c = document.getElementById('payClass').value;
@@ -1561,7 +1808,7 @@
                 document.getElementById('payName').value = "";
                 return;
             }
-            const db = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            const db = getObjectFromStorage('amc_student_db');
             const s = db[`${c}_${r}`] || db[`${c}_${Number(r)}`];
             document.getElementById('payName').value = s ? s.name : "";
         }
@@ -1580,7 +1827,7 @@
                 return Swal.fire('ফরম অসম্পূর্ণ!', 'সব সঠিক তথ্য ইনপুট দিন!', 'warning');
             }
 
-            let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]");
+            let payments = getArrayFromStorage('amc_payment_db');
             payments.push({
                 id: 'PAY_' + Date.now(),
                 cls, roll,
@@ -1594,7 +1841,7 @@
         }
 
         function loadPaymentList() {
-            let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]");
+            let payments = getArrayFromStorage('amc_payment_db');
             const container = document.getElementById('adminPaymentList');
             if (payments.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-500 text-xs py-2'>কোন পেমেন্ট রেকর্ড নেই।</p>";
@@ -1616,7 +1863,7 @@
         }
 
         function viewSinglePaymentSlip(id) {
-            let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]");
+            let payments = getArrayFromStorage('amc_payment_db');
             let p = payments.find(item => item.id === id);
             if (!p) return;
             showSection('displayArea');
@@ -1655,7 +1902,7 @@
                 return Swal.fire('ফিল্ড খালি!', 'অনুগ্রহ করে রোল, শ্রেণী ও নির্দিষ্ট মাস নির্বাচন করুন।', 'warning');
             }
 
-            let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]");
+            let payments = getArrayFromStorage('amc_payment_db');
             let p = payments.find(item => item.roll == roll && item.cls === cls && item.month === month);
             if (p) {
                 showSection('displayArea');
@@ -1666,10 +1913,10 @@
         }
 
         function sharePaymentWhatsApp(id) {
-            let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]");
+            let payments = getArrayFromStorage('amc_payment_db');
             let p = payments.find(item => item.id === id);
             if (!p) return;
-            const studentDB = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            const studentDB = getObjectFromStorage('amc_student_db');
             const student = studentDB[`${p.cls}_${p.roll}`];
             if (!student || !student.wa) {
                 return Swal.fire('হোয়াটসঅ্যাপ নম্বর নেই!', 'হোয়াটসঅ্যাপ নম্বর পাওয়া যায়নি।', 'info');
@@ -1679,11 +1926,10 @@
         }
 
         function deletePaymentRecord(id) {
-            let payments = JSON.parse(localStorage.getItem('amc_payment_db') || "[]").filter(item => item.id !== id);
+            let payments = getArrayFromStorage('amc_payment_db').filter(item => item.id !== id);
             if (window.saveToFirebase) window.saveToFirebase('payments', payments);
         }
 
-        // ==================== REPORTS ====================
         function downloadMeritListPDF() {
             const fCls = document.getElementById('filterClass').value;
             const fDate = document.getElementById('filterDate').value;
@@ -1691,7 +1937,7 @@
                 return Swal.fire('ত্রুটি!', 'শ্রেণী এবং তারিখ সিলেক্ট করুন!', 'error');
             }
 
-            let data = JSON.parse(localStorage.getItem('amc_db_final') || "[]")
+            let data = getArrayFromStorage('amc_db_final')
                 .filter(s => s.cls === fCls && s.date === fDate);
             data.sort((a, b) => b.grandTotal - a.grandTotal);
 
@@ -1726,7 +1972,7 @@
         }
 
         function downloadStudentListPDF() {
-            const students = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            const students = getObjectFromStorage('amc_student_db');
             const data = Object.values(students).sort((a, b) => a.cls.localeCompare(b.cls) || a.roll - b.roll);
             if (data.length === 0) {
                 return Swal.fire('ডাটাবেজ খালি', 'কোন শিক্ষার্থীর ডাটা পাওয়া যায়নি', 'info');
@@ -1768,7 +2014,7 @@
                 return Swal.fire('তথ্য অসম্পূর্ণ!', 'সব ঘর পূরণ করুন!', 'warning');
             }
 
-            const students = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            const students = getObjectFromStorage('amc_student_db');
             const student = students[`${cls}_${roll}`];
 
             showSection('displayArea');
@@ -1787,11 +2033,10 @@
             window.print();
         }
 
-        // ==================== ATTENDANCE ====================
         function loadStudentsForAttendance() {
             const cls = document.getElementById('attClass').value;
             const container = document.getElementById('attendanceList');
-            const students = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            const students = getObjectFromStorage('amc_student_db');
             if (!cls) {
                 container.innerHTML = "";
                 return;
@@ -1815,7 +2060,7 @@
 
             const checks = document.querySelectorAll('.att-check:checked');
             let presentRolls = Array.from(checks).map(c => c.value);
-            let allAtt = JSON.parse(localStorage.getItem('amc_attendance') || "{}");
+            let allAtt = getObjectFromStorage('amc_attendance');
             allAtt[date] = presentRolls;
             if (window.saveToFirebase) window.saveToFirebase('attendance', allAtt);
 
@@ -1823,12 +2068,11 @@
             document.getElementById('attendanceSystem').classList.add('hidden');
         }
 
-        // ==================== WHATSAPP ====================
         function sendBulkWhatsAppResults() {
             const date = prompt("কোন তারিখের রেজাল্ট পাঠাতে চান? (YYYY-MM-DD)", new Date().toISOString().split('T')[0]);
             if (!date) return;
 
-            const results = JSON.parse(localStorage.getItem('amc_db_final') || "[]").filter(r => r.date === date);
+            const results = getArrayFromStorage('amc_db_final').filter(r => r.date === date);
             if (results.length === 0) {
                 return Swal.fire('ডাটা নেই', 'উক্ত তারিখে কোনো পরীক্ষার রেজাল্ট পাওয়া যায়নি।', 'info');
             }
@@ -1841,11 +2085,11 @@
         }
 
         function sendSingleResultWhatsApp(date, roll, cls) {
-            const results = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
+            const results = getArrayFromStorage('amc_db_final');
             const r = results.find(item => item.date === date && item.roll == roll && item.cls === cls);
             if (!r) return;
 
-            const studentDB = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            const studentDB = getObjectFromStorage('amc_student_db');
             const student = studentDB[`${cls}_${roll}`];
             if (!student || !student.wa) return;
 
@@ -1858,7 +2102,6 @@
             window.open(`https://wa.me/${student.wa}?text=${message}`, '_blank');
         }
 
-        // ==================== STUDENT MANAGEMENT ====================
         function fetchStudentInfo() {
             const r = document.getElementById('stdRoll').value.trim();
             const c = document.getElementById('stdClass').value;
@@ -1868,7 +2111,7 @@
                 return;
             }
 
-            const db = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            const db = getObjectFromStorage('amc_student_db');
             const s = db[`${c}_${r}`] || db[`${c}_${Number(r)}`];
             document.getElementById('stdName').value = s ? s.name : "";
         }
@@ -1882,14 +2125,14 @@
                 return Swal.fire('অসম্পূর্ণ ইনপুট', 'রোল, নাম এবং ক্লাস দেওয়া বাধ্যতামূলক!', 'warning');
             }
 
-            let db = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            let db = getObjectFromStorage('amc_student_db');
             db[`${cls}_${roll}`] = { roll, name, cls, wa };
             if (window.saveToFirebase) window.saveToFirebase('students', db);
             cancelEditStudent();
         }
 
         function editStudent(id) {
-            const db = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            const db = getObjectFromStorage('amc_student_db');
             const s = db[id];
             document.getElementById('newRoll').value = s.roll;
             document.getElementById('newName').value = s.name;
@@ -1901,7 +2144,7 @@
         }
 
         function deleteStudent(id) {
-            let db = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            let db = getObjectFromStorage('amc_student_db');
             delete db[id];
             if (window.saveToFirebase) window.saveToFirebase('students', db);
         }
@@ -1914,7 +2157,7 @@
         }
 
         function loadStudentList() {
-            let db = JSON.parse(localStorage.getItem('amc_student_db') || "{}");
+            let db = getObjectFromStorage('amc_student_db');
             document.getElementById('dbList').innerHTML = Object.keys(db).map(id => `
                 <div class="flex justify-between items-center p-2 border-b text-xs text-black">
                     <div><b>[${db[id].cls}]</b> Roll: ${db[id].roll} - ${db[id].name}</div>
@@ -1926,7 +2169,6 @@
             `).join('');
         }
 
-        // ==================== RESULT SYSTEM ====================
         function updateSubjectInputs() {
             const cls = document.getElementById('stdClass').value;
             const container = document.getElementById('subjectInputs');
@@ -2004,7 +2246,7 @@
                 grandTotal += t;
             });
 
-            let data = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
+            let data = getArrayFromStorage('amc_db_final');
 
             if (currentEditResultIndex !== null) {
                 data[currentEditResultIndex] = { date, cls, roll, name, examType: type, scores, grandTotal };
@@ -2018,7 +2260,7 @@
         }
 
         function editResult(idx) {
-            let data = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
+            let data = getArrayFromStorage('amc_db_final');
             let target = data[idx];
             if (!target) return;
 
@@ -2051,7 +2293,7 @@
         }
 
         function deleteData(date, roll) {
-            let data = JSON.parse(localStorage.getItem('amc_db_final') || "[]")
+            let data = getArrayFromStorage('amc_db_final')
                 .filter(s => !(s.date === date && s.roll == roll));
             if (window.saveToFirebase) window.saveToFirebase('results', data);
         }
@@ -2076,7 +2318,7 @@
         }
 
         function renderTable() {
-            let data = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
+            let data = getArrayFromStorage('amc_db_final');
             const fDate = document.getElementById('filterDate').value;
             const fCls = document.getElementById('filterClass').value;
 
@@ -2092,7 +2334,7 @@
             }
 
             tbody.innerHTML = data.map((item, index) => {
-                const originalIndex = JSON.parse(localStorage.getItem('amc_db_final') || "[]")
+                const originalIndex = getArrayFromStorage('amc_db_final')
                     .findIndex(r => r.date === item.date && r.roll == item.roll && r.cls === item.cls);
 
                 return `
@@ -2113,9 +2355,8 @@
             }).join('');
         }
 
-        // ==================== PROGRESS CHART ====================
         function getStudentProgressData(cls, roll) {
-            const results = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
+            const results = getArrayFromStorage('amc_db_final');
             return results
                 .filter(r => r.cls === cls && String(r.roll) === String(roll))
                 .sort((a, b) => a.date.localeCompare(b.date));
@@ -2218,7 +2459,7 @@
                 return Swal.fire('ফিল্ড খালি!', 'অনুগ্রহ করে রোল, শ্রেণী ও তারিখ পূরণ করুন।', 'warning');
             }
 
-            const results = JSON.parse(localStorage.getItem('amc_db_final') || "[]");
+            const results = getArrayFromStorage('amc_db_final');
             const res = results.find(item => item.roll == roll && item.cls === cls && item.date === date);
 
             if (res) {
@@ -2292,7 +2533,489 @@
             }
         }
 
-        // ==================== INITIALIZATION ====================
+        function addQuestionField(existingQ = null) {
+            questionFieldCount++;
+            const idx = questionFieldCount;
+            const container = document.getElementById('questionsBuilder');
+            
+            const qText = existingQ ? existingQ.q : '';
+            const opts = existingQ ? existingQ.options : ['', '', '', ''];
+            const correct = existingQ ? existingQ.correct : 'A';
+
+            const html = `
+                <div class="bg-white p-4 rounded-xl border border-pink-200 relative" id="qField_${idx}">
+                    <button type="button" onclick="removeQuestionField(${idx})" class="absolute top-2 right-2 text-red-500 hover:text-red-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <label class="text-xs font-medium text-gray-600">প্রশ্ন ${idx}</label>
+                    <textarea id="qText_${idx}" rows="2" class="w-full p-2 border rounded-lg mt-1 text-sm" placeholder="প্রশ্ন লিখুন...">${qText}</textarea>
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <div>
+                            <label class="text-[10px]">অপশন A</label>
+                            <input type="text" id="optA_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[0] || ''}" placeholder="অপশন A">
+                        </div>
+                        <div>
+                            <label class="text-[10px]">অপশন B</label>
+                            <input type="text" id="optB_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[1] || ''}" placeholder="অপশন B">
+                        </div>
+                        <div>
+                            <label class="text-[10px]">অপশন C</label>
+                            <input type="text" id="optC_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[2] || ''}" placeholder="অপশন C">
+                        </div>
+                        <div>
+                            <label class="text-[10px]">অপশন D</label>
+                            <input type="text" id="optD_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[3] || ''}" placeholder="অপশন D">
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <label class="text-[10px]">সঠিক উত্তর</label>
+                        <select id="correct_${idx}" class="w-full p-1.5 border rounded text-sm">
+                            <option value="A" ${correct === 'A' ? 'selected' : ''}>A</option>
+                            <option value="B" ${correct === 'B' ? 'selected' : ''}>B</option>
+                            <option value="C" ${correct === 'C' ? 'selected' : ''}>C</option>
+                            <option value="D" ${correct === 'D' ? 'selected' : ''}>D</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeQuestionField(idx) {
+            const el = document.getElementById(`qField_${idx}`);
+            if (el) el.remove();
+        }
+
+        function saveExamToDB() {
+            const title = document.getElementById('examTitle').value.trim();
+            const cls = document.getElementById('examClass').value;
+            const duration = Number(document.getElementById('examDuration').value) || 30;
+            const pdfUrl = document.getElementById('examPdfUrl').value.trim();
+
+            if (!title || !cls) {
+                return Swal.fire('ফরম অসম্পূর্ণ!', 'শিরোনাম ও শ্রেণী দিতে হবে।', 'warning');
+            }
+
+            const questions = [];
+            const fields = document.querySelectorAll('[id^="qField_"]');
+            fields.forEach(field => {
+                const id = field.id.split('_')[1];
+                const q = document.getElementById(`qText_${id}`)?.value.trim();
+                const a = document.getElementById(`optA_${id}`)?.value.trim();
+                const b = document.getElementById(`optB_${id}`)?.value.trim();
+                const c = document.getElementById(`optC_${id}`)?.value.trim();
+                const d = document.getElementById(`optD_${id}`)?.value.trim();
+                const correct = document.getElementById(`correct_${id}`)?.value;
+
+                if (q && a && b && c && d) {
+                    questions.push({
+                        q,
+                        options: [a, b, c, d],
+                        correct
+                    });
+                }
+            });
+
+            if (questions.length === 0) {
+                return Swal.fire('কোনো প্রশ্ন নেই!', 'কমপক্ষে একটি সম্পূর্ণ প্রশ্ন যোগ করুন।', 'warning');
+            }
+
+            let exams = getArrayFromStorage('amc_exams');
+            
+            const examData = {
+                id: currentEditExamId || ('EXAM_' + Date.now()),
+                title,
+                cls,
+                duration,
+                pdfUrl,
+                questions,
+                createdAt: new Date().toISOString()
+            };
+
+            if (currentEditExamId) {
+                const idx = exams.findIndex(e => e.id === currentEditExamId);
+                if (idx !== -1) exams[idx] = examData;
+            } else {
+                exams.push(examData);
+            }
+
+            if (window.saveToFirebase) window.saveToFirebase('exams', exams);
+
+            Swal.fire('সফল!', 'পরীক্ষা সফলভাবে সেভ হয়েছে।', 'success');
+            cancelExamEdit();
+        }
+
+        function cancelExamEdit() {
+            currentEditExamId = null;
+            document.getElementById('examFormTitle').innerText = 'নতুন পরীক্ষা তৈরি করুন';
+            document.getElementById('examTitle').value = '';
+            document.getElementById('examClass').value = '';
+            document.getElementById('examDuration').value = '30';
+            document.getElementById('examPdfUrl').value = '';
+            document.getElementById('questionsBuilder').innerHTML = '';
+            questionFieldCount = 0;
+            addQuestionField();
+            document.getElementById('cancelExamEditBtn').classList.add('hidden');
+            document.getElementById('saveExamBtn').innerText = 'পরীক্ষা সেভ করুন';
+        }
+
+        function loadAdminExamList() {
+            let exams = getArrayFromStorage('amc_exams');
+            const container = document.getElementById('adminExamList');
+            if (!container) return;
+
+            if (exams.length === 0) {
+                container.innerHTML = "<p class='text-center text-gray-400 text-sm py-4'>কোনো পরীক্ষা নেই</p>";
+                return;
+            }
+
+            container.innerHTML = exams.map(e => `
+                <div class="flex justify-between items-center p-3 border-b hover:bg-gray-100 text-xs">
+                    <div>
+                        <b class="text-pink-800">${e.title}</b><br>
+                        <span class="text-gray-600">${e.cls} • ${e.questions.length}টি প্রশ্ন • ${e.duration} মিনিট</span>
+                    </div>
+                    <div class="flex gap-3 text-sm">
+                        <button onclick="editExam('${e.id}')" class="text-blue-600"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteExam('${e.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editExam(id) {
+            let exams = getArrayFromStorage('amc_exams');
+            const exam = exams.find(e => e.id === id);
+            if (!exam) return;
+
+            currentEditExamId = id;
+            document.getElementById('examFormTitle').innerText = 'পরীক্ষা এডিট করুন';
+            document.getElementById('examTitle').value = exam.title;
+            document.getElementById('examClass').value = exam.cls;
+            document.getElementById('examDuration').value = exam.duration;
+            document.getElementById('examPdfUrl').value = exam.pdfUrl || '';
+            document.getElementById('questionsBuilder').innerHTML = '';
+            questionFieldCount = 0;
+
+            exam.questions.forEach(q => addQuestionField(q));
+
+            document.getElementById('cancelExamEditBtn').classList.remove('hidden');
+            document.getElementById('saveExamBtn').innerText = 'আপডেট করুন';
+            document.getElementById('examManagerSystem').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteExam(id) {
+            Swal.fire({
+                title: 'নিশ্চিত?',
+                text: 'এই পরীক্ষাটি মুছে ফেলা হবে!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, মুছুন',
+                cancelButtonText: 'না'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let exams = getArrayFromStorage('amc_exams').filter(e => e.id !== id);
+                    if (window.saveToFirebase) window.saveToFirebase('exams', exams);
+                    Swal.fire('মুছে ফেলা হয়েছে', '', 'success');
+                }
+            });
+        }
+
+        function loadExamAttemptsList() {
+            let attempts = getArrayFromStorage('amc_exam_attempts');
+            const container = document.getElementById('examAttemptsList');
+            if (!container) return;
+
+            if (attempts.length === 0) {
+                container.innerHTML = "<p class='text-center text-gray-400 text-sm py-4'>এখনো কোনো অ্যাটেম্প্ট নেই</p>";
+                return;
+            }
+
+            container.innerHTML = attempts.slice().reverse().map(a => `
+                <div class="p-3 bg-white border rounded-lg text-xs">
+                    <div class="flex justify-between">
+                        <b>${a.studentName || 'অজ্ঞাত'} (${a.cls} - রোল ${a.roll})</b>
+                        <span class="text-pink-700 font-medium">${a.score}/${a.total} (${a.percentage}%)</span>
+                    </div>
+                    <div class="text-gray-500 mt-1">${a.examTitle} • ${a.submittedAt}</div>
+                </div>
+            `).join('');
+        }
+
+        function loadAvailableExams() {
+            const cls = document.getElementById('onlineExamClass')?.value;
+            const container = document.getElementById('availableExamsList');
+            if (!container) return;
+
+            if (!cls) {
+                container.innerHTML = "<p class='text-center text-gray-400 text-sm py-4'>শ্রেণী নির্বাচন করুন</p>";
+                return;
+            }
+
+            let exams = getArrayFromStorage('amc_exams')
+                .filter(e => e.cls === cls);
+
+            if (exams.length === 0) {
+                container.innerHTML = "<p class='text-center text-gray-400 text-sm py-4'>এই শ্রেণীর কোনো পরীক্ষা নেই</p>";
+                return;
+            }
+
+            container.innerHTML = exams.map(e => `
+                <div class="p-4 bg-indigo-50 dark:bg-gray-700 rounded-xl border border-indigo-200 dark:border-gray-600">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-medium text-indigo-900 dark:text-yellow-400">${e.title}</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                                ${e.questions.length}টি প্রশ্ন • ${e.duration} মিনিট
+                            </p>
+                        </div>
+                        <button onclick="startOnlineExam('${e.id}')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 transition">
+                            শুরু করুন
+                        </button>
+                    </div>
+                    ${e.pdfUrl ? `<a href="${e.pdfUrl}" target="_blank" class="text-xs text-blue-600 underline mt-2 inline-block">প্রশ্নপত্রের PDF দেখুন</a>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function startOnlineExam(examId) {
+            let exams = getArrayFromStorage('amc_exams');
+            const exam = exams.find(e => e.id === examId);
+            if (!exam) return Swal.fire('ত্রুটি', 'পরীক্ষা পাওয়া যায়নি', 'error');
+
+            Swal.fire({
+                title: 'শিক্ষার্থীর তথ্য',
+                html: `
+                    <input id="swal-roll" class="swal2-input" placeholder="রোল নম্বর">
+                    <input id="swal-name" class="swal2-input" placeholder="নাম (ঐচ্ছিক)">
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'পরীক্ষা শুরু করুন',
+                cancelButtonText: 'বাতিল',
+                preConfirm: () => {
+                    const roll = document.getElementById('swal-roll').value.trim();
+                    if (!roll) {
+                        Swal.showValidationMessage('রোল নম্বর দিতে হবে');
+                        return false;
+                    }
+                    return {
+                        roll,
+                        name: document.getElementById('swal-name').value.trim() || 'অজ্ঞাত শিক্ষার্থী'
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    currentExam = exam;
+                    currentQuestionIndex = 0;
+                    studentAnswers = {};
+                    examTimeLeft = exam.duration * 60;
+
+                    currentExam._studentRoll = result.value.roll;
+                    currentExam._studentName = result.value.name;
+                    currentExam._studentCls = exam.cls;
+
+                    showSection('examTakingArea');
+                    document.getElementById('examTakingTitle').innerText = exam.title;
+                    document.getElementById('examTakingMeta').innerText = `${exam.cls} • ${exam.questions.length}টি প্রশ্ন`;
+
+                    renderExamQuestion();
+                    startExamTimer();
+                }
+            });
+        }
+
+        function renderExamQuestion() {
+            if (!currentExam) return;
+            const q = currentExam.questions[currentQuestionIndex];
+            const total = currentExam.questions.length;
+            const container = document.getElementById('examQuestionContainer');
+
+            const progress = ((currentQuestionIndex + 1) / total) * 100;
+            document.getElementById('examProgressBar').style.width = progress + '%';
+            document.getElementById('examProgressText').innerText = `প্রশ্ন ${currentQuestionIndex + 1} / ${total}`;
+
+            document.getElementById('examPrevBtn').disabled = currentQuestionIndex === 0;
+            if (currentQuestionIndex === total - 1) {
+                document.getElementById('examNextBtn').classList.add('hidden');
+                document.getElementById('examSubmitBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('examNextBtn').classList.remove('hidden');
+                document.getElementById('examSubmitBtn').classList.add('hidden');
+            }
+
+            const selected = studentAnswers[currentQuestionIndex] || '';
+
+            container.innerHTML = `
+                <div class="exam-question-card">
+                    <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-6 leading-relaxed">
+                        ${currentQuestionIndex + 1}. ${q.q}
+                    </h3>
+                    <div class="space-y-3">
+                        ${['A', 'B', 'C', 'D'].map((opt, i) => `
+                            <button onclick="selectExamOption('${opt}')" 
+                                class="option-btn w-full text-left p-4 border-2 rounded-xl flex items-center gap-3 ${selected === opt ? 'option-selected border-indigo-600' : 'border-gray-200 dark:border-gray-600'}">
+                                <span class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 flex items-center justify-center font-medium text-sm">${opt}</span>
+                                <span class="text-gray-800 dark:text-gray-200">${q.options[i]}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectExamOption(opt) {
+            studentAnswers[currentQuestionIndex] = opt;
+            renderExamQuestion();
+        }
+
+        function nextExamQuestion() {
+            if (currentQuestionIndex < currentExam.questions.length - 1) {
+                currentQuestionIndex++;
+                renderExamQuestion();
+            }
+        }
+
+        function prevExamQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderExamQuestion();
+            }
+        }
+
+        function startExamTimer() {
+            if (examTimerInterval) clearInterval(examTimerInterval);
+            updateTimerDisplay();
+            examTimerInterval = setInterval(() => {
+                examTimeLeft--;
+                updateTimerDisplay();
+                if (examTimeLeft <= 0) {
+                    clearInterval(examTimerInterval);
+                    Swal.fire('সময় শেষ!', 'পরীক্ষা স্বয়ংক্রিয়ভাবে সাবমিট হচ্ছে...', 'info').then(() => {
+                        submitOnlineExam(true);
+                    });
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const min = Math.floor(examTimeLeft / 60);
+            const sec = examTimeLeft % 60;
+            document.getElementById('examTimer').innerText = 
+                `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+            if (examTimeLeft <= 60) {
+                document.getElementById('examTimer').classList.add('text-red-300');
+            }
+        }
+
+        function submitOnlineExam(auto = false) {
+            if (!auto) {
+                const total = currentExam.questions.length;
+                const answered = Object.keys(studentAnswers).length;
+                if (answered < total) {
+                    Swal.fire({
+                        title: 'কিছু প্রশ্ন উত্তরহীন',
+                        text: `${total - answered}টি প্রশ্নের উত্তর দেননি। তবুও সাবমিট করবেন?`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'হ্যাঁ, সাবমিট করুন',
+                        cancelButtonText: 'ফিরে যান'
+                    }).then((res) => {
+                        if (res.isConfirmed) doSubmitExam();
+                    });
+                    return;
+                }
+            }
+            doSubmitExam();
+        }
+
+        function doSubmitExam() {
+            if (examTimerInterval) clearInterval(examTimerInterval);
+
+            let correctCount = 0;
+            const review = [];
+
+            currentExam.questions.forEach((q, idx) => {
+                const studentAns = studentAnswers[idx] || null;
+                const isCorrect = studentAns === q.correct;
+                if (isCorrect) correctCount++;
+                review.push({
+                    question: q.q,
+                    options: q.options,
+                    correct: q.correct,
+                    student: studentAns,
+                    isCorrect
+                });
+            });
+
+            const total = currentExam.questions.length;
+            const percentage = Math.round((correctCount / total) * 100);
+
+            const attempt = {
+                id: 'ATT_' + Date.now(),
+                examId: currentExam.id,
+                examTitle: currentExam.title,
+                cls: currentExam._studentCls,
+                roll: currentExam._studentRoll,
+                studentName: currentExam._studentName,
+                score: correctCount,
+                total,
+                percentage,
+                review,
+                submittedAt: new Date().toLocaleString('bn-BD')
+            };
+
+            let attempts = getArrayFromStorage('amc_exam_attempts');
+            attempts.push(attempt);
+            if (window.saveToFirebase) window.saveToFirebase('examAttempts', attempts);
+
+            showExamResult(attempt);
+        }
+
+        function showExamResult(attempt) {
+            showSection('displayArea');
+
+            let reviewHTML = attempt.review.map((r, i) => `
+                <div style="margin-bottom:15px; padding:12px; border-radius:10px; background:${r.isCorrect ? '#ecfdf5' : '#fef2f2'}; border-left:4px solid ${r.isCorrect ? '#10b981' : '#ef4444'};">
+                    <p style="font-weight:600; margin-bottom:6px;">${i + 1}. ${r.question}</p>
+                    <p style="font-size:13px; margin:2px 0;">
+                        আপনার উত্তর: <b style="color:${r.isCorrect ? '#059669' : '#dc2626'}">${r.student || 'উত্তর দেননি'}</b>
+                        ${!r.isCorrect ? ` | সঠিক উত্তর: <b style="color:#059669">${r.correct}</b>` : ''}
+                    </p>
+                    <p style="font-size:12px; color:#6b7280; margin-top:4px;">
+                        A) ${r.options[0]} &nbsp; B) ${r.options[1]} &nbsp; C) ${r.options[2]} &nbsp; D) ${r.options[3]}
+                    </p>
+                </div>
+            `).join('');
+
+            document.getElementById('pdfContent').innerHTML = `
+                <div style="font-family:'Hind Siliguri', sans-serif; padding:10px;">
+                    <div style="text-align:center; border-bottom:2px solid #4c1d95; padding-bottom:12px; margin-bottom:18px;">
+                        <img src="${siteLogo}" style="width:55px; height:55px; border-radius:50%; display:inline-block;">
+                        <h2 style="color:#4c1d95; margin:6px 0 0 0; font-size:20px;">AMIRUL MATH CARE</h2>
+                        <p style="margin:0; font-size:13px; color:#555;">অনলাইন পরীক্ষার ফলাফল</p>
+                    </div>
+
+                    <div style="background:#f5f3ff; border-radius:12px; padding:16px; margin-bottom:20px; text-align:center;">
+                        <h3 style="margin:0 0 8px 0; color:#4c1d95;">${attempt.examTitle}</h3>
+                        <p style="margin:0; font-size:14px;">${attempt.studentName} (${attempt.cls} - রোল ${attempt.roll})</p>
+                        <div style="font-size:36px; font-weight:700; color:#4c1d95; margin:12px 0 4px 0;">
+                            ${attempt.score} / ${attempt.total}
+                        </div>
+                        <div style="font-size:18px; color:#059669;">${attempt.percentage}%</div>
+                    </div>
+
+                    <h4 style="color:#4c1d95; margin-bottom:12px; border-bottom:1px dashed #c4b5fd; padding-bottom:6px;">
+                        বিস্তারিত রিভিউ (ভুল উত্তরসহ)
+                    </h4>
+                    ${reviewHTML}
+
+                    <p style="text-align:center; font-size:12px; color:#6b7280; margin-top:20px;">
+                        সাবমিটের সময়: ${attempt.submittedAt}
+                    </p>
+                </div>
+            `;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const today = new Date().toISOString().split('T')[0];
             if (document.getElementById('examDate')) document.getElementById('examDate').value = today;
@@ -2304,7 +3027,10 @@
             loadGallerySlider();
             loadFaqAccordion();
 
-            // Log page visit (light security log)
+            if (document.getElementById('questionsBuilder')) {
+                addQuestionField();
+            }
+
             setTimeout(() => {
                 logSecurityEvent('page_load', 'হোমপেজ ভিজিট');
             }, 1500);
