@@ -183,7 +183,7 @@
     </div>
 
     <!-- Navbar -->
-    <nav class="brand-purple p-4 text-white flex justify-between items-center sticky top-0 z-50 shadow-xl border-b-4 border-yellow-500 no-print">
+    <nav class="brand-purple p-4 text-white flex justify-between items-center sticky top-0 z-55 shadow-xl border-b-4 border-yellow-500 no-print">
         <div class="flex items-center gap-3" onclick="location.reload()" style="cursor: pointer;">
             <img id="navLogo" src="https://i.ibb.co/Lhy0W0P/1000018420.jpg" alt="Logo" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-lg">
             <h1 class="text-lg md:text-xl font-medium">AMIRUL MATH CARE</h1>
@@ -288,7 +288,7 @@
         <!-- ONLINE EXAM SECTION -->
         <div class="bg-white p-6 rounded-3xl shadow-xl border-t-8 border-indigo-700 transition-colors mb-6">
             <h3 class="text-gray-800 dark:text-white text-xl mb-4 text-center font-medium">
-                <i class="fas fa-laptop-code mr-2 text-indigo-600"></i>অনলাইন পরীক্ষা
+                <i class="fas fa-laptop-code mr-2 text-indigo-600"></i>অনলাইন পরীক্ষা (PDF প্রশ্নপত্রসহ)
             </h3>
             <div class="space-y-3">
                 <div>
@@ -549,10 +549,10 @@
             </button>
         </div>
 
-        <!-- ONLINE EXAM MANAGER -->
+        <!-- ONLINE EXAM MANAGER (With PDF Question Paper Uploader) -->
         <div id="examManagerSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-pink-600 hidden text-black transition-colors">
             <h2 class="text-xl text-pink-800 mb-4 font-medium">
-                <i class="fas fa-laptop-code mr-2"></i>অনলাইন পরীক্ষা ম্যানেজার
+                <i class="fas fa-laptop-code mr-2"></i>অনলাইন পরীক্ষা ম্যানেজার (PDF প্রশ্নপত্রসহ)
             </h2>
 
             <div class="bg-pink-50 p-5 rounded-xl mb-6 space-y-4">
@@ -569,11 +569,19 @@
                         <option value="SSC">SSC</option>
                     </select>
                     <input type="number" id="examDuration" placeholder="সময় (মিনিট)" class="p-2.5 border rounded-xl outline-none" value="30">
-                    <input type="text" id="examPdfUrl" placeholder="প্রশ্নপত্রের PDF লিঙ্ক (ঐচ্ছিক)" class="p-2.5 border rounded-xl outline-none">
+                    
+                    <!-- PDF File Upload / URL input -->
+                    <div class="space-y-1">
+                        <div class="border-2 border-dashed border-pink-400 rounded-xl p-2 text-center bg-white relative">
+                            <input type="file" id="examPdfFileInput" accept="application/pdf" onchange="handleExamPdfSelect(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                            <p class="text-xs text-gray-700 font-medium" id="examPdfStatusText">প্রশ্নপত্রের PDF ফাইল আপলোড করুন (বা নিচে লিঙ্ক দিন)</p>
+                        </div>
+                        <input type="text" id="examPdfUrl" placeholder="অথবা PDF এর ডাইনামিক URL/লিঙ্ক" class="p-2.5 border rounded-xl outline-none text-xs w-full">
+                    </div>
                 </div>
 
                 <div class="border-t pt-4">
-                    <h4 class="text-sm font-medium mb-2 text-pink-800">প্রশ্ন যোগ করুন</h4>
+                    <h4 class="text-sm font-medium mb-2 text-pink-800">অনলাইন পরীক্ষার MCQ প্রশ্নসমূহ যোগ করুন</h4>
                     <div id="questionsBuilder" class="space-y-4"></div>
                     <button onclick="addQuestionField()" class="mt-3 bg-pink-200 text-pink-900 px-4 py-2 rounded-lg text-sm hover:bg-pink-300 transition">
                         <i class="fas fa-plus mr-1"></i> নতুন প্রশ্ন যোগ করুন
@@ -869,8 +877,8 @@
         </div>
     </div>
 
-    <!-- ONLINE EXAM TAKING INTERFACE -->
-    <div id="examTakingArea" class="container mx-auto mt-6 p-4 max-w-2xl hidden no-print">
+    <!-- ONLINE EXAM TAKING INTERFACE (With Integrated PDF Question Viewer) -->
+    <div id="examTakingArea" class="container mx-auto mt-6 p-4 max-w-3xl hidden no-print">
         <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border-t-8 border-indigo-700">
             <div class="bg-indigo-700 text-white p-5">
                 <div class="flex justify-between items-center">
@@ -889,6 +897,19 @@
                     </div>
                     <p id="examProgressText" class="text-xs mt-1 text-center opacity-90">প্রশ্ন 1 / 10</p>
                 </div>
+            </div>
+
+            <!-- PDF Question Paper Viewer Box (Visible in exam if PDF is attached) -->
+            <div id="examPdfViewerBox" class="hidden p-4 bg-gray-50 border-b">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-indigo-900 flex items-center gap-1">
+                        <i class="fas fa-file-pdf text-red-600"></i> প্রশ্নপত্র PDF (পড়ে উত্তর দিন)
+                    </span>
+                    <button onclick="toggleExamPdfFullscreen()" class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg hover:bg-indigo-200">
+                        <i class="fas fa-expand mr-1"></i> বড় করুন
+                    </button>
+                </div>
+                <iframe id="examPdfViewerFrame" src="" class="w-full h-80 rounded-xl border bg-white"></iframe>
             </div>
 
             <div class="p-6" id="examQuestionContainer"></div>
@@ -926,18 +947,10 @@
         const db = getDatabase(app);
 
         window.saveToFirebase = (path, data) => set(ref(db, path), data);
-        // Temporary stubs until main script loads (onValue callbacks run later)
         if (typeof window.safeSetItem !== 'function') {
             window.safeSetItem = function(key, value) {
                 try { localStorage.setItem(key, value); return true; }
-                catch(e) {
-                    if (e && (e.name === 'QuotaExceededError' || e.code === 22)) {
-                        console.warn('QuotaExceeded (early)', key);
-                        try { localStorage.removeItem(key); } catch(_){}
-                        return false;
-                    }
-                    return false;
-                }
+                catch(e) { return false; }
             };
         }
         if (typeof window.ensureArray !== 'function') {
@@ -1093,31 +1106,15 @@
         let heroIndex = 0;
         let heroInterval = null;
         let base64ImageString = "";
+        let examPdfBase64String = "";
         const DEFAULT_LOGO = "https://i.ibb.co/Lhy0W0P/1000018420.jpg";
 
-        // ===== Safe Storage Helpers (Quota + Array/Object normalization) =====
         function safeSetItem(key, value) {
             try {
                 localStorage.setItem(key, value);
                 return true;
             } catch (e) {
-                if (e && (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014)) {
-                    console.warn('QuotaExceeded for', key, '- attempting recovery');
-                    if (key === 'amc_gallery') {
-                        try {
-                            const parsed = JSON.parse(value);
-                            let arr = Array.isArray(parsed) ? parsed : (parsed && typeof parsed === 'object' ? Object.values(parsed) : []);
-                            // Keep only non-base64 images and last 8
-                            arr = arr.filter(img => img && img.url && !String(img.url).startsWith('data:')).slice(-8);
-                            localStorage.setItem(key, JSON.stringify(arr));
-                            return true;
-                        } catch (_) {}
-                    }
-                    // Last resort: clear this key
-                    try { localStorage.removeItem(key); } catch (_) {}
-                    return false;
-                }
-                console.error(e);
+                try { localStorage.removeItem(key); } catch (_) {}
                 return false;
             }
         }
@@ -1149,13 +1146,11 @@
                 return {};
             }
         }
-        // Expose globally (override any early stubs)
+
         window.safeSetItem = safeSetItem;
         window.ensureArray = ensureArray;
         window.getArrayFromStorage = getArrayFromStorage;
         window.getObjectFromStorage = getObjectFromStorage;
-        // ===== End Helpers =====
-
 
         let siteLogo = localStorage.getItem('amc_site_logo') || DEFAULT_LOGO;
         const GALLERY_PLACEHOLDER = "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80";
@@ -1193,7 +1188,7 @@
                     country: data.country_name || data.country || 'Unknown',
                     lat: data.latitude || null,
                     lon: data.longitude || null,
-                    org: data.org || data.asn || '',
+                    org: data.org || '',
                     timezone: data.timezone || ''
                 };
             } catch (e) {
@@ -1215,17 +1210,13 @@
                     type: type,
                     details: details,
                     timestamp: new Date().toLocaleString('bn-BD'),
-                    timeISO: new Date().toISOString(),
                     ip: loc.ip,
                     city: loc.city,
                     region: loc.region,
                     country: loc.country,
                     lat: loc.lat,
                     lon: loc.lon,
-                    org: loc.org,
-                    userAgent: navigator.userAgent.substring(0, 150),
-                    screen: `${screen.width}x${screen.height}`,
-                    language: navigator.language
+                    userAgent: navigator.userAgent.substring(0, 150)
                 };
 
                 let logs = getArrayFromStorage('amc_security_logs');
@@ -1237,9 +1228,7 @@
                 } else {
                     safeSetItem('amc_security_logs', JSON.stringify(logs));
                 }
-            } catch (err) {
-                console.warn('Security log failed:', err);
-            }
+            } catch (err) {}
         }
 
         function loadSecurityLogs() {
@@ -1257,7 +1246,6 @@
                 let icon = 'fa-info-circle';
                 if (log.type === 'login_success') { badgeColor = 'bg-green-600'; icon = 'fa-check-circle'; }
                 if (log.type === 'login_fail') { badgeColor = 'bg-red-600'; icon = 'fa-exclamation-triangle'; }
-                if (log.type === 'suspicious') { badgeColor = 'bg-orange-600'; icon = 'fa-skull-crossbones'; }
 
                 const mapLink = (log.lat && log.lon) 
                     ? `<a href="https://www.google.com/maps?q=${log.lat},${log.lon}" target="_blank" class="text-blue-600 underline ml-1">ম্যাপ দেখুন</a>` 
@@ -1273,11 +1261,8 @@
                     </div>
                     <p class="text-gray-800 font-medium">${log.details || '—'}</p>
                     <div class="mt-1 text-[11px] text-gray-600 space-y-0.5">
-                        <div><i class="fas fa-map-marker-alt text-red-500 mr-1"></i> 
-                            ${log.city}, ${log.region} ${log.country} ${mapLink}
-                        </div>
-                        <div><i class="fas fa-network-wired mr-1"></i> IP: <b>${log.ip}</b> ${log.org ? `(${log.org})` : ''}</div>
-                        <div class="truncate"><i class="fas fa-desktop mr-1"></i> ${log.userAgent}</div>
+                        <div><i class="fas fa-map-marker-alt text-red-500 mr-1"></i> ${log.city}, ${log.region} ${log.country} ${mapLink}</div>
+                        <div><i class="fas fa-network-wired mr-1"></i> IP: <b>${log.ip}</b></div>
                     </div>
                 </div>`;
             }).join('');
@@ -1570,14 +1555,31 @@
             reader.readAsDataURL(file);
         }
 
-        function loadGallerySlider() {
-            let imgs = [];
-            try {
-                imgs = getArrayFromStorage('amc_gallery');
-            } catch (e) {
-                imgs = [];
+        // PDF file select handler for Online Exam
+        function handleExamPdfSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (file.type !== 'application/pdf') {
+                Swal.fire('ত্রুটি!', 'দয়া করে একটি সঠিক PDF ফাইল সিলেক্ট করুন।', 'warning');
+                event.target.value = "";
+                return;
+            }
+            if (file.size > 2 * 1024 * 1024) {
+                Swal.fire('ফাইল বড়!', '২ মেগাবাইটের কম সাইজের PDF ফাইল দিন অথবা ড্রাইভ লিঙ্ক ব্যবহার করুন।', 'warning');
+                event.target.value = "";
+                return;
             }
 
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                examPdfBase64String = e.target.result;
+                document.getElementById('examPdfStatusText').innerText = "PDF সিলেক্ট হয়েছে: " + file.name;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function loadGallerySlider() {
+            let imgs = getArrayFromStorage('amc_gallery');
             const track = document.getElementById('galleryTrack');
             if (!track) return;
 
@@ -1597,59 +1599,36 @@
                 const url = (img && img.url) ? img.url : GALLERY_PLACEHOLDER;
                 return `
                     <div class="gallery-slide">
-                        <img src="${url}" 
-                             alt="Gallery Image ${idx + 1}" 
-                             loading="lazy"
-                             onerror="this.onerror=null; this.src='${GALLERY_PLACEHOLDER}'; this.style.opacity='0.7';">
+                        <img src="${url}" alt="Gallery Image ${idx + 1}" loading="lazy" onerror="this.onerror=null; this.src='${GALLERY_PLACEHOLDER}';">
                     </div>
                 `;
             }).join('');
 
             galleryIndex = 0;
             track.style.transform = `translateX(0%)`;
-            void track.offsetWidth;
-
             if (imgs.length > 1) {
                 galleryInterval = setInterval(() => nextGallerySlide(), 3500);
             }
         }
 
         function nextGallerySlide() {
-            let imgs = [];
-            try {
-                imgs = getArrayFromStorage('amc_gallery');
-            } catch (e) {
-                imgs = [];
-            }
+            let imgs = getArrayFromStorage('amc_gallery');
             if (imgs.length === 0) return;
-
             galleryIndex = (galleryIndex + 1) % imgs.length;
             const track = document.getElementById('galleryTrack');
             if (track) track.style.transform = `translateX(-${galleryIndex * 100}%)`;
         }
 
         function prevGallerySlide() {
-            let imgs = [];
-            try {
-                imgs = getArrayFromStorage('amc_gallery');
-            } catch (e) {
-                imgs = [];
-            }
+            let imgs = getArrayFromStorage('amc_gallery');
             if (imgs.length === 0) return;
-
             galleryIndex = (galleryIndex - 1 + imgs.length) % imgs.length;
             const track = document.getElementById('galleryTrack');
             if (track) track.style.transform = `translateX(-${galleryIndex * 100}%)`;
         }
 
         function loadAdminGalleryList() {
-            let imgs = [];
-            try {
-                imgs = getArrayFromStorage('amc_gallery');
-            } catch (e) {
-                imgs = [];
-            }
-
+            let imgs = getArrayFromStorage('amc_gallery');
             const container = document.getElementById('adminGalleryList');
             if (!container) return;
 
@@ -1662,11 +1641,8 @@
                 const url = (img && img.url) ? img.url : GALLERY_PLACEHOLDER;
                 return `
                     <div class="relative group border rounded overflow-hidden h-16 bg-gray-100">
-                        <img src="${url}" 
-                             class="w-full h-full object-cover"
-                             onerror="this.onerror=null; this.src='${GALLERY_PLACEHOLDER}';">
-                        <button onclick="deleteGalleryImage('${img.id}')" 
-                                class="absolute inset-0 bg-red-600/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <img src="${url}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='${GALLERY_PLACEHOLDER}';">
+                        <button onclick="deleteGalleryImage('${img.id}')" class="absolute inset-0 bg-red-600/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -1676,41 +1652,24 @@
 
         function addImageToGallery() {
             const urlInput = document.getElementById('galleryImgUrl').value.trim();
-            let finalImageUrl = "";
+            let finalImageUrl = base64ImageString !== "" ? base64ImageString : urlInput;
 
-            if (base64ImageString !== "") {
-                // Prevent huge base64 from filling localStorage / Firebase RTDB
-                if (base64ImageString.length > 400000) { // ~300KB limit
-                    return Swal.fire('ছবি অনেক বড়!', 'অনুগ্রহ করে ছোট ছবি (৩০০ কেবির নিচে) ব্যবহার করুন অথবা ছবির লিঙ্ক দিন (ImgBB, Google Drive ইত্যাদি)।', 'warning');
-                }
-                finalImageUrl = base64ImageString;
-            } else if (urlInput !== "") {
-                finalImageUrl = urlInput;
-            } else {
-                return Swal.fire('কোনো ইনপুট নেই!', 'অনুগ্রহ করে ডিভাইস থেকে ছবি সিলেক্ট করুন অথবা ছবির একটি সচল লিঙ্ক দিন।', 'warning');
+            if (!finalImageUrl) {
+                return Swal.fire('কোনো ইনপুট নেই!', 'ডিভাইস থেকে ছবি সিলেক্ট করুন অথবা লিঙ্ক দিন।', 'warning');
             }
 
-            let imgs = [];
-            try {
-                imgs = getArrayFromStorage('amc_gallery');
-            } catch (e) {
-                imgs = [];
-            }
-
+            let imgs = getArrayFromStorage('amc_gallery');
             imgs.push({ id: 'I_' + Date.now(), url: finalImageUrl });
 
             if (window.saveToFirebase) {
-                window.saveToFirebase('gallery', imgs)
-                    .then(() => {
-                        Swal.fire('সফল!', 'ছবি আপলোড সম্পন্ন হয়েছে।', 'success');
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        safeSetItem('amc_gallery', JSON.stringify(imgs));
-                        loadGallerySlider();
-                        loadAdminGalleryList();
-                        Swal.fire('সতর্কতা', 'Firebase-এ বড় ছবি সেভ করা যায়নি। লোকাল স্টোরেজে রাখা হয়েছে। ছোট ছবি বা লিঙ্ক ব্যবহার করুন।', 'warning');
-                    });
+                window.saveToFirebase('gallery', imgs).then(() => {
+                    Swal.fire('সফল!', 'ছবি আপলোড সম্পন্ন হয়েছে।', 'success');
+                }).catch(() => {
+                    safeSetItem('amc_gallery', JSON.stringify(imgs));
+                    loadGallerySlider();
+                    loadAdminGalleryList();
+                    Swal.fire('সফল!', 'ছবি আপলোড সম্পন্ন হয়েছে।', 'success');
+                });
             } else {
                 safeSetItem('amc_gallery', JSON.stringify(imgs));
                 loadGallerySlider();
@@ -1721,32 +1680,24 @@
             document.getElementById('galleryImgUrl').value = '';
             document.getElementById('galleryFileInput').value = '';
             document.getElementById('imagePreviewContainer').classList.add('hidden');
-            document.getElementById('galleryPreviewImg').src = "";
-            document.getElementById('uploadStatusText').innerText = "ডিভাইস থেকে ছবি সিলেক্ট করুন";
             base64ImageString = "";
         }
 
         function deleteGalleryImage(id) {
-            let imgs = [];
-            try {
-                imgs = getArrayFromStorage('amc_gallery');
-            } catch (e) {
-                imgs = [];
-            }
-            imgs = imgs.filter(i => i.id !== id);
+            let imgs = getArrayFromStorage('amc_gallery').filter(i => i.id !== id);
             if (window.saveToFirebase) window.saveToFirebase('gallery', imgs);
         }
 
         function addFaqToDB() {
             const q = document.getElementById('faqQuestionInput').value.trim();
             const a = document.getElementById('faqAnswerInput').value.trim();
-            if (!q || !a) return Swal.fire('ফরম অসম্পূর্ণ!', 'দয়া করে প্রশ্ন এবং উত্তর উভয়ই ইনপুট দিন।', 'warning');
+            if (!q || !a) return Swal.fire('ফরম অসম্পূর্ণ!', 'প্রশ্ন এবং উত্তর উভয়ই দিন।', 'warning');
 
             let faqs = getArrayFromStorage('amc_faq_db');
             faqs.push({ id: 'FAQ_' + Date.now(), q, a });
             if (window.saveToFirebase) window.saveToFirebase('faqs', faqs);
 
-            Swal.fire('সফল!', 'নতুন FAQ সফলভাবে লাইভ করা হয়েছে।', 'success');
+            Swal.fire('সফল!', 'FAQ যুক্ত হয়েছে।', 'success');
             document.getElementById('faqQuestionInput').value = '';
             document.getElementById('faqAnswerInput').value = '';
         }
@@ -1782,7 +1733,7 @@
                         <span>${f.q}</span>
                         <i id="faqIcon_${index}" class="fas fa-chevron-down text-xs text-purple-700 dark:text-yellow-400 transition-transform duration-300"></i>
                     </button>
-                    <div id="faqAnsBlock_${index}" class="hidden p-4 text-xs text-gray-700 dark:text-gray-300 border-t border-gray-100 dark:border-gray-700 leading-relaxed bg-white dark:bg-gray-800">
+                    <div id="faqAnsBlock_${index}" class="hidden p-4 text-xs text-gray-700 dark:text-gray-300 border-t bg-white dark:bg-gray-800">
                         ${f.a}
                     </div>
                 </div>
@@ -1873,7 +1824,7 @@
         function getPaymentSlipHTML(p) {
             return `
             <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 25px; border: 4px double #4c1d95; border-radius: 15px; background: #fff; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 85px; font-weight: 800; color: rgba(16, 185, 129, 0.14); border: 8px solid rgba(16, 185, 129, 0.14); padding: 5px 25px; border-radius: 15px; text-transform: uppercase; letter-spacing: 5px; pointer-events: none; user-select: none; z-index: 0;">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 85px; font-weight: 800; color: rgba(16, 185, 129, 0.14); border: 8px solid rgba(16, 185, 129, 0.14); padding: 5px 25px; border-radius: 15px; text-transform: uppercase; letter-spacing: 5px; pointer-events: none; z-index: 0;">
                     PAID
                 </div>
                 <div style="position: relative; z-index: 1;">
@@ -1899,7 +1850,7 @@
             const cls = document.getElementById('searchClass').value;
             const month = document.getElementById('searchMonth').value;
             if (!roll || !cls || !month) {
-                return Swal.fire('ফিল্ড খালি!', 'অনুগ্রহ করে রোল, শ্রেণী ও নির্দিষ্ট মাস নির্বাচন করুন।', 'warning');
+                return Swal.fire('ফিল্ড খালি!', 'রোল, শ্রেণী ও নির্দিষ্ট মাস নির্বাচন করুন।', 'warning');
             }
 
             let payments = getArrayFromStorage('amc_payment_db');
@@ -1919,7 +1870,7 @@
             const studentDB = getObjectFromStorage('amc_student_db');
             const student = studentDB[`${p.cls}_${p.roll}`];
             if (!student || !student.wa) {
-                return Swal.fire('হোয়াটসঅ্যাপ নম্বর নেই!', 'হোয়াটসঅ্যাপ নম্বর পাওয়া যায়নি।', 'info');
+                return Swal.fire('হোয়াটসঅ্যাপ নম্বর নেই!', 'নম্বর পাওয়া যায়নি।', 'info');
             }
             const message = `*AMIRUL MATH CARE - পেমেন্ট রসিদ*%0A--------------------------------%0A*নাম:* ${p.name}%0A*রোল:* ${p.roll} | *শ্রেণী:* ${p.cls}%0A*টাকা পরিমাণ:* ৳ ${p.amount}/-%0A*স্ট্যাটাস:* PAID ✔`;
             window.open(`https://wa.me/${student.wa}?text=${message}`, '_blank');
@@ -1937,8 +1888,7 @@
                 return Swal.fire('ত্রুটি!', 'শ্রেণী এবং তারিখ সিলেক্ট করুন!', 'error');
             }
 
-            let data = getArrayFromStorage('amc_db_final')
-                .filter(s => s.cls === fCls && s.date === fDate);
+            let data = getArrayFromStorage('amc_db_final').filter(s => s.cls === fCls && s.date === fDate);
             data.sort((a, b) => b.grandTotal - a.grandTotal);
 
             if (data.length === 0) {
@@ -1994,11 +1944,7 @@
                 <table border="1" style="width:100%; border-collapse:collapse;">
                     <thead>
                         <tr style="background:#ef4444; color:white;">
-                            <th>ক্রমিক</th>
-                            <th>শ্রেণী</th>
-                            <th>রোল</th>
-                            <th>নাম</th>
-                            <th>হোয়াটসঅ্যাপ</th>
+                            <th>ক্রমিক</th><th>শ্রেণী</th><th>রোল</th><th>নাম</th><th>হোয়াটসঅ্যাপ</th>
                         </tr>
                     </thead>
                     <tbody>${rows}</tbody>
@@ -2105,12 +2051,10 @@
         function fetchStudentInfo() {
             const r = document.getElementById('stdRoll').value.trim();
             const c = document.getElementById('stdClass').value;
-
             if (!r || !c) {
                 document.getElementById('stdName').value = "";
                 return;
             }
-
             const db = getObjectFromStorage('amc_student_db');
             const s = db[`${c}_${r}`] || db[`${c}_${Number(r)}`];
             document.getElementById('stdName').value = s ? s.name : "";
@@ -2239,15 +2183,11 @@
                 const m = Number(document.getElementById(`mcq_${sid}`).value || 0);
                 const c = Number(document.getElementById(`cq_${sid}`).value || 0);
                 const t = m + c;
-                scores[sub] = {
-                    f, m, c, t,
-                    g: document.getElementById(`grade_${sid}`).innerText
-                };
+                scores[sub] = { f, m, c, t, g: document.getElementById(`grade_${sid}`).innerText };
                 grandTotal += t;
             });
 
             let data = getArrayFromStorage('amc_db_final');
-
             if (currentEditResultIndex !== null) {
                 data[currentEditResultIndex] = { date, cls, roll, name, examType: type, scores, grandTotal };
                 cancelResultEdit();
@@ -2293,15 +2233,13 @@
         }
 
         function deleteData(date, roll) {
-            let data = getArrayFromStorage('amc_db_final')
-                .filter(s => !(s.date === date && s.roll == roll));
+            let data = getArrayFromStorage('amc_db_final').filter(s => !(s.date === date && s.roll == roll));
             if (window.saveToFirebase) window.saveToFirebase('results', data);
         }
 
         function quickResetForm() {
             document.getElementById('stdRoll').value = "";
             document.getElementById('stdName').value = "";
-
             const cls = document.getElementById('stdClass').value;
             if (subjectsConfig[cls]) {
                 subjectsConfig[cls].forEach(sub => {
@@ -2311,10 +2249,6 @@
                     if (document.getElementById(`grade_${sid}`)) document.getElementById(`grade_${sid}`).innerText = "N/A";
                 });
             }
-
-            setTimeout(() => {
-                document.getElementById('stdRoll').focus();
-            }, 100);
         }
 
         function renderTable() {
@@ -2334,9 +2268,7 @@
             }
 
             tbody.innerHTML = data.map((item, index) => {
-                const originalIndex = getArrayFromStorage('amc_db_final')
-                    .findIndex(r => r.date === item.date && r.roll == item.roll && r.cls === item.cls);
-
+                const originalIndex = getArrayFromStorage('amc_db_final').findIndex(r => r.date === item.date && r.roll == item.roll && r.cls === item.cls);
                 return `
                 <tr class="border-b hover:bg-purple-50 transition">
                     <td class="p-4 font-medium">${item.roll}</td>
@@ -2346,9 +2278,9 @@
                     <td class="p-4"><span class="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-xs font-semibold">মেরিট #${index + 1}</span></td>
                     <td class="p-4 text-center">
                         <div class="flex justify-center gap-2">
-                            <button onclick="editResult(${originalIndex})" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i></button>
-                            <button onclick="sendSingleResultWhatsApp('${item.date}', ${item.roll}, '${item.cls}')" class="text-green-600 hover:text-green-800"><i class="fab fa-whatsapp"></i></button>
-                            <button onclick="deleteData('${item.date}', ${item.roll})" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+                            <button onclick="editResult(${originalIndex})" class="text-blue-600"><i class="fas fa-edit"></i></button>
+                            <button onclick="sendSingleResultWhatsApp('${item.date}', ${item.roll}, '${item.cls}')" class="text-green-600"><i class="fab fa-whatsapp"></i></button>
+                            <button onclick="deleteData('${item.date}', ${item.roll})" class="text-red-500"><i class="fas fa-trash"></i></button>
                         </div>
                     </td>
                 </tr>`;
@@ -2357,9 +2289,7 @@
 
         function getStudentProgressData(cls, roll) {
             const results = getArrayFromStorage('amc_db_final');
-            return results
-                .filter(r => r.cls === cls && String(r.roll) === String(roll))
-                .sort((a, b) => a.date.localeCompare(b.date));
+            return results.filter(r => r.cls === cls && String(r.roll) === String(roll)).sort((a, b) => a.date.localeCompare(b.date));
         }
 
         function createProgressChart(canvasId, progressData, studentName) {
@@ -2370,7 +2300,7 @@
             const totals = progressData.map(r => r.grandTotal);
             const examTypes = progressData.map(r => r.examType || '');
 
-            const chart = new Chart(canvas, {
+            return new Chart(canvas, {
                 type: 'line',
                 data: {
                     labels: labels,
@@ -2383,7 +2313,6 @@
                         pointBackgroundColor: '#4c1d95',
                         pointBorderColor: '#fff',
                         pointRadius: 5,
-                        pointHoverRadius: 7,
                         fill: true,
                         tension: 0.3
                     }]
@@ -2393,33 +2322,13 @@
                     maintainAspectRatio: true,
                     plugins: {
                         legend: { display: false },
-                        title: {
-                            display: true,
-                            text: studentName ? `${studentName} এর অগ্রগতি` : 'অগ্রগতি চার্ট',
-                            font: { size: 14, family: "'Hind Siliguri', sans-serif" },
-                            color: '#4c1d95'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                afterLabel: function(context) {
-                                    const idx = context.dataIndex;
-                                    return examTypes[idx] ? `ধরন: ${examTypes[idx]}` : '';
-                                }
-                            }
-                        }
+                        title: { display: true, text: studentName ? `${studentName} এর অগ্রগতি` : 'অগ্রগতি চার্ট', color: '#4c1d95' }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'নম্বর' }
-                        },
-                        x: {
-                            title: { display: true, text: 'তারিখ' }
-                        }
+                        y: { beginAtZero: true }
                     }
                 }
             });
-            return chart;
         }
 
         function showLiveProgressChart() {
@@ -2444,9 +2353,7 @@
             const studentName = progressData[0].name || 'শিক্ষার্থী';
             msgEl.innerText = `${studentName} (${cls} - রোল ${roll}) • মোট ${progressData.length}টি পরীক্ষা`;
 
-            if (liveProgressChartInstance) {
-                liveProgressChartInstance.destroy();
-            }
+            if (liveProgressChartInstance) liveProgressChartInstance.destroy();
             liveProgressChartInstance = createProgressChart('liveProgressChart', progressData, studentName);
         }
 
@@ -2456,7 +2363,7 @@
             const date = document.getElementById('searchDate').value;
 
             if (!roll || !cls || !date) {
-                return Swal.fire('ফিল্ড খালি!', 'অনুগ্রহ করে রোল, শ্রেণী ও তারিখ পূরণ করুন।', 'warning');
+                return Swal.fire('ফিল্ড খালি!', 'রোল, শ্রেণী ও তারিখ পূরণ করুন।', 'warning');
             }
 
             const results = getArrayFromStorage('amc_db_final');
@@ -2505,29 +2412,7 @@
                         <div style="text-align:right; font-size:16px; color:#4c1d95; padding:5px; border-top:2px solid #4c1d95; margin-bottom:20px;">
                             <b>সর্বমোট নম্বর: ${res.grandTotal}</b>
                         </div>
-
-                        <div style="margin-top:20px; border-top:2px dashed #0d9488; padding-top:15px;">
-                            <h3 style="text-align:center; color:#0d9488; font-size:16px; margin-bottom:10px;">
-                                <i class="fas fa-chart-line"></i> শিক্ষার্থীর অগ্রগতি গ্রাফ
-                            </h3>
-                            <div style="background:#f0fdfa; border-radius:12px; padding:10px;">
-                                <canvas id="markSheetProgressChart" height="200"></canvas>
-                            </div>
-                            <p style="text-align:center; font-size:11px; color:#666; margin-top:8px;">
-                                মোট ${progressData.length}টি পরীক্ষার ভিত্তিতে অগ্রগতি দেখানো হয়েছে
-                            </p>
-                        </div>
                     </div>`;
-
-                setTimeout(() => {
-                    if (markSheetProgressChartInstance) {
-                        markSheetProgressChartInstance.destroy();
-                    }
-                    if (progressData.length > 0) {
-                        markSheetProgressChartInstance = createProgressChart('markSheetProgressChart', progressData, res.name);
-                    }
-                }, 150);
-
             } else {
                 Swal.fire('ফলাফল পাওয়া যায়নি!', 'প্রদত্ত তথ্যের ভিত্তিতে কোন ফলাফল পাওয়া যায়নি।', 'error');
             }
@@ -2552,19 +2437,19 @@
                     <div class="grid grid-cols-2 gap-2 mt-2">
                         <div>
                             <label class="text-[10px]">অপশন A</label>
-                            <input type="text" id="optA_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[0] || ''}" placeholder="অপশন A">
+                            <input type="text" id="optA_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[0] || ''}">
                         </div>
                         <div>
                             <label class="text-[10px]">অপশন B</label>
-                            <input type="text" id="optB_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[1] || ''}" placeholder="অপশন B">
+                            <input type="text" id="optB_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[1] || ''}">
                         </div>
                         <div>
                             <label class="text-[10px]">অপশন C</label>
-                            <input type="text" id="optC_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[2] || ''}" placeholder="অপশন C">
+                            <input type="text" id="optC_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[2] || ''}">
                         </div>
                         <div>
                             <label class="text-[10px]">অপশন D</label>
-                            <input type="text" id="optD_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[3] || ''}" placeholder="অপশন D">
+                            <input type="text" id="optD_${idx}" class="w-full p-1.5 border rounded text-sm" value="${opts[3] || ''}">
                         </div>
                     </div>
                     <div class="mt-2">
@@ -2590,10 +2475,14 @@
             const title = document.getElementById('examTitle').value.trim();
             const cls = document.getElementById('examClass').value;
             const duration = Number(document.getElementById('examDuration').value) || 30;
-            const pdfUrl = document.getElementById('examPdfUrl').value.trim();
+            let pdfUrl = document.getElementById('examPdfUrl').value.trim();
 
             if (!title || !cls) {
                 return Swal.fire('ফরম অসম্পূর্ণ!', 'শিরোনাম ও শ্রেণী দিতে হবে।', 'warning');
+            }
+
+            if (examPdfBase64String !== "") {
+                pdfUrl = examPdfBase64String;
             }
 
             const questions = [];
@@ -2608,11 +2497,7 @@
                 const correct = document.getElementById(`correct_${id}`)?.value;
 
                 if (q && a && b && c && d) {
-                    questions.push({
-                        q,
-                        options: [a, b, c, d],
-                        correct
-                    });
+                    questions.push({ q, options: [a, b, c, d], correct });
                 }
             });
 
@@ -2621,7 +2506,6 @@
             }
 
             let exams = getArrayFromStorage('amc_exams');
-            
             const examData = {
                 id: currentEditExamId || ('EXAM_' + Date.now()),
                 title,
@@ -2641,7 +2525,7 @@
 
             if (window.saveToFirebase) window.saveToFirebase('exams', exams);
 
-            Swal.fire('সফল!', 'পরীক্ষা সফলভাবে সেভ হয়েছে।', 'success');
+            Swal.fire('সফল!', 'পরীক্ষা ও PDF প্রশ্নপত্র সফলভাবে সেভ হয়েছে।', 'success');
             cancelExamEdit();
         }
 
@@ -2652,6 +2536,9 @@
             document.getElementById('examClass').value = '';
             document.getElementById('examDuration').value = '30';
             document.getElementById('examPdfUrl').value = '';
+            document.getElementById('examPdfFileInput').value = '';
+            document.getElementById('examPdfStatusText').innerText = 'প্রশ্নপত্রের PDF ফাইল আপলোড করুন (বা নিচে লিঙ্ক দিন)';
+            examPdfBase64String = "";
             document.getElementById('questionsBuilder').innerHTML = '';
             questionFieldCount = 0;
             addQuestionField();
@@ -2672,7 +2559,7 @@
             container.innerHTML = exams.map(e => `
                 <div class="flex justify-between items-center p-3 border-b hover:bg-gray-100 text-xs">
                     <div>
-                        <b class="text-pink-800">${e.title}</b><br>
+                        <b class="text-pink-800">${e.title}</b> ${e.pdfUrl ? '<span class="bg-red-100 text-red-600 px-1.5 py-0.5 rounded ml-2">PDF যুক্ত</span>' : ''}<br>
                         <span class="text-gray-600">${e.cls} • ${e.questions.length}টি প্রশ্ন • ${e.duration} মিনিট</span>
                     </div>
                     <div class="flex gap-3 text-sm">
@@ -2697,7 +2584,9 @@
             document.getElementById('questionsBuilder').innerHTML = '';
             questionFieldCount = 0;
 
-            exam.questions.forEach(q => addQuestionField(q));
+            if (exam.questions) {
+                exam.questions.forEach(q => addQuestionField(q));
+            }
 
             document.getElementById('cancelExamEditBtn').classList.remove('hidden');
             document.getElementById('saveExamBtn').innerText = 'আপডেট করুন';
@@ -2752,8 +2641,7 @@
                 return;
             }
 
-            let exams = getArrayFromStorage('amc_exams')
-                .filter(e => e.cls === cls);
+            let exams = getArrayFromStorage('amc_exams').filter(e => e.cls === cls);
 
             if (exams.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-400 text-sm py-4'>এই শ্রেণীর কোনো পরীক্ষা নেই</p>";
@@ -2766,14 +2654,14 @@
                         <div>
                             <h4 class="font-medium text-indigo-900 dark:text-yellow-400">${e.title}</h4>
                             <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">
-                                ${e.questions.length}টি প্রশ্ন • ${e.duration} মিনিট
+                                ${e.questions.length}টি প্রশ্ন • ${e.duration} মিনিট ${e.pdfUrl ? '• PDF প্রশ্নপত্র সংযুক্ত' : ''}
                             </p>
                         </div>
                         <button onclick="startOnlineExam('${e.id}')" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 transition">
-                            শুরু করুন
+                            পরীক্ষা দিন
                         </button>
                     </div>
-                    ${e.pdfUrl ? `<a href="${e.pdfUrl}" target="_blank" class="text-xs text-blue-600 underline mt-2 inline-block">প্রশ্নপত্রের PDF দেখুন</a>` : ''}
+                    ${e.pdfUrl ? `<a href="${e.pdfUrl}" target="_blank" class="text-xs text-red-600 font-semibold underline mt-2 inline-block"><i class="fas fa-file-pdf mr-1"></i>প্রশ্নপত্র PDF ডাউনলোড / দেখুন</a>` : ''}
                 </div>
             `).join('');
         }
@@ -2784,24 +2672,22 @@
             if (!exam) return Swal.fire('ত্রুটি', 'পরীক্ষা পাওয়া যায়নি', 'error');
 
             Swal.fire({
-                title: 'শিক্ষার্থীর তথ্য',
+                title: 'শিক্ষার্থীর তথ্য দিন',
                 html: `
                     <input id="swal-roll" class="swal2-input" placeholder="রোল নম্বর">
-                    <input id="swal-name" class="swal2-input" placeholder="নাম (ঐচ্ছিক)">
+                    <input id="swal-name" class="swal2-input" placeholder="আপনার নাম">
                 `,
                 showCancelButton: true,
                 confirmButtonText: 'পরীক্ষা শুরু করুন',
                 cancelButtonText: 'বাতিল',
                 preConfirm: () => {
                     const roll = document.getElementById('swal-roll').value.trim();
+                    const name = document.getElementById('swal-name').value.trim();
                     if (!roll) {
                         Swal.showValidationMessage('রোল নম্বর দিতে হবে');
                         return false;
                     }
-                    return {
-                        roll,
-                        name: document.getElementById('swal-name').value.trim() || 'অজ্ঞাত শিক্ষার্থী'
-                    };
+                    return { roll, name: name || 'শিক্ষার্থী' };
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -2818,10 +2704,30 @@
                     document.getElementById('examTakingTitle').innerText = exam.title;
                     document.getElementById('examTakingMeta').innerText = `${exam.cls} • ${exam.questions.length}টি প্রশ্ন`;
 
+                    // Handle PDF Question Paper Display in Exam View
+                    const pdfBox = document.getElementById('examPdfViewerBox');
+                    const pdfFrame = document.getElementById('examPdfViewerFrame');
+                    if (exam.pdfUrl) {
+                        pdfBox.classList.remove('hidden');
+                        pdfFrame.src = exam.pdfUrl;
+                    } else {
+                        pdfBox.classList.add('hidden');
+                        pdfFrame.src = '';
+                    }
+
                     renderExamQuestion();
                     startExamTimer();
                 }
             });
+        }
+
+        function toggleExamPdfFullscreen() {
+            const frame = document.getElementById('examPdfViewerFrame');
+            if (frame.style.height === '80vh') {
+                frame.style.height = '320px';
+            } else {
+                frame.style.height = '80vh';
+            }
         }
 
         function renderExamQuestion() {
@@ -2900,11 +2806,7 @@
         function updateTimerDisplay() {
             const min = Math.floor(examTimeLeft / 60);
             const sec = examTimeLeft % 60;
-            document.getElementById('examTimer').innerText = 
-                `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
-            if (examTimeLeft <= 60) {
-                document.getElementById('examTimer').classList.add('text-red-300');
-            }
+            document.getElementById('examTimer').innerText = `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
         }
 
         function submitOnlineExam(auto = false) {
@@ -2917,8 +2819,7 @@
                         text: `${total - answered}টি প্রশ্নের উত্তর দেননি। তবুও সাবমিট করবেন?`,
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonText: 'হ্যাঁ, সাবমিট করুন',
-                        cancelButtonText: 'ফিরে যান'
+                        confirmButtonText: 'হ্যাঁ, সাবমিট করুন'
                     }).then((res) => {
                         if (res.isConfirmed) doSubmitExam();
                     });
@@ -2981,9 +2882,6 @@
                         আপনার উত্তর: <b style="color:${r.isCorrect ? '#059669' : '#dc2626'}">${r.student || 'উত্তর দেননি'}</b>
                         ${!r.isCorrect ? ` | সঠিক উত্তর: <b style="color:#059669">${r.correct}</b>` : ''}
                     </p>
-                    <p style="font-size:12px; color:#6b7280; margin-top:4px;">
-                        A) ${r.options[0]} &nbsp; B) ${r.options[1]} &nbsp; C) ${r.options[2]} &nbsp; D) ${r.options[3]}
-                    </p>
                 </div>
             `).join('');
 
@@ -3005,7 +2903,7 @@
                     </div>
 
                     <h4 style="color:#4c1d95; margin-bottom:12px; border-bottom:1px dashed #c4b5fd; padding-bottom:6px;">
-                        বিস্তারিত রিভিউ (ভুল উত্তরসহ)
+                        বিস্তারিত রিভিউ
                     </h4>
                     ${reviewHTML}
 
