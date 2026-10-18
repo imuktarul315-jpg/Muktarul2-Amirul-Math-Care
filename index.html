@@ -10,6 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- QR Code Generation -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <!-- QR Code Scanner -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&display=swap');
@@ -167,6 +171,15 @@
         .dark-mode .option-selected {
             background-color: #4c1d95 !important;
         }
+
+        #qr-reader {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        #qr-reader video {
+            border-radius: 12px;
+        }
     </style>
 </head>
 
@@ -273,6 +286,7 @@
                     <button onclick="checkResult()" class="brand-purple text-white py-4 rounded-2xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
                         <i class="fas fa-poll mr-2"></i>রেজাল্ট
                     </button>
+                    <!-- অ্যাডমিট কার্ডে অটোমেটিক কিউআর কোড জেনারেট হবে -->
                     <button onclick="generateAdmit()" class="bg-orange-500 text-white py-4 rounded-2xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
                         <i class="fas fa-id-card mr-2"></i>অ্যাডমিট
                     </button>
@@ -541,6 +555,9 @@
             <button onclick="toggleSectionElement('examManagerSystem')" class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fas fa-laptop-code"></i>অনলাইন পরীক্ষা ম্যানেজার
             </button>
+            <button onclick="toggleSectionElement('qrAttendanceSystem')" class="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-qrcode"></i>QR অ্যাটেনডেন্স স্ক্যানার
+            </button>
             <button onclick="sendBulkWhatsAppResults()" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fab fa-whatsapp"></i>গ্রুপ রেজাল্ট পাঠান
             </button>
@@ -549,7 +566,54 @@
             </button>
         </div>
 
-        <!-- ONLINE EXAM MANAGER (With PDF Question Paper Uploader) -->
+        <!-- QR ATTENDANCE SCANNER SYSTEM -->
+        <div id="qrAttendanceSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-cyan-600 hidden text-black transition-colors">
+            <h2 class="text-xl text-cyan-800 mb-4 font-medium">
+                <i class="fas fa-qrcode mr-2"></i>QR কোড অ্যাটেনডেন্স স্ক্যানার (পরীক্ষা)
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-cyan-50 p-5 rounded-xl">
+                    <h3 class="font-medium text-cyan-900 mb-3">ক্যামেরা দিয়ে QR স্ক্যান করুন</h3>
+                    <div id="qr-reader" class="mb-3"></div>
+                    <div class="flex gap-2">
+                        <button id="startScanBtn" onclick="startQRScanner()" class="flex-1 bg-cyan-600 text-white py-2.5 rounded-xl hover:bg-cyan-700 transition">
+                            <i class="fas fa-camera mr-1"></i> স্ক্যান শুরু
+                        </button>
+                        <button id="stopScanBtn" onclick="stopQRScanner()" class="flex-1 bg-red-500 text-white py-2.5 rounded-xl hover:bg-red-600 transition hidden">
+                            <i class="fas fa-stop mr-1"></i> বন্ধ করুন
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-3 text-center">অ্যাডমিট কার্ডের QR কোড স্ক্যান করুন। সফল স্ক্যান হলে অ্যাটেনডেন্স অটো সেভ হবে।</p>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-medium text-cyan-900">সাম্প্রতিক স্ক্যান</h3>
+                        <button onclick="downloadQRAttendancePDF()" class="text-xs bg-cyan-100 text-cyan-800 px-3 py-1.5 rounded-lg hover:bg-cyan-200">
+                            <i class="fas fa-file-pdf mr-1"></i>PDF ডাউনলোড
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <select id="qrFilterClass" onchange="loadQRAttendanceList()" class="p-2 border rounded-lg text-sm">
+                            <option value="">সব শ্রেণী</option>
+                            <option value="৬ষ্ঠ">৬ষ্ঠ</option>
+                            <option value="৭ম">৭ম</option>
+                            <option value="৮ম">৮ম</option>
+                            <option value="৯ম">৯ম</option>
+                            <option value="১০ম">১০ম</option>
+                            <option value="SSC">SSC</option>
+                        </select>
+                        <input type="date" id="qrFilterDate" onchange="loadQRAttendanceList()" class="p-2 border rounded-lg text-sm">
+                    </div>
+                    <div id="qrAttendanceList" class="max-h-80 overflow-y-auto border rounded-xl p-3 bg-gray-50 space-y-2 text-xs">
+                        <p class="text-center text-gray-400 py-4">এখনো কোনো স্ক্যান নেই</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ONLINE EXAM MANAGER -->
         <div id="examManagerSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-pink-600 hidden text-black transition-colors">
             <h2 class="text-xl text-pink-800 mb-4 font-medium">
                 <i class="fas fa-laptop-code mr-2"></i>অনলাইন পরীক্ষা ম্যানেজার (PDF প্রশ্নপত্রসহ)
@@ -570,7 +634,6 @@
                     </select>
                     <input type="number" id="examDuration" placeholder="সময় (মিনিট)" class="p-2.5 border rounded-xl outline-none" value="30">
                     
-                    <!-- PDF File Upload / URL input -->
                     <div class="space-y-1">
                         <div class="border-2 border-dashed border-pink-400 rounded-xl p-2 text-center bg-white relative">
                             <input type="file" id="examPdfFileInput" accept="application/pdf" onchange="handleExamPdfSelect(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
@@ -877,7 +940,7 @@
         </div>
     </div>
 
-    <!-- ONLINE EXAM TAKING INTERFACE (With Integrated PDF Question Viewer) -->
+    <!-- ONLINE EXAM TAKING INTERFACE -->
     <div id="examTakingArea" class="container mx-auto mt-6 p-4 max-w-3xl hidden no-print">
         <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border-t-8 border-indigo-700">
             <div class="bg-indigo-700 text-white p-5">
@@ -899,7 +962,6 @@
                 </div>
             </div>
 
-            <!-- PDF Question Paper Viewer Box (Visible in exam if PDF is attached) -->
             <div id="examPdfViewerBox" class="hidden p-4 bg-gray-50 border-b">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-xs font-bold text-indigo-900 flex items-center gap-1">
@@ -1092,6 +1154,15 @@
                 loadExamAttemptsList();
             }
         });
+
+        onValue(ref(db, 'examAttendance'), (snapshot) => {
+            let val = snapshot.exists() ? snapshot.val() : [];
+            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+            safeSetItem('amc_exam_attendance', JSON.stringify(arr));
+            if (sessionStorage.getItem('is_admin')) {
+                loadQRAttendanceList();
+            }
+        });
     </script>
 
     <!-- Main Script -->
@@ -1100,7 +1171,6 @@
         let currentEditResultIndex = null;
         let attendanceChartInstance = null;
         let liveProgressChartInstance = null;
-        let markSheetProgressChartInstance = null;
         let galleryIndex = 0;
         let galleryInterval = null;
         let heroIndex = 0;
@@ -1108,6 +1178,9 @@
         let base64ImageString = "";
         let examPdfBase64String = "";
         const DEFAULT_LOGO = "https://i.ibb.co/Lhy0W0P/1000018420.jpg";
+
+        let html5QrCode = null;
+        let isScanning = false;
 
         function safeSetItem(key, value) {
             try {
@@ -1299,6 +1372,12 @@
                 loadExamAttemptsList();
                 if (questionFieldCount === 0) addQuestionField();
             }
+            if (id === 'qrAttendanceSystem') {
+                loadQRAttendanceList();
+                if (!document.getElementById('qrFilterDate').value) {
+                    document.getElementById('qrFilterDate').valueAsDate = new Date();
+                }
+            }
         }
 
         function showSection(id) {
@@ -1330,6 +1409,7 @@
                 loadSecurityLogs();
                 loadAdminExamList();
                 loadExamAttemptsList();
+                loadQRAttendanceList();
                 await logSecurityEvent('login_success', 'অ্যাডমিন সফলভাবে লগইন করেছে');
             } else {
                 await logSecurityEvent('login_fail', 'ভুল পাসওয়ার্ড দিয়ে লগইন চেষ্টা করা হয়েছে');
@@ -1341,6 +1421,7 @@
             sessionStorage.removeItem('is_admin');
             document.getElementById('logoutBtn').classList.add('hidden');
             document.getElementById('adminLoginBtn').classList.remove('hidden');
+            stopQRScanner();
             showSection('studentView');
         }
 
@@ -1406,7 +1487,7 @@
             `).join('');
 
             dotsContainer.innerHTML = slides.map((_, i) => `
-                <button onclick="goToHeroSlide(${i})" class="w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white transition" id="heroDot${i}"></button>
+                <button onclick="goToHeroSlide(${i})" class="w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white transition" id="heroDot_${i}"></button>
             `).join('');
 
             updateHeroDots();
@@ -1555,7 +1636,6 @@
             reader.readAsDataURL(file);
         }
 
-        // PDF file select handler for Online Exam
         function handleExamPdfSelect(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1951,28 +2031,68 @@
                 </table>`;
         }
 
-        function generateAdmit() {
-            const roll = document.getElementById('searchRoll').value;
+        // ==================== AUTO ROLL & NAME BASED QR ADMIT CARD ====================
+        async function generateAdmit() {
+            const roll = document.getElementById('searchRoll').value.trim();
             const cls = document.getElementById('searchClass').value;
             const date = document.getElementById('searchDate').value;
             const type = document.getElementById('searchExamType').value;
+            
             if (!roll || !cls || !date) {
                 return Swal.fire('তথ্য অসম্পূর্ণ!', 'সব ঘর পূরণ করুন!', 'warning');
             }
 
             const students = getObjectFromStorage('amc_student_db');
-            const student = students[`${cls}_${roll}`];
+            const student = students[`${cls}_${roll}`] || students[`${cls}_${Number(roll)}`];
+            const studentName = student ? student.name : 'অজ্ঞাত শিক্ষার্থী';
+
+            // অটো রোল ও নাম ভিত্তিক ইউনিক কিউআর ডাটা ফরম্যাট
+            const qrData = `AMC|${cls}|${roll}|${date}|${type}`;
 
             showSection('displayArea');
+            
             document.getElementById('pdfContent').innerHTML = `
-                <div style="border:3px double #4c1d95; padding:20px; border-radius:10px;">
-                    <h2 style="text-align:center; color:#4c1d95; margin:0; font-size:22px;">AMIRUL MATH CARE</h2>
-                    <p style="text-align:center; margin:0 0 15px 0; color:#4a5568;">Official Admit Card</p>
-                    <p style="margin:5px 0;">নাম: <b>${student ? student.name : 'অজ্ঞাত শিক্ষার্থী'}</b></p>
-                    <p style="margin:5px 0;">শ্রেণী: <b>${cls}</b> &nbsp;&nbsp; রোল: <b>${roll}</b></p>
-                    <p style="margin:5px 0;">পরীক্ষা: <b>${type}</b></p>
-                    <p style="margin:5px 0;">তারিখ: <b>${date}</b></p>
+                <div style="border:3px double #4c1d95; padding:20px; border-radius:10px; text-align:center;">
+                    <p>অ্যাডমিট কার্ড ও QR কোড তৈরি হচ্ছে...</p>
                 </div>`;
+
+            let qrDataUrl = "";
+            try {
+                if (typeof QRCode !== 'undefined') {
+                    qrDataUrl = await QRCode.toDataURL(qrData, {
+                        width: 180,
+                        margin: 2,
+                        color: { dark: '#4c1d95', light: '#ffffff' }
+                    });
+                } else {
+                    qrDataUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qrData)}`;
+                }
+            } catch (err) {
+                qrDataUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qrData)}`;
+            }
+
+            document.getElementById('pdfContent').innerHTML = `
+            <div style="border:3px double #4c1d95; padding:20px; border-radius:12px; font-family:'Hind Siliguri',sans-serif; background:white;">
+                <div style="text-align:center; margin-bottom:15px;">
+                    <img src="${siteLogo}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
+                    <h2 style="color:#4c1d95; margin:8px 0 2px 0; font-size:22px;">AMIRUL MATH CARE</h2>
+                    <p style="margin:0; color:#4a5568; font-size:13px;">Official Admit Card</p>
+                </div>
+                
+                <table style="width:100%; font-size:14px; line-height:1.8; margin-bottom:15px;">
+                    <tr><td style="width:35%;">নাম:</td><td><b>${studentName}</b></td></tr>
+                    <tr><td>শ্রেণী:</td><td><b>${cls}</b></td></tr>
+                    <tr><td>রোল:</td><td><b>${roll}</b></td></tr>
+                    <tr><td>পরীক্ষা:</td><td><b>${type}</b></td></tr>
+                    <tr><td>তারিখ:</td><td><b>${date}</b></td></tr>
+                </table>
+
+                <div style="text-align:center; margin-top:10px; border-top:2px dashed #4c1d95; padding-top:15px;">
+                    <img src="${qrDataUrl}" alt="QR Code" style="width:160px; height:160px; display:inline-block;">
+                    <p style="font-size:11px; color:#666; margin-top:6px;">স্ক্যান করে পরীক্ষার উপস্থিতি নিন</p>
+                    <p style="font-size:10px; color:#999;">QR: ${cls} | রোল ${roll}</p>
+                </div>
+            </div>`;
         }
 
         function downloadDocument() {
@@ -2298,7 +2418,6 @@
 
             const labels = progressData.map(r => r.date);
             const totals = progressData.map(r => r.grandTotal);
-            const examTypes = progressData.map(r => r.examType || '');
 
             return new Chart(canvas, {
                 type: 'line',
@@ -2382,8 +2501,6 @@
                             <td style="padding:8px; border-bottom:1px solid #ddd; text-align:center;">${res.scores[sub].g}</td>
                         </tr>`;
                 }
-
-                const progressData = getStudentProgressData(cls, roll);
 
                 document.getElementById('pdfContent').innerHTML = `
                     <div style="font-family:'Hind Siliguri', sans-serif; padding:10px;">
@@ -2704,7 +2821,6 @@
                     document.getElementById('examTakingTitle').innerText = exam.title;
                     document.getElementById('examTakingMeta').innerText = `${exam.cls} • ${exam.questions.length}টি প্রশ্ন`;
 
-                    // Handle PDF Question Paper Display in Exam View
                     const pdfBox = document.getElementById('examPdfViewerBox');
                     const pdfFrame = document.getElementById('examPdfViewerFrame');
                     if (exam.pdfUrl) {
@@ -2876,6 +2992,9 @@
             showSection('displayArea');
 
             let reviewHTML = attempt.review.map((r, i) => `
+                <style>
+                    /* Force clean print styles */
+                </style>
                 <div style="margin-bottom:15px; padding:12px; border-radius:10px; background:${r.isCorrect ? '#ecfdf5' : '#fef2f2'}; border-left:4px solid ${r.isCorrect ? '#10b981' : '#ef4444'};">
                     <p style="font-weight:600; margin-bottom:6px;">${i + 1}. ${r.question}</p>
                     <p style="font-size:13px; margin:2px 0;">
@@ -2912,6 +3031,223 @@
                     </p>
                 </div>
             `;
+        }
+
+        function startQRScanner() {
+            if (isScanning) return;
+
+            const readerEl = document.getElementById('qr-reader');
+            if (!readerEl) return;
+
+            html5QrCode = new Html5Qrcode("qr-reader");
+
+            html5QrCode.start(
+                { facingMode: "environment" },
+                {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
+                },
+                (decodedText) => {
+                    processScannedQR(decodedText);
+                },
+                (errorMessage) => {}
+            ).then(() => {
+                isScanning = true;
+                document.getElementById('startScanBtn').classList.add('hidden');
+                document.getElementById('stopScanBtn').classList.remove('hidden');
+            }).catch(err => {
+                Swal.fire('ক্যামেরা সমস্যা', 'ক্যামেরা অ্যাক্সেস করতে পারছে না। পারমিশন চেক করুন।', 'error');
+                console.error(err);
+            });
+        }
+
+        function stopQRScanner() {
+            if (html5QrCode && isScanning) {
+                html5QrCode.stop().then(() => {
+                    isScanning = false;
+                    document.getElementById('startScanBtn').classList.remove('hidden');
+                    document.getElementById('stopScanBtn').classList.add('hidden');
+                    document.getElementById('qr-reader').innerHTML = '';
+                }).catch(err => console.error(err));
+            }
+        }
+
+        function processScannedQR(decodedText) {
+            if (!decodedText.startsWith('AMC|')) {
+                Swal.fire('অবৈধ QR', 'এটি AMIRUL MATH CARE এর অ্যাডমিট কার্ড QR নয়।', 'warning');
+                return;
+            }
+
+            const parts = decodedText.split('|');
+            if (parts.length < 5) {
+                Swal.fire('অসম্পূর্ণ QR', 'QR কোডের তথ্য অসম্পূর্ণ।', 'warning');
+                return;
+            }
+
+            const cls = parts[1];
+            const roll = parts[2];
+            const examDate = parts[3];
+            const examType = parts[4];
+
+            const students = getObjectFromStorage('amc_student_db');
+            const student = students[`${cls}_${roll}`] || students[`${cls}_${Number(roll)}`];
+            const studentName = student ? student.name : 'অজ্ঞাত শিক্ষার্থী';
+
+            let attendanceList = getArrayFromStorage('amc_exam_attendance');
+            const alreadyScanned = attendanceList.find(a => 
+                a.cls === cls && String(a.roll) === String(roll) && a.examDate === examDate && a.examType === examType
+            );
+
+            if (alreadyScanned) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'ইতিমধ্যে স্ক্যান হয়েছে',
+                    html: `<b>${studentName}</b> (রোল: ${roll})<br>শ্রেণী: ${cls}<br>ইতিমধ্যে উপস্থিত হিসেবে মার্ক করা আছে।`,
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            const record = {
+                id: 'QRATT_' + Date.now(),
+                cls,
+                roll,
+                name: studentName,
+                examDate,
+                examType,
+                scannedAt: new Date().toLocaleString('bn-BD'),
+                scannedTimestamp: Date.now()
+            };
+
+            attendanceList.unshift(record);
+            if (window.saveToFirebase) {
+                window.saveToFirebase('examAttendance', attendanceList);
+            } else {
+                safeSetItem('amc_exam_attendance', JSON.stringify(attendanceList));
+            }
+
+            Swal.fire({
+                icon: 'success',
+                title: 'উপস্থিতি নেওয়া হয়েছে!',
+                html: `<b>${studentName}</b><br>রোল: ${roll} | শ্রেণী: ${cls}<br>পরীক্ষা: ${examType}<br>তারিখ: ${examDate}`,
+                timer: 2200,
+                showConfirmButton: false
+            });
+
+            loadQRAttendanceList();
+        }
+
+        function loadQRAttendanceList() {
+            const container = document.getElementById('qrAttendanceList');
+            if (!container) return;
+
+            let list = getArrayFromStorage('amc_exam_attendance');
+            const filterCls = document.getElementById('qrFilterClass')?.value || '';
+            const filterDate = document.getElementById('qrFilterDate')?.value || '';
+
+            if (filterCls) list = list.filter(a => a.cls === filterCls);
+            if (filterDate) list = list.filter(a => a.examDate === filterDate);
+
+            if (list.length === 0) {
+                container.innerHTML = "<p class='text-center text-gray-400 py-4'>কোনো স্ক্যান রেকর্ড নেই</p>";
+                return;
+            }
+
+            container.innerHTML = list.map(a => `
+                <div class="p-3 bg-white border rounded-lg shadow-sm flex justify-between items-start">
+                    <div>
+                        <b class="text-cyan-900">${a.name}</b>
+                        <div class="text-gray-600 mt-0.5">
+                            ${a.cls} • রোল ${a.roll} • ${a.examType}
+                        </div>
+                        <div class="text-[10px] text-gray-500 mt-1">
+                            পরীক্ষার তারিখ: ${a.examDate} | স্ক্যান: ${a.scannedAt}
+                        </div>
+                    </div>
+                    <button onclick="deleteQRAttendance('${a.id}')" class="text-red-500 p-1">
+                        <i class="fas fa-trash text-sm"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deleteQRAttendance(id) {
+            Swal.fire({
+                title: 'মুছে ফেলবেন?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ',
+                cancelButtonText: 'না'
+            }).then(result => {
+                if (result.isConfirmed) {
+                    let list = getArrayFromStorage('amc_exam_attendance').filter(a => a.id !== id);
+                    if (window.saveToFirebase) window.saveToFirebase('examAttendance', list);
+                    else safeSetItem('amc_exam_attendance', JSON.stringify(list));
+                    loadQRAttendanceList();
+                }
+            });
+        }
+
+        function downloadQRAttendancePDF() {
+            let list = getArrayFromStorage('amc_exam_attendance');
+            const filterCls = document.getElementById('qrFilterClass')?.value || '';
+            const filterDate = document.getElementById('qrFilterDate')?.value || '';
+
+            if (filterCls) list = list.filter(a => a.cls === filterCls);
+            if (filterDate) list = list.filter(a => a.examDate === filterDate);
+
+            if (list.length === 0) {
+                return Swal.fire('কোনো ডাটা নেই', 'ডাউনলোড করার মতো কোনো অ্যাটেনডেন্স রেকর্ড পাওয়া যায়নি।', 'info');
+            }
+
+            list.sort((a, b) => Number(a.roll) - Number(b.roll));
+
+            showSection('displayArea');
+
+            let rows = list.map((a, idx) => `
+                <tr>
+                    <td style="padding:8px; text-align:center; border:1px solid #ddd;">${idx + 1}</td>
+                    <td style="padding:8px; text-align:center; border:1px solid #ddd;">${a.cls}</td>
+                    <td style="padding:8px; text-align:center; border:1px solid #ddd;">${a.roll}</td>
+                    <td style="padding:8px; border:1px solid #ddd;">${a.name}</td>
+                    <td style="padding:8px; text-align:center; border:1px solid #ddd;">${a.examType}</td>
+                    <td style="padding:8px; text-align:center; border:1px solid #ddd;">${a.examDate}</td>
+                    <td style="padding:8px; text-align:center; border:1px solid #ddd; font-size:11px;">${a.scannedAt}</td>
+                </tr>
+            `).join('');
+
+            const filterText = [
+                filterCls ? `শ্রেণী: ${filterCls}` : 'সব শ্রেণী',
+                filterDate ? `তারিখ: ${filterDate}` : 'সব তারিখ'
+            ].join(' | ');
+
+            document.getElementById('pdfContent').innerHTML = `
+                <div style="font-family:'Hind Siliguri',sans-serif; padding:10px;">
+                    <div style="text-align:center; margin-bottom:15px;">
+                        <img src="${siteLogo}" style="width:55px; height:55px; border-radius:50%;">
+                        <h2 style="color:#4c1d95; margin:6px 0 0 0; font-size:20px;">AMIRUL MATH CARE</h2>
+                        <p style="margin:2px 0; font-size:14px; color:#0891b2;">QR কোড পরীক্ষা অ্যাটেনডেন্স রিপোর্ট</p>
+                        <p style="margin:0; font-size:12px; color:#666;">${filterText}</p>
+                    </div>
+                    <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                        <thead>
+                            <tr style="background:#0891b2; color:white;">
+                                <th style="padding:8px; border:1px solid #ddd;">ক্রম</th>
+                                <th style="padding:8px; border:1px solid #ddd;">শ্রেণী</th>
+                                <th style="padding:8px; border:1px solid #ddd;">রোল</th>
+                                <th style="padding:8px; border:1px solid #ddd;">নাম</th>
+                                <th style="padding:8px; border:1px solid #ddd;">পরীক্ষা</th>
+                                <th style="padding:8px; border:1px solid #ddd;">তারিখ</th>
+                                <th style="padding:8px; border:1px solid #ddd;">স্ক্যান সময়</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                    <p style="text-align:right; font-size:11px; color:#666; margin-top:12px;">
+                        মোট উপস্থিত: <b>${list.length}</b> জন | জেনারেট: ${new Date().toLocaleString('bn-BD')}
+                    </p>
+                </div>`;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
