@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMIRUL MATH CARE - Pro Management</title>
+    <title> কোচিং ম্যানেজমেন্ট সফটওয়্যার - Multi Coaching Center Pro</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- QR Code Generation -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <!-- QR Code Scanner -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
     <style>
@@ -46,7 +44,7 @@
 
         @media print {
             body { background: white !important; color: black !important; }
-            .no-print, nav, #studentView, #loginSection, #adminPanel, .slider-container, button, .contact-section {
+            .no-print, nav, #studentView, #loginSection, #adminPanel, #centerSelectSection, #registerSection, .slider-container, button, .contact-section {
                 display: none !important;
             }
             #displayArea {
@@ -180,6 +178,18 @@
         #qr-reader video {
             border-radius: 12px;
         }
+
+        .center-card {
+            transition: all 0.25s ease;
+        }
+        .center-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(76, 29, 149, 0.18);
+        }
+        .subscription-expired {
+            border-color: #ef4444 !important;
+            opacity: 0.85;
+        }
     </style>
 </head>
 
@@ -190,16 +200,19 @@
         <div class="container mx-auto px-4 flex items-center">
             <span class="bg-red-600 text-white text-[11px] px-2 py-0.5 rounded mr-3 animate-pulse tracking-wider">নোটিশ</span>
             <marquee id="mainNotice" class="text-sm text-black dark:text-yellow-100">
-                আমিরুল ম্যাথ কেয়ারে আপনাকে স্বাগত। আধুনিক পদ্ধতিতে গণিত শিখুন।
+                আমিরুল ম্যাথ কেয়ারে আপনাকে স্বাগত। আধুনিক পদ্ধতিতে গণিত শিখুন। একাধিক কোচিং সেন্টার সাপোর্ট যুক্ত।
             </marquee>
         </div>
     </div>
 
     <!-- Navbar -->
     <nav class="brand-purple p-4 text-white flex justify-between items-center sticky top-0 z-55 shadow-xl border-b-4 border-yellow-500 no-print">
-        <div class="flex items-center gap-3" onclick="location.reload()" style="cursor: pointer;">
+        <div class="flex items-center gap-3" onclick="goHome()" style="cursor: pointer;">
             <img id="navLogo" src="https://i.ibb.co/Lhy0W0P/1000018420.jpg" alt="Logo" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-lg">
-            <h1 class="text-lg md:text-xl font-medium">AMIRUL MATH CARE</h1>
+            <div>
+                <h1 class="text-lg md:text-xl font-medium leading-tight">AMIRUL MATH CARE</h1>
+                <p id="navCenterName" class="text-[10px] text-yellow-300 hidden">—</p>
+            </div>
         </div>
         <div class="flex gap-2 items-center">
             <div class="live-users-badge text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md">
@@ -218,8 +231,78 @@
         </div>
     </nav>
 
+    <!-- CENTER SELECTION (Student Entry Point) -->
+    <div id="centerSelectSection" class="container mx-auto mt-8 p-4 max-w-2xl no-print">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl border-t-8 border-purple-800 text-center">
+            <i class="fas fa-school text-5xl text-purple-700 mb-4"></i>
+            <h2 class="text-2xl font-medium text-gray-800 dark:text-white mb-2">কোচিং সেন্টার নির্বাচন করুন</h2>
+            <p class="text-sm text-gray-500 mb-6">যে সেন্টারে আপনি পড়াশোনা করেন সেটি বেছে নিন</p>
+            
+            <div id="centersList" class="space-y-3 max-h-96 overflow-y-auto text-left">
+                <p class="text-center text-gray-400 py-8">লোড হচ্ছে...</p>
+            </div>
+
+            <div class="mt-8 pt-6 border-t">
+                <p class="text-xs text-gray-500 mb-3">নতুন কোচিং সেন্টার রেজিস্ট্রেশন করতে চান?</p>
+                <button onclick="showSection('registerSection')" class="bg-purple-100 text-purple-800 px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-200 transition">
+                    <i class="fas fa-plus-circle mr-1"></i> নতুন সেন্টার রেজিস্টার
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTRATION SECTION -->
+    <div id="registerSection" class="container mx-auto mt-10 p-6 max-w-md hidden no-print">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl border-t-4 border-purple-700">
+            <h2 class="text-2xl mb-2 text-center text-black dark:text-white font-medium">নতুন কোচিং সেন্টার রেজিস্ট্রেশন</h2>
+            <p class="text-xs text-center text-gray-500 mb-6">বার্ষিক সাবস্ক্রিপশন ফি প্রয়োজন • ১ বছরের জন্য অ্যাক্টিভ</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs block mb-1 text-gray-600">কোচিং সেন্টারের নাম *</label>
+                    <input type="text" id="regCenterName" placeholder="যেমন: আমিরুল ম্যাথ কেয়ার - দিনাজপুর" class="w-full p-3 border rounded-xl outline-none text-black">
+                </div>
+                <div>
+                    <label class="text-xs block mb-1 text-gray-600">মোবাইল নম্বর *</label>
+                    <input type="tel" id="regMobile" placeholder="01XXXXXXXXX" class="w-full p-3 border rounded-xl outline-none text-black">
+                </div>
+                <div>
+                    <label class="text-xs block mb-1 text-gray-600">পাসওয়ার্ড *</label>
+                    <input type="password" id="regPassword" placeholder="কমপক্ষে ৬ অক্ষর" class="w-full p-3 border rounded-xl outline-none text-black">
+                </div>
+                <div>
+                    <label class="text-xs block mb-1 text-gray-600">পাসওয়ার্ড নিশ্চিত করুন *</label>
+                    <input type="password" id="regPasswordConfirm" placeholder="আবার পাসওয়ার্ড লিখুন" class="w-full p-3 border rounded-xl outline-none text-black">
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    রেজিস্ট্রেশনের পর ১ বছরের সাবস্ক্রিপশন অ্যাক্টিভ থাকবে। মেয়াদ শেষ হলে নবায়ন করতে হবে।
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button onclick="registerNewCenter()" class="flex-1 bg-purple-700 text-white py-3.5 rounded-xl shadow-md hover:bg-purple-800 transition">
+                        রেজিস্টার করুন
+                    </button>
+                    <button onclick="showSection('centerSelectSection')" class="flex-1 bg-gray-500 text-white py-3.5 rounded-xl shadow-md hover:bg-gray-600 transition">
+                        ফিরে যান
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Student View -->
-    <div id="studentView" class="container mx-auto mt-6 p-4 max-w-lg no-print">
+    <div id="studentView" class="container mx-auto mt-6 p-4 max-w-lg no-print hidden">
+
+        <!-- Selected Center Banner -->
+        <div class="bg-purple-50 dark:bg-gray-800 border border-purple-200 dark:border-gray-600 rounded-2xl p-3 mb-5 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-map-marker-alt text-purple-600"></i>
+                <span class="text-sm font-medium text-purple-900 dark:text-yellow-300" id="selectedCenterLabel">—</span>
+            </div>
+            <button onclick="changeCenter()" class="text-xs bg-white dark:bg-gray-700 px-3 py-1.5 rounded-lg border hover:bg-gray-50 transition">
+                পরিবর্তন
+            </button>
+        </div>
 
         <!-- Hero Slider -->
         <div id="heroSlider" class="slider-container mb-6">
@@ -286,7 +369,6 @@
                     <button onclick="checkResult()" class="brand-purple text-white py-4 rounded-2xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
                         <i class="fas fa-poll mr-2"></i>রেজাল্ট
                     </button>
-                    <!-- অ্যাডমিট কার্ডে অটোমেটিক কিউআর কোড জেনারেট হবে -->
                     <button onclick="generateAdmit()" class="bg-orange-500 text-white py-4 rounded-2xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
                         <i class="fas fa-id-card mr-2"></i>অ্যাডমিট
                     </button>
@@ -465,17 +547,36 @@
     <!-- Login Section -->
     <div id="loginSection" class="container mx-auto mt-12 p-6 max-w-md hidden no-print">
         <div class="bg-white p-10 rounded-2xl shadow-2xl text-center border-t-4 border-purple-700 transition-colors">
-            <h2 class="text-2xl mb-6 text-black dark:text-white font-medium">অ্যাডমিন লগইন</h2>
-            <input type="password" id="adminPass" placeholder="পাসওয়ার্ড" class="w-full p-4 border rounded-xl mb-6 text-center text-xl outline-none text-black">
-            <div class="flex gap-3">
-                <button onclick="adminLogin()" class="flex-1 bg-purple-700 text-white py-4 rounded-xl shadow-md hover:bg-purple-800 transition">লগইন</button>
-                <button onclick="showSection('studentView')" class="flex-1 bg-gray-500 text-white py-4 rounded-xl shadow-md hover:bg-gray-600 transition">ফিরে যান</button>
+            <h2 class="text-2xl mb-2 text-black dark:text-white font-medium">অ্যাডমিন লগইন</h2>
+            <p class="text-xs text-gray-500 mb-6">মোবাইল নম্বর ও পাসওয়ার্ড দিয়ে লগইন করুন</p>
+            
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="text-xs block mb-1 text-gray-600">মোবাইল নম্বর</label>
+                    <input type="tel" id="adminMobile" placeholder="01XXXXXXXXX" class="w-full p-3.5 border rounded-xl outline-none text-black">
+                </div>
+                <div>
+                    <label class="text-xs block mb-1 text-gray-600">পাসওয়ার্ড</label>
+                    <input type="password" id="adminPass" placeholder="পাসওয়ার্ড" class="w-full p-3.5 border rounded-xl outline-none text-black">
+                </div>
             </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="adminLogin()" class="flex-1 bg-purple-700 text-white py-4 rounded-xl shadow-md hover:bg-purple-800 transition">লগইন</button>
+                <button onclick="showSection('centerSelectSection')" class="flex-1 bg-gray-500 text-white py-4 rounded-xl shadow-md hover:bg-gray-600 transition">ফিরে যান</button>
+            </div>
+            <p class="text-xs text-gray-500 mt-5">
+                নতুন সেন্টার? <a href="#" onclick="showSection('registerSection')" class="text-purple-700 font-medium underline">রেজিস্টার করুন</a>
+            </p>
         </div>
     </div>
 
     <!-- Admin Panel -->
     <div id="adminPanel" class="container mx-auto mt-6 p-4 hidden no-print">
+
+        <!-- Subscription Banner -->
+        <div id="subscriptionBanner" class="mb-4 p-4 rounded-2xl border-2 hidden">
+            <!-- filled dynamically -->
+        </div>
 
         <!-- Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -558,12 +659,83 @@
             <button onclick="toggleSectionElement('qrAttendanceSystem')" class="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fas fa-qrcode"></i>QR অ্যাটেনডেন্স স্ক্যানার
             </button>
+            <button onclick="toggleSectionElement('subscriptionManager')" class="bg-rose-600 hover:bg-rose-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-crown"></i>সাবস্ক্রিপশন
+            </button>
+            <button id="manageAllCentersBtn" onclick="toggleSectionElement('allCentersManager'); loadAllCentersList();" class="hidden bg-slate-800 hover:bg-slate-900 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-building"></i>সব সেন্টার ম্যানেজ
+            </button>
             <button onclick="sendBulkWhatsAppResults()" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fab fa-whatsapp"></i>গ্রুপ রেজাল্ট পাঠান
             </button>
             <button onclick="downloadStudentListPDF()" class="bg-gray-700 hover:bg-gray-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fas fa-file-download"></i>ছাত্র তালিকা PDF
             </button>
+        </div>
+
+        <!-- ALL CENTERS MANAGER (Only for AMIRUL MATH CARE / Default Center) -->
+        <div id="allCentersManager" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-slate-700 hidden text-black transition-colors">
+            <h2 class="text-xl text-slate-800 mb-2 font-medium">
+                <i class="fas fa-building mr-2"></i>সকল কোচিং সেন্টার ম্যানেজমেন্ট
+            </h2>
+            <p class="text-xs text-gray-500 mb-4">
+                শুধুমাত্র <b>AMIRUL MATH CARE</b> অ্যাডমিন এই প্যানেল দেখতে ও ব্যবহার করতে পারবেন। 
+                যেকোনো সময় (অ্যাক্টিভ বা মেয়াদ শেষ) যেকোনো কোচিং সেন্টার এখান থেকে ডিলিট করতে পারবেন।
+            </p>
+            <div class="flex gap-2 mb-4">
+                <button onclick="loadAllCentersList()" class="text-xs bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-200">
+                    <i class="fas fa-sync-alt mr-1"></i>রিফ্রেশ
+                </button>
+                <select id="centerFilterStatus" onchange="loadAllCentersList()" class="text-xs border rounded-lg px-2 py-1.5">
+                    <option value="all">সব সেন্টার</option>
+                    <option value="expired">শুধু মেয়াদ শেষ</option>
+                    <option value="active">শুধু অ্যাক্টিভ</option>
+                </select>
+            </div>
+            <div id="allCentersList" class="max-h-96 overflow-y-auto space-y-2 border rounded-xl p-3 bg-gray-50">
+                <p class="text-center text-gray-400 py-6 text-sm">লোড হচ্ছে...</p>
+            </div>
+        </div>
+
+        <!-- SUBSCRIPTION MANAGER -->
+        <div id="subscriptionManager" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-rose-600 hidden text-black transition-colors">
+            <h2 class="text-xl text-rose-800 mb-4 font-medium">
+                <i class="fas fa-crown mr-2"></i>বার্ষিক সাবস্ক্রিপশন ম্যানেজমেন্ট
+            </h2>
+            <div id="subscriptionDetails" class="bg-rose-50 p-5 rounded-xl mb-4">
+                <!-- filled by JS -->
+            </div>
+            <div class="bg-gray-50 p-4 rounded-xl">
+                <p class="text-sm text-gray-700 mb-3">সাবস্ক্রিপশন নবায়ন করতে নিচের তথ্য পূরণ করুন (ম্যানুয়াল কনফার্মেশন)।</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <input type="text" id="subTxnId" placeholder="পেমেন্ট ট্রানজেকশন আইডি" class="p-2.5 border rounded-xl">
+                    <select id="subMethod" class="p-2.5 border rounded-xl">
+                        <option value="bKash">bKash</option>
+                        <option value="Nagad">Nagad</option>
+                        <option value="Bank">Bank Transfer</option>
+                        <option value="Cash">Cash</option>
+                    </select>
+                    <button onclick="renewSubscription()" class="bg-rose-600 text-white py-2.5 rounded-xl hover:bg-rose-700 transition">
+                        ১ বছর নবায়ন করুন
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">নবায়ন হলে মেয়াদ আরও ৩৬৫ দিন বাড়বে।</p>
+            </div>
+
+            <!-- CENTER DELETE SECTION -->
+            <div class="mt-6 bg-red-50 border-2 border-red-200 rounded-xl p-5">
+                <h3 class="text-red-800 font-medium mb-2">
+                    <i class="fas fa-trash-alt mr-2"></i>কোচিং সেন্টার ডিলিট (স্থায়ী)
+                </h3>
+                <p class="text-xs text-red-700 mb-4">
+                    এক বছর শেষে বা যেকোনো সময় আপনি এই সেন্টারটি সম্পূর্ণ মুছে ফেলতে পারেন। 
+                    <b>সব ছাত্র-ছাত্রীর তথ্য, রেজাল্ট, পেমেন্ট, পরীক্ষা — সবকিছু স্থায়ীভাবে মুছে যাবে।</b> 
+                    এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না।
+                </p>
+                <button onclick="deleteCurrentCenter()" class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-medium transition shadow">
+                    <i class="fas fa-exclamation-triangle mr-2"></i> এই কোচিং সেন্টার সম্পূর্ণ ডিলিট করুন
+                </button>
+            </div>
         </div>
 
         <!-- QR ATTENDANCE SCANNER SYSTEM -->
@@ -993,7 +1165,7 @@
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue, onDisconnect, remove, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, onDisconnect, remove, push, serverTimestamp, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC4j1NqdqdYoHlKj_mtX5Kcz_X0M9DhMdI",
@@ -1008,20 +1180,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        window.saveToFirebase = (path, data) => set(ref(db, path), data);
-        if (typeof window.safeSetItem !== 'function') {
-            window.safeSetItem = function(key, value) {
-                try { localStorage.setItem(key, value); return true; }
-                catch(e) { return false; }
-            };
-        }
-        if (typeof window.ensureArray !== 'function') {
-            window.ensureArray = function(data) {
-                if (Array.isArray(data)) return data;
-                if (data && typeof data === 'object') return Object.values(data);
-                return [];
-            };
-        }
+        window.firebaseDb = db;
         window.firebaseRef = ref;
         window.firebaseSet = set;
         window.firebaseOnValue = onValue;
@@ -1029,8 +1188,15 @@
         window.firebaseRemove = remove;
         window.firebasePush = push;
         window.firebaseServerTimestamp = serverTimestamp;
-        window.firebaseDb = db;
+        window.firebaseGet = get;
 
+        window.saveToFirebase = (path, data) => set(ref(db, path), data);
+        window.getFromFirebase = async (path) => {
+            const snap = await get(ref(db, path));
+            return snap.exists() ? snap.val() : null;
+        };
+
+        // Global presence (all centers)
         const presenceId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         const presenceRef = ref(db, 'presence/' + presenceId);
 
@@ -1056,117 +1222,832 @@
             });
         }, 45000);
 
-        onValue(ref(db, 'results'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : [];
-            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
-            safeSetItem('amc_db_final', JSON.stringify(arr));
-            updateDashboardStats();
-            if (sessionStorage.getItem('is_admin')) loadResultList();
+        // Centers list listener
+        onValue(ref(db, 'centers'), (snapshot) => {
+            let val = snapshot.exists() ? snapshot.val() : {};
+            window._centersCache = val || {};
+            if (typeof loadCentersList === 'function') loadCentersList();
+
+            // One-time migration of original Amirul Math Care data
+            if (!window._migrationChecked) {
+                window._migrationChecked = true;
+                migrateLegacyDataIfNeeded(val || {});
+            }
         });
 
-        onValue(ref(db, 'students'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : {};
-            if (typeof val !== 'object' || Array.isArray(val)) val = {};
-            safeSetItem('amc_student_db', JSON.stringify(val));
-            if (sessionStorage.getItem('is_admin')) {
-                loadStudentList();
+        // Migrate old single-center data (students, results, etc.) into a default "Amirul Math Care" center
+        async function migrateLegacyDataIfNeeded(centers) {
+            try {
+                // Check if a default center already exists
+                const hasDefault = Object.values(centers).some(c => 
+                    c && (c.name === 'Amirul Math Care' || c.name === 'AMIRUL MATH CARE' || c.isDefault === true)
+                );
+                if (hasDefault) return;
+
+                // Check for legacy root data
+                const legacyStudents = await get(ref(db, 'students'));
+                const legacyResults = await get(ref(db, 'results'));
+                const hasLegacy = (legacyStudents.exists() && Object.keys(legacyStudents.val() || {}).length > 0) ||
+                                  (legacyResults.exists() && (Array.isArray(legacyResults.val()) ? legacyResults.val().length : Object.keys(legacyResults.val() || {}).length) > 0);
+
+                if (!hasLegacy) return;
+
+                // Create default center
+                const defaultId = 'CTR_DEFAULT_AMIRUL_MATH_CARE';
+                const now = new Date();
+                const expiry = new Date(now);
+                expiry.setFullYear(expiry.getFullYear() + 5); // 5 years for original data
+
+                const defaultCenter = {
+                    id: defaultId,
+                    name: 'AMIRUL MATH CARE',
+                    mobile: '01773167795',
+                    password: 'amc123',
+                    createdAt: now.toISOString(),
+                    subscriptionExpiry: expiry.toISOString(),
+                    isDefault: true,
+                    subscriptionHistory: [{
+                        action: 'initial',
+                        date: now.toISOString(),
+                        method: 'Legacy Migration',
+                        txnId: 'LEGACY-MIGRATE'
+                    }]
+                };
+
+                await set(ref(db, `centers/${defaultId}`), defaultCenter);
+
+                // Migrate all known legacy paths
+                const pathsToMigrate = [
+                    'students', 'results', 'notice', 'multiNotices', 'routines',
+                    'gallery', 'attendance', 'payments', 'faqs', 'securityLogs',
+                    'exams', 'examAttempts', 'examAttendance'
+                ];
+
+                for (const p of pathsToMigrate) {
+                    const snap = await get(ref(db, p));
+                    if (snap.exists()) {
+                        await set(ref(db, `centerData/${defaultId}/${p}`), snap.val());
+                    }
+                }
+
+                console.log('Legacy Amirul Math Care data migrated successfully to default center.');
+            } catch (err) {
+                console.warn('Migration skipped or failed:', err);
+            }
+        }
+
+        // When a center is selected / admin logged in, attach data listeners
+        window.attachCenterDataListeners = function(centerId) {
+            if (!centerId) return;
+            const base = `centerData/${centerId}`;
+
+            // Results
+            onValue(ref(db, `${base}/results`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_db_final'), JSON.stringify(arr));
                 updateDashboardStats();
-            }
-        });
+                if (sessionStorage.getItem('is_admin')) loadResultList && loadResultList();
+                if (sessionStorage.getItem('is_admin')) renderTable && renderTable();
+            });
 
-        onValue(ref(db, 'notice'), (snapshot) => {
-            if (snapshot.exists()) {
-                const v = snapshot.val();
-                try { localStorage.setItem('amc_notice', v); } catch(e) {}
-                const el = document.getElementById('mainNotice');
-                if (el) el.innerText = v;
-            }
-        });
+            // Students
+            onValue(ref(db, `${base}/students`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : {};
+                if (typeof val !== 'object' || Array.isArray(val)) val = {};
+                safeSetItem(lsKey('amc_student_db'), JSON.stringify(val));
+                if (sessionStorage.getItem('is_admin')) {
+                    loadStudentList();
+                    updateDashboardStats();
+                }
+            });
 
-        onValue(ref(db, 'multiNotices'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : [];
-            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
-            safeSetItem('amc_multi_notices', JSON.stringify(arr));
-            loadMultiNotices();
-            if (sessionStorage.getItem('is_admin')) loadAdminNoticeList();
-        });
+            // Notice
+            onValue(ref(db, `${base}/notice`), (snapshot) => {
+                if (snapshot.exists()) {
+                    const v = snapshot.val();
+                    try { localStorage.setItem(lsKey('amc_notice'), v); } catch(e) {}
+                    const el = document.getElementById('mainNotice');
+                    if (el) el.innerText = v;
+                }
+            });
 
-        onValue(ref(db, 'routines'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : [];
-            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
-            safeSetItem('amc_routines', JSON.stringify(arr));
-            loadRoutines();
-            if (sessionStorage.getItem('is_admin')) loadAdminRoutineList();
-        });
+            // Multi Notices
+            onValue(ref(db, `${base}/multiNotices`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_multi_notices'), JSON.stringify(arr));
+                loadMultiNotices();
+                if (sessionStorage.getItem('is_admin')) loadAdminNoticeList();
+            });
 
-        onValue(ref(db, 'gallery'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : [];
-            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
-            safeSetItem('amc_gallery', JSON.stringify(arr));
-            loadGallerySlider();
-            if (sessionStorage.getItem('is_admin')) loadAdminGalleryList();
-        });
+            // Routines
+            onValue(ref(db, `${base}/routines`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_routines'), JSON.stringify(arr));
+                loadRoutines();
+                if (sessionStorage.getItem('is_admin')) loadAdminRoutineList();
+            });
 
-        onValue(ref(db, 'attendance'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : {};
-            if (typeof val !== 'object' || Array.isArray(val)) val = {};
-            safeSetItem('amc_attendance', JSON.stringify(val));
-            updateDashboardStats();
-        });
+            // Gallery
+            onValue(ref(db, `${base}/gallery`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_gallery'), JSON.stringify(arr));
+                loadGallerySlider();
+                if (sessionStorage.getItem('is_admin')) loadAdminGalleryList();
+            });
 
-        onValue(ref(db, 'payments'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : [];
-            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
-            safeSetItem('amc_payment_db', JSON.stringify(arr));
-            if (sessionStorage.getItem('is_admin')) loadPaymentList();
-        });
+            // Attendance
+            onValue(ref(db, `${base}/attendance`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : {};
+                if (typeof val !== 'object' || Array.isArray(val)) val = {};
+                safeSetItem(lsKey('amc_attendance'), JSON.stringify(val));
+                updateDashboardStats();
+            });
 
-        onValue(ref(db, 'faqs'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : [];
-            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
-            safeSetItem('amc_faq_db', JSON.stringify(arr));
-            loadFaqAccordion();
-            if (sessionStorage.getItem('is_admin')) loadAdminFaqList();
-        });
+            // Payments
+            onValue(ref(db, `${base}/payments`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_payment_db'), JSON.stringify(arr));
+                if (sessionStorage.getItem('is_admin')) loadPaymentList();
+            });
 
-        onValue(ref(db, 'securityLogs'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : [];
-            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
-            safeSetItem('amc_security_logs', JSON.stringify(arr));
-            if (sessionStorage.getItem('is_admin')) loadSecurityLogs();
-        });
+            // FAQs
+            onValue(ref(db, `${base}/faqs`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_faq_db'), JSON.stringify(arr));
+                loadFaqAccordion();
+                if (sessionStorage.getItem('is_admin')) loadAdminFaqList();
+            });
 
-        onValue(ref(db, 'exams'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : [];
-            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
-            safeSetItem('amc_exams', JSON.stringify(arr));
-            if (sessionStorage.getItem('is_admin')) {
-                loadAdminExamList();
-            }
-            loadAvailableExams();
-        });
+            // Security Logs
+            onValue(ref(db, `${base}/securityLogs`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_security_logs'), JSON.stringify(arr));
+                if (sessionStorage.getItem('is_admin')) loadSecurityLogs();
+            });
 
-        onValue(ref(db, 'examAttempts'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : [];
-            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
-            safeSetItem('amc_exam_attempts', JSON.stringify(arr));
-            if (sessionStorage.getItem('is_admin')) {
-                loadExamAttemptsList();
-            }
-        });
+            // Exams
+            onValue(ref(db, `${base}/exams`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_exams'), JSON.stringify(arr));
+                if (sessionStorage.getItem('is_admin')) loadAdminExamList();
+                loadAvailableExams();
+            });
 
-        onValue(ref(db, 'examAttendance'), (snapshot) => {
-            let val = snapshot.exists() ? snapshot.val() : [];
-            let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
-            safeSetItem('amc_exam_attendance', JSON.stringify(arr));
-            if (sessionStorage.getItem('is_admin')) {
-                loadQRAttendanceList();
-            }
-        });
+            // Exam Attempts
+            onValue(ref(db, `${base}/examAttempts`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_exam_attempts'), JSON.stringify(arr));
+                if (sessionStorage.getItem('is_admin')) loadExamAttemptsList();
+            });
+
+            // Exam Attendance (QR)
+            onValue(ref(db, `${base}/examAttendance`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_exam_attendance'), JSON.stringify(arr));
+                if (sessionStorage.getItem('is_admin')) loadQRAttendanceList();
+            });
+        };
     </script>
 
     <!-- Main Script -->
     <script>
+        // ==================== MULTI-CENTER CORE ====================
+        let currentCenterId = null;
+        let currentCenterInfo = null;
+
+        function lsKey(key) {
+            return currentCenterId ? `${key}_${currentCenterId}` : key;
+        }
+
+        function path(key) {
+            return currentCenterId ? `centerData/${currentCenterId}/${key}` : key;
+        }
+
+        function saveCenterData(key, data) {
+            if (!currentCenterId) return;
+            if (window.saveToFirebase) {
+                window.saveToFirebase(path(key), data);
+            } else {
+                safeSetItem(lsKey(key), JSON.stringify(data));
+            }
+        }
+
+        function getCurrentCenters() {
+            return window._centersCache || {};
+        }
+
+        function isSubscriptionActive(center) {
+            if (!center || !center.subscriptionExpiry) return false;
+            return new Date(center.subscriptionExpiry) > new Date();
+        }
+
+        function daysLeft(expiry) {
+            if (!expiry) return 0;
+            const diff = new Date(expiry) - new Date();
+            return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+        }
+
+        function loadCentersList() {
+            const container = document.getElementById('centersList');
+            if (!container) return;
+
+            const centers = getCurrentCenters();
+            const list = Object.keys(centers).map(id => ({ id, ...centers[id] }));
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10">
+                        <i class="fas fa-school text-4xl text-gray-300 mb-3"></i>
+                        <p class="text-gray-500 text-sm">এখনো কোনো কোচিং সেন্টার রেজিস্টার হয়নি।</p>
+                        <p class="text-xs text-gray-400 mt-1">প্রথমে একটি সেন্টার রেজিস্টার করুন।</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = list.map(c => {
+                const active = isSubscriptionActive(c);
+                const left = daysLeft(c.subscriptionExpiry);
+                return `
+                <div class="center-card p-4 border-2 rounded-2xl cursor-pointer ${active ? 'border-purple-200 hover:border-purple-500' : 'border-red-200 subscription-expired'}"
+                     onclick="${active ? `selectCenter('${c.id}')` : `showExpiredAlert('${c.name}')`}">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-purple-900 dark:text-yellow-300 text-base">${c.name}</h3>
+                            <p class="text-xs text-gray-500 mt-1"><i class="fas fa-phone-alt mr-1"></i>${c.mobile}</p>
+                        </div>
+                        <div class="text-right">
+                            ${active 
+                                ? `<span class="bg-green-100 text-green-700 text-[10px] px-2 py-1 rounded-full">অ্যাক্টিভ • ${left} দিন বাকি</span>`
+                                : `<span class="bg-red-100 text-red-700 text-[10px] px-2 py-1 rounded-full">মেয়াদ শেষ</span>`
+                            }
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function showExpiredAlert(name) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'সাবস্ক্রিপশন মেয়াদ শেষ',
+                html: `<b>${name}</b> এর বার্ষিক সাবস্ক্রিপশন মেয়াদ শেষ হয়েছে।<br>অ্যাডমিন প্যানেল থেকে নবায়ন করুন।`,
+                confirmButtonText: 'বুঝেছি'
+            });
+        }
+
+        function selectCenter(centerId) {
+            const centers = getCurrentCenters();
+            const center = centers[centerId];
+            if (!center) return;
+
+            if (!isSubscriptionActive(center)) {
+                showExpiredAlert(center.name);
+                return;
+            }
+
+            currentCenterId = centerId;
+            currentCenterInfo = center;
+            sessionStorage.setItem('selected_center_id', centerId);
+            sessionStorage.setItem('selected_center_name', center.name);
+
+            // Update UI
+            document.getElementById('selectedCenterLabel').innerText = center.name;
+            document.getElementById('navCenterName').innerText = center.name;
+            document.getElementById('navCenterName').classList.remove('hidden');
+
+            // Attach Firebase listeners for this center
+            if (window.attachCenterDataListeners) {
+                window.attachCenterDataListeners(centerId);
+            }
+
+            // Load student-facing data
+            loadMultiNotices();
+            loadRoutines();
+            loadGallerySlider();
+            loadFaqAccordion();
+            initHeroSlider();
+
+            showSection('studentView');
+        }
+
+        function changeCenter() {
+            currentCenterId = null;
+            currentCenterInfo = null;
+            sessionStorage.removeItem('selected_center_id');
+            sessionStorage.removeItem('selected_center_name');
+            document.getElementById('navCenterName').classList.add('hidden');
+            showSection('centerSelectSection');
+            loadCentersList();
+        }
+
+        function goHome() {
+            if (sessionStorage.getItem('is_admin') === 'true') {
+                showSection('adminPanel');
+            } else if (currentCenterId) {
+                showSection('studentView');
+            } else {
+                showSection('centerSelectSection');
+            }
+        }
+
+        async function registerNewCenter() {
+            const name = document.getElementById('regCenterName').value.trim();
+            const mobile = document.getElementById('regMobile').value.trim().replace(/\D/g, '');
+            const pass = document.getElementById('regPassword').value;
+            const pass2 = document.getElementById('regPasswordConfirm').value;
+
+            if (!name || name.length < 3) {
+                return Swal.fire('ত্রুটি', 'সেন্টারের নাম কমপক্ষে ৩ অক্ষরের হতে হবে।', 'warning');
+            }
+            if (!mobile || mobile.length < 11) {
+                return Swal.fire('ত্রুটি', 'সঠিক মোবাইল নম্বর দিন (১১ ডিজিট)।', 'warning');
+            }
+            if (!pass || pass.length < 6) {
+                return Swal.fire('ত্রুটি', 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।', 'warning');
+            }
+            if (pass !== pass2) {
+                return Swal.fire('ত্রুটি', 'পাসওয়ার্ড মিলছে না।', 'warning');
+            }
+
+            // Check if mobile already registered
+            const centers = getCurrentCenters();
+            const exists = Object.values(centers).some(c => c.mobile === mobile);
+            if (exists) {
+                return Swal.fire('ইতিমধ্যে রেজিস্টারড', 'এই মোবাইল নম্বর দিয়ে ইতিমধ্যে একটি সেন্টার রেজিস্টার আছে।', 'error');
+            }
+
+            const centerId = 'CTR_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            const now = new Date();
+            const expiry = new Date(now);
+            expiry.setFullYear(expiry.getFullYear() + 1);
+
+            const centerData = {
+                id: centerId,
+                name: name,
+                mobile: mobile,
+                password: pass, // Note: client-side only, not secure for production
+                createdAt: now.toISOString(),
+                subscriptionExpiry: expiry.toISOString(),
+                subscriptionHistory: [{
+                    action: 'initial',
+                    date: now.toISOString(),
+                    method: 'Registration',
+                    txnId: 'REG-' + Date.now()
+                }]
+            };
+
+            try {
+                if (window.saveToFirebase) {
+                    await window.saveToFirebase(`centers/${centerId}`, centerData);
+                }
+                Swal.fire({
+                    icon: 'success',
+                    title: 'রেজিস্ট্রেশন সফল!',
+                    html: `<b>${name}</b> সফলভাবে রেজিস্টার হয়েছে।<br>সাবস্ক্রিপশন মেয়াদ: ১ বছর<br><br>এখন মোবাইল ও পাসওয়ার্ড দিয়ে লগইন করুন।`,
+                    confirmButtonText: 'লগইন পেজে যান'
+                }).then(() => {
+                    document.getElementById('adminMobile').value = mobile;
+                    showSection('loginSection');
+                });
+
+                // Clear form
+                ['regCenterName', 'regMobile', 'regPassword', 'regPasswordConfirm'].forEach(id => {
+                    document.getElementById(id).value = '';
+                });
+            } catch (err) {
+                Swal.fire('ত্রুটি', 'রেজিস্ট্রেশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।', 'error');
+                console.error(err);
+            }
+        }
+
+        async function adminLogin() {
+            const mobile = document.getElementById('adminMobile').value.trim().replace(/\D/g, '');
+            const pass = document.getElementById('adminPass').value;
+
+            if (!mobile || !pass) {
+                return Swal.fire('ফিল্ড খালি', 'মোবাইল ও পাসওয়ার্ড দিন।', 'warning');
+            }
+
+            const centers = getCurrentCenters();
+            let foundId = null;
+            let foundCenter = null;
+
+            for (const [id, c] of Object.entries(centers)) {
+                if (c.mobile === mobile && c.password === pass) {
+                    foundId = id;
+                    foundCenter = c;
+                    break;
+                }
+            }
+
+            if (!foundId) {
+                await logSecurityEvent('login_fail', `ভুল মোবাইল/পাসওয়ার্ড: ${mobile}`);
+                return Swal.fire('লগইন ব্যর্থ', 'মোবাইল নম্বর বা পাসওয়ার্ড ভুল।', 'error');
+            }
+
+            // Check subscription
+            if (!isSubscriptionActive(foundCenter)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'সাবস্ক্রিপশন মেয়াদ শেষ',
+                    html: `আপনার সেন্টারের বার্ষিক সাবস্ক্রিপশন শেষ হয়েছে।<br>নবায়ন করতে লগইন করে <b>সাবস্ক্রিপশন</b> সেকশনে যান।`,
+                    confirmButtonText: 'লগইন চালিয়ে যান'
+                });
+            }
+
+            currentCenterId = foundId;
+            currentCenterInfo = foundCenter;
+            sessionStorage.setItem('is_admin', 'true');
+            sessionStorage.setItem('admin_center_id', foundId);
+            sessionStorage.setItem('selected_center_id', foundId);
+            sessionStorage.setItem('selected_center_name', foundCenter.name);
+
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            document.getElementById('adminLoginBtn').classList.add('hidden');
+            document.getElementById('navCenterName').innerText = foundCenter.name;
+            document.getElementById('navCenterName').classList.remove('hidden');
+
+            // Attach listeners
+            if (window.attachCenterDataListeners) {
+                window.attachCenterDataListeners(foundId);
+            }
+
+            showSection('adminPanel');
+            updateSubscriptionBanner();
+            loadStudentList();
+            loadPaymentList();
+            updateDashboardStats();
+            loadSecurityLogs();
+            loadAdminExamList();
+            loadExamAttemptsList();
+            loadQRAttendanceList();
+            renderTable();
+
+            // Show "Manage All Centers" only for default / AMIRUL MATH CARE admin
+            const manageBtn = document.getElementById('manageAllCentersBtn');
+            if (manageBtn) {
+                const isMainAdmin = foundCenter.isDefault === true || 
+                    foundCenter.name === 'AMIRUL MATH CARE' || 
+                    foundCenter.name === 'Amirul Math Care';
+                manageBtn.classList.toggle('hidden', !isMainAdmin);
+            }
+
+            await logSecurityEvent('login_success', `অ্যাডমিন লগইন: ${foundCenter.name} (${mobile})`);
+        }
+
+        function updateSubscriptionBanner() {
+            const banner = document.getElementById('subscriptionBanner');
+            const details = document.getElementById('subscriptionDetails');
+            if (!currentCenterInfo || !banner) return;
+
+            const active = isSubscriptionActive(currentCenterInfo);
+            const left = daysLeft(currentCenterInfo.subscriptionExpiry);
+            const expiryStr = new Date(currentCenterInfo.subscriptionExpiry).toLocaleDateString('bn-BD');
+
+            if (active) {
+                banner.className = 'mb-4 p-4 rounded-2xl border-2 border-green-300 bg-green-50';
+                banner.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="font-medium text-green-800"><i class="fas fa-check-circle mr-1"></i>সাবস্ক্রিপশন অ্যাক্টিভ</span>
+                            <p class="text-xs text-green-700 mt-1">মেয়াদ শেষ: ${expiryStr} • বাকি ${left} দিন</p>
+                        </div>
+                        <span class="text-xs bg-green-200 text-green-800 px-3 py-1 rounded-full">${currentCenterInfo.name}</span>
+                    </div>`;
+                banner.classList.remove('hidden');
+            } else {
+                banner.className = 'mb-4 p-4 rounded-2xl border-2 border-red-400 bg-red-50';
+                banner.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="font-medium text-red-800"><i class="fas fa-exclamation-triangle mr-1"></i>সাবস্ক্রিপশন মেয়াদ শেষ!</span>
+                            <p class="text-xs text-red-700 mt-1">মেয়াদ শেষ হয়েছে: ${expiryStr}। নবায়ন করুন।</p>
+                        </div>
+                        <button onclick="toggleSectionElement('subscriptionManager')" class="text-xs bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                            এখনই নবায়ন
+                        </button>
+                    </div>`;
+                banner.classList.remove('hidden');
+            }
+
+            if (details) {
+                details.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <p class="text-gray-500 text-xs">সেন্টারের নাম</p>
+                            <p class="font-medium">${currentCenterInfo.name}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-xs">মোবাইল</p>
+                            <p class="font-medium">${currentCenterInfo.mobile}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-xs">বর্তমান মেয়াদ শেষ</p>
+                            <p class="font-medium ${active ? 'text-green-700' : 'text-red-700'}">${expiryStr}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-xs">স্ট্যাটাস</p>
+                            <p class="font-medium">${active ? '✅ অ্যাক্টিভ (' + left + ' দিন বাকি)' : '❌ মেয়াদ শেষ'}</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t">
+                        <p class="text-xs text-gray-500 mb-2">সাবস্ক্রিপশন হিস্ট্রি</p>
+                        ${(currentCenterInfo.subscriptionHistory || []).slice().reverse().map(h => `
+                            <div class="text-xs text-gray-600 py-1 border-b border-gray-100">
+                                ${h.action === 'initial' ? 'প্রথম রেজিস্ট্রেশন' : 'নবায়ন'} • ${new Date(h.date).toLocaleDateString('bn-BD')} • ${h.method} (${h.txnId})
+                            </div>
+                        `).join('') || '<p class="text-xs text-gray-400">কোনো হিস্ট্রি নেই</p>'}
+                    </div>
+                `;
+            }
+        }
+
+        async function renewSubscription() {
+            if (!currentCenterId || !currentCenterInfo) return;
+
+            const txnId = document.getElementById('subTxnId').value.trim() || ('MANUAL-' + Date.now());
+            const method = document.getElementById('subMethod').value;
+
+            const currentExpiry = new Date(currentCenterInfo.subscriptionExpiry);
+            const base = currentExpiry > new Date() ? currentExpiry : new Date();
+            const newExpiry = new Date(base);
+            newExpiry.setFullYear(newExpiry.getFullYear() + 1);
+
+            const history = currentCenterInfo.subscriptionHistory || [];
+            history.push({
+                action: 'renew',
+                date: new Date().toISOString(),
+                method: method,
+                txnId: txnId
+            });
+
+            const updated = {
+                ...currentCenterInfo,
+                subscriptionExpiry: newExpiry.toISOString(),
+                subscriptionHistory: history
+            };
+
+            try {
+                if (window.saveToFirebase) {
+                    await window.saveToFirebase(`centers/${currentCenterId}`, updated);
+                }
+                currentCenterInfo = updated;
+                window._centersCache[currentCenterId] = updated;
+
+                updateSubscriptionBanner();
+                document.getElementById('subTxnId').value = '';
+                Swal.fire('সফল!', `সাবস্ক্রিপশন নবায়ন হয়েছে। নতুন মেয়াদ: ${newExpiry.toLocaleDateString('bn-BD')}`, 'success');
+            } catch (err) {
+                Swal.fire('ত্রুটি', 'নবায়ন ব্যর্থ হয়েছে।', 'error');
+            }
+        }
+
+        async function deleteCurrentCenter() {
+            if (!currentCenterId || !currentCenterInfo) {
+                return Swal.fire('ত্রুটি', 'কোনো সেন্টার লোড নেই।', 'error');
+            }
+
+            const centerName = currentCenterInfo.name;
+
+            const { value: typedName } = await Swal.fire({
+                title: 'সেন্টার ডিলিট করবেন?',
+                html: `
+                    <p class="text-sm text-red-700 mb-3">
+                        <b>${centerName}</b> এবং এর <b>সব ছাত্র-ছাত্রীর তথ্য, রেজাল্ট, পেমেন্ট, পরীক্ষা, নোটিশ</b> স্থায়ীভাবে মুছে যাবে।
+                    </p>
+                    <p class="text-xs text-gray-600 mb-2">নিশ্চিত করতে নিচে সেন্টারের <b>পূর্ণ নাম</b> লিখুন:</p>
+                `,
+                input: 'text',
+                inputPlaceholder: centerName,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, সম্পূর্ণ ডিলিট করুন',
+                cancelButtonText: 'বাতিল',
+                confirmButtonColor: '#dc2626',
+                inputValidator: (value) => {
+                    if (!value || value.trim() !== centerName) {
+                        return 'সেন্টারের নাম সঠিকভাবে লিখুন!';
+                    }
+                }
+            });
+
+            if (!typedName) return;
+
+            // Second confirmation
+            const confirm2 = await Swal.fire({
+                title: 'শেষবার নিশ্চিত করুন',
+                text: 'এই কাজটি আর পূর্বাবস্থায় ফেরানো যাবে না। চালিয়ে যেতে চান?',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, ডিলিট করুন',
+                cancelButtonText: 'না, থাক',
+                confirmButtonColor: '#991b1b'
+            });
+
+            if (!confirm2.isConfirmed) return;
+
+            try {
+                // Delete center metadata
+                if (window.saveToFirebase) {
+                    await window.saveToFirebase(`centers/${currentCenterId}`, null);
+                    // Delete all center data
+                    await window.saveToFirebase(`centerData/${currentCenterId}`, null);
+                }
+
+                // Clear local cache
+                if (window._centersCache) {
+                    delete window._centersCache[currentCenterId];
+                }
+
+                // Clear session
+                sessionStorage.removeItem('is_admin');
+                sessionStorage.removeItem('admin_center_id');
+                sessionStorage.removeItem('selected_center_id');
+                sessionStorage.removeItem('selected_center_name');
+
+                currentCenterId = null;
+                currentCenterInfo = null;
+
+                document.getElementById('logoutBtn').classList.add('hidden');
+                document.getElementById('adminLoginBtn').classList.remove('hidden');
+                document.getElementById('navCenterName').classList.add('hidden');
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ডিলিট সম্পন্ন',
+                    text: `"${centerName}" এবং এর সব তথ্য স্থায়ীভাবে মুছে ফেলা হয়েছে।`,
+                    confirmButtonText: 'ঠিক আছে'
+                }).then(() => {
+                    showSection('centerSelectSection');
+                    loadCentersList();
+                });
+            } catch (err) {
+                console.error(err);
+                Swal.fire('ত্রুটি', 'ডিলিট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
+            }
+        }
+
+        // ==================== ALL CENTERS MANAGEMENT (Main Admin Only) ====================
+        function loadAllCentersList() {
+            const container = document.getElementById('allCentersList');
+            if (!container) return;
+
+            // Only main admin can use this
+            if (!currentCenterInfo || !(currentCenterInfo.isDefault || currentCenterInfo.name === 'AMIRUL MATH CARE' || currentCenterInfo.name === 'Amirul Math Care')) {
+                container.innerHTML = '<p class="text-center text-red-500 py-6 text-sm">এই প্যানেল শুধুমাত্র AMIRUL MATH CARE অ্যাডমিন ব্যবহার করতে পারবেন।</p>';
+                return;
+            }
+
+            const centers = getCurrentCenters();
+            const filter = document.getElementById('centerFilterStatus')?.value || 'all';
+            let list = Object.keys(centers).map(id => ({ id, ...centers[id] }));
+
+            // Exclude self (main center)
+            list = list.filter(c => c.id !== currentCenterId);
+
+            if (filter === 'expired') {
+                list = list.filter(c => !isSubscriptionActive(c));
+            } else if (filter === 'active') {
+                list = list.filter(c => isSubscriptionActive(c));
+            }
+
+            // Sort: expired first, then by name
+            list.sort((a, b) => {
+                const aActive = isSubscriptionActive(a);
+                const bActive = isSubscriptionActive(b);
+                if (aActive !== bActive) return aActive ? 1 : -1;
+                return (a.name || '').localeCompare(b.name || '');
+            });
+
+            if (list.length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-400 py-6 text-sm">কোনো অন্যান্য সেন্টার পাওয়া যায়নি।</p>';
+                return;
+            }
+
+            container.innerHTML = list.map(c => {
+                const active = isSubscriptionActive(c);
+                const left = daysLeft(c.subscriptionExpiry);
+                const expiryStr = c.subscriptionExpiry ? new Date(c.subscriptionExpiry).toLocaleDateString('bn-BD') : 'N/A';
+                const createdStr = c.createdAt ? new Date(c.createdAt).toLocaleDateString('bn-BD') : 'N/A';
+
+                return `
+                <div class="p-4 bg-white border rounded-xl shadow-sm ${active ? 'border-green-200' : 'border-red-300 bg-red-50/50'}">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h4 class="font-medium text-slate-800">${c.name || 'অজানা'}</h4>
+                                ${active 
+                                    ? `<span class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full">অ্যাক্টিভ • ${left} দিন বাকি</span>`
+                                    : `<span class="bg-red-100 text-red-700 text-[10px] px-2 py-0.5 rounded-full">মেয়াদ শেষ</span>`
+                                }
+                            </div>
+                            <div class="text-xs text-gray-600 mt-1.5 space-y-0.5">
+                                <div><i class="fas fa-phone-alt mr-1 text-gray-400"></i> ${c.mobile || 'N/A'}</div>
+                                <div><i class="fas fa-calendar-plus mr-1 text-gray-400"></i> রেজিস্টার: ${createdStr}</div>
+                                <div><i class="fas fa-hourglass-end mr-1 text-gray-400"></i> মেয়াদ শেষ: ${expiryStr}</div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="deleteOtherCenter('${c.id}', '${(c.name || '').replace(/'/g, "\\'")}')" 
+                                class="bg-red-600 hover:bg-red-700 text-white text-xs px-4 py-2 rounded-lg transition flex items-center gap-1">
+                                <i class="fas fa-trash"></i> ডিলিট করুন
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function deleteOtherCenter(centerId, centerName) {
+            // Security: only main admin
+            if (!currentCenterInfo || !(currentCenterInfo.isDefault || currentCenterInfo.name === 'AMIRUL MATH CARE' || currentCenterInfo.name === 'Amirul Math Care')) {
+                return Swal.fire('অনুমতি নেই', 'শুধুমাত্র AMIRUL MATH CARE অ্যাডমিন এই কাজটি করতে পারবেন।', 'error');
+            }
+
+            if (centerId === currentCenterId) {
+                return Swal.fire('ত্রুটি', 'নিজের সেন্টার এখান থেকে ডিলিট করা যাবে না।', 'warning');
+            }
+
+            const centers = getCurrentCenters();
+            const target = centers[centerId];
+            if (!target) {
+                return Swal.fire('ত্রুটি', 'সেন্টার পাওয়া যায়নি।', 'error');
+            }
+
+            // Allow delete anytime (active or expired) — only by AMIRUL MATH CARE main admin
+            const statusText = isSubscriptionActive(target) ? 'অ্যাক্টিভ (মেয়াদ চলমান)' : 'মেয়াদ শেষ';
+
+            const { value: typedName } = await Swal.fire({
+                title: 'সেন্টার ডিলিট করবেন?',
+                html: `
+                    <p class="text-sm text-red-700 mb-2">
+                        <b>${centerName}</b> এবং এর <b>সব ছাত্র-ছাত্রীর তথ্য, রেজাল্ট, পেমেন্ট, পরীক্ষা</b> স্থায়ীভাবে মুছে যাবে।
+                    </p>
+                    <p class="text-xs text-gray-600 mb-1">স্ট্যাটাস: <b>${statusText}</b></p>
+                    <p class="text-xs text-gray-600 mb-2">নিশ্চিত করতে নিচে সেন্টারের <b>পূর্ণ নাম</b> লিখুন:</p>
+                `,
+                input: 'text',
+                inputPlaceholder: centerName,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, ডিলিট করুন',
+                cancelButtonText: 'বাতিল',
+                confirmButtonColor: '#dc2626',
+                inputValidator: (value) => {
+                    if (!value || value.trim() !== centerName) {
+                        return 'সেন্টারের নাম সঠিকভাবে লিখুন!';
+                    }
+                }
+            });
+
+            if (!typedName) return;
+
+            const confirm2 = await Swal.fire({
+                title: 'শেষবার নিশ্চিত করুন',
+                text: 'এই কাজটি আর পূর্বাবস্থায় ফেরানো যাবে না।',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, সম্পূর্ণ ডিলিট',
+                cancelButtonText: 'না',
+                confirmButtonColor: '#991b1b'
+            });
+
+            if (!confirm2.isConfirmed) return;
+
+            try {
+                if (window.saveToFirebase) {
+                    await window.saveToFirebase(`centers/${centerId}`, null);
+                    await window.saveToFirebase(`centerData/${centerId}`, null);
+                }
+                if (window._centersCache) {
+                    delete window._centersCache[centerId];
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ডিলিট সম্পন্ন',
+                    text: `"${centerName}" এবং এর সব তথ্য মুছে ফেলা হয়েছে।`
+                });
+
+                loadAllCentersList();
+                loadCentersList();
+            } catch (err) {
+                console.error(err);
+                Swal.fire('ত্রুটি', 'ডিলিট করতে সমস্যা হয়েছে।', 'error');
+            }
+        }
+
+        // ==================== ORIGINAL HELPERS (scoped) ====================
         let currentEditStudentId = null;
         let currentEditResultIndex = null;
         let attendanceChartInstance = null;
@@ -1200,7 +2081,7 @@
 
         function getArrayFromStorage(key) {
             try {
-                const raw = localStorage.getItem(key);
+                const raw = localStorage.getItem(lsKey(key));
                 if (!raw) return [];
                 return ensureArray(JSON.parse(raw));
             } catch (e) {
@@ -1210,7 +2091,7 @@
 
         function getObjectFromStorage(key) {
             try {
-                const raw = localStorage.getItem(key);
+                const raw = localStorage.getItem(lsKey(key));
                 if (!raw) return {};
                 const data = JSON.parse(raw);
                 if (data && typeof data === 'object' && !Array.isArray(data)) return data;
@@ -1276,6 +2157,7 @@
         }
 
         async function logSecurityEvent(type, details = '') {
+            if (!currentCenterId) return;
             try {
                 const loc = await getVisitorLocationInfo();
                 const logEntry = {
@@ -1296,11 +2178,7 @@
                 logs.unshift(logEntry);
                 if (logs.length > 100) logs = logs.slice(0, 100);
 
-                if (window.saveToFirebase) {
-                    window.saveToFirebase('securityLogs', logs);
-                } else {
-                    safeSetItem('amc_security_logs', JSON.stringify(logs));
-                }
+                saveCenterData('securityLogs', logs);
             } catch (err) {}
         }
 
@@ -1351,8 +2229,7 @@
                 cancelButtonText: 'না'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    if (window.saveToFirebase) window.saveToFirebase('securityLogs', []);
-                    safeSetItem('amc_security_logs', "[]");
+                    saveCenterData('securityLogs', []);
                     loadSecurityLogs();
                     Swal.fire('মুছে ফেলা হয়েছে', '', 'success');
                 }
@@ -1378,54 +2255,51 @@
                     document.getElementById('qrFilterDate').valueAsDate = new Date();
                 }
             }
+            if (id === 'subscriptionManager') {
+                updateSubscriptionBanner();
+            }
         }
 
         function showSection(id) {
-            ['studentView', 'loginSection', 'adminPanel', 'displayArea', 'examTakingArea'].forEach(s => {
+            ['studentView', 'loginSection', 'adminPanel', 'displayArea', 'examTakingArea', 'centerSelectSection', 'registerSection'].forEach(s => {
                 const el = document.getElementById(s);
                 if (el) el.classList.add('hidden');
             });
-            document.getElementById(id).classList.remove('hidden');
+            const target = document.getElementById(id);
+            if (target) target.classList.remove('hidden');
         }
 
         function closeDisplayArea() {
             if (sessionStorage.getItem('is_admin') === 'true') {
                 showSection('adminPanel');
-            } else {
+            } else if (currentCenterId) {
                 showSection('studentView');
-            }
-        }
-
-        async function adminLogin() {
-            const pass = document.getElementById('adminPass').value;
-            if (pass === "amc123") {
-                sessionStorage.setItem('is_admin', 'true');
-                document.getElementById('logoutBtn').classList.remove('hidden');
-                document.getElementById('adminLoginBtn').classList.add('hidden');
-                showSection('adminPanel');
-                loadStudentList();
-                loadPaymentList();
-                updateDashboardStats();
-                loadSecurityLogs();
-                loadAdminExamList();
-                loadExamAttemptsList();
-                loadQRAttendanceList();
-                await logSecurityEvent('login_success', 'অ্যাডমিন সফলভাবে লগইন করেছে');
             } else {
-                await logSecurityEvent('login_fail', 'ভুল পাসওয়ার্ড দিয়ে লগইন চেষ্টা করা হয়েছে');
-                Swal.fire('ভুল পাসওয়ার্ড', 'সঠিক পাসওয়ার্ড দিন!', 'error');
+                showSection('centerSelectSection');
             }
         }
 
         function logout() {
             sessionStorage.removeItem('is_admin');
+            sessionStorage.removeItem('admin_center_id');
             document.getElementById('logoutBtn').classList.add('hidden');
             document.getElementById('adminLoginBtn').classList.remove('hidden');
+            const manageBtn = document.getElementById('manageAllCentersBtn');
+            if (manageBtn) manageBtn.classList.add('hidden');
+            // Hide all-centers panel if open
+            const acm = document.getElementById('allCentersManager');
+            if (acm) acm.classList.add('hidden');
             stopQRScanner();
-            showSection('studentView');
+            // Keep selected center for student view if wanted, or clear
+            if (currentCenterId) {
+                showSection('studentView');
+            } else {
+                showSection('centerSelectSection');
+            }
         }
 
         function updateDashboardStats() {
+            if (!currentCenterId) return;
             const students = getObjectFromStorage('amc_student_db');
             const results = getArrayFromStorage('amc_db_final');
             const attendance = getObjectFromStorage('amc_attendance');
@@ -1475,6 +2349,7 @@
 
             const track = document.getElementById('sliderTrack');
             const dotsContainer = document.getElementById('sliderDots');
+            if (!track || !dotsContainer) return;
 
             track.innerHTML = slides.map(s => `
                 <div class="slide">
@@ -1497,6 +2372,7 @@
 
         function nextHeroSlide() {
             const total = document.querySelectorAll('#sliderTrack .slide').length;
+            if (total === 0) return;
             heroIndex = (heroIndex + 1) % total;
             document.getElementById('sliderTrack').style.transform = `translateX(-${heroIndex * 100}%)`;
             updateHeroDots();
@@ -1518,6 +2394,7 @@
         function loadMultiNotices() {
             let notices = getArrayFromStorage('amc_multi_notices');
             const container = document.getElementById('multiNoticeContainer');
+            if (!container) return;
             if (notices.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-400 text-xs py-4'>বর্তমানে কোনো নোটিশ প্রকাশ করা হয়নি।</p>";
                 return;
@@ -1533,6 +2410,7 @@
         function loadAdminNoticeList() {
             let notices = getArrayFromStorage('amc_multi_notices');
             const container = document.getElementById('adminNoticeList');
+            if (!container) return;
             container.innerHTML = notices.map(n => `
                 <div class="flex justify-between items-center p-2 bg-gray-50 rounded border text-xs text-black mb-1">
                     <span class="truncate max-w-[80%]">${n.text}</span>
@@ -1542,10 +2420,11 @@
         }
 
         function saveNotice() {
+            if (!currentCenterId) return;
             const scrollMsg = document.getElementById('adminNoticeInput').value.trim();
             const textMsg = document.getElementById('adminMultiNoticeText').value.trim();
 
-            if (scrollMsg && window.saveToFirebase) window.saveToFirebase('notice', scrollMsg);
+            if (scrollMsg) saveCenterData('notice', scrollMsg);
 
             if (textMsg) {
                 let notices = getArrayFromStorage('amc_multi_notices');
@@ -1554,7 +2433,7 @@
                     text: textMsg,
                     date: new Date().toLocaleDateString('bn-BD')
                 });
-                if (window.saveToFirebase) window.saveToFirebase('multiNotices', notices);
+                saveCenterData('multiNotices', notices);
             }
 
             Swal.fire('আপডেট সম্পন্ন!', 'নোটিশ সফলভাবে লাইভ করা হয়েছে।', 'success');
@@ -1564,12 +2443,13 @@
 
         function deleteNoticeRecord(id) {
             let notices = getArrayFromStorage('amc_multi_notices').filter(n => n.id !== id);
-            if (window.saveToFirebase) window.saveToFirebase('multiNotices', notices);
+            saveCenterData('multiNotices', notices);
         }
 
         function loadRoutines() {
             let routines = getArrayFromStorage('amc_routines');
             const container = document.getElementById('routineContainer');
+            if (!container) return;
             if (routines.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-400 text-xs py-4'>বর্তমানে কোনো নতুন রুটিন উপলব্ধ নেই।</p>";
                 return;
@@ -1588,6 +2468,7 @@
         function loadAdminRoutineList() {
             let routines = getArrayFromStorage('amc_routines');
             const container = document.getElementById('adminRoutineList');
+            if (!container) return;
             container.innerHTML = routines.map(r => `
                 <div class="flex justify-between items-center p-2 bg-gray-50 rounded border text-xs text-black mb-1">
                     <div><b>[${r.cls}]</b> ${r.title}</div>
@@ -1604,7 +2485,7 @@
 
             let routines = getArrayFromStorage('amc_routines');
             routines.push({ id: 'R_' + Date.now(), title, cls, details });
-            if (window.saveToFirebase) window.saveToFirebase('routines', routines);
+            saveCenterData('routines', routines);
 
             Swal.fire('সফল!', 'পরীক্ষার রুটিন প্রকাশিত হয়েছে।', 'success');
             document.getElementById('routineTitle').value = '';
@@ -1613,7 +2494,7 @@
 
         function deleteRoutineRecord(id) {
             let routines = getArrayFromStorage('amc_routines').filter(r => r.id !== id);
-            if (window.saveToFirebase) window.saveToFirebase('routines', routines);
+            saveCenterData('routines', routines);
         }
 
         function handleFileSelect(event) {
@@ -1740,22 +2621,9 @@
 
             let imgs = getArrayFromStorage('amc_gallery');
             imgs.push({ id: 'I_' + Date.now(), url: finalImageUrl });
+            saveCenterData('gallery', imgs);
 
-            if (window.saveToFirebase) {
-                window.saveToFirebase('gallery', imgs).then(() => {
-                    Swal.fire('সফল!', 'ছবি আপলোড সম্পন্ন হয়েছে।', 'success');
-                }).catch(() => {
-                    safeSetItem('amc_gallery', JSON.stringify(imgs));
-                    loadGallerySlider();
-                    loadAdminGalleryList();
-                    Swal.fire('সফল!', 'ছবি আপলোড সম্পন্ন হয়েছে।', 'success');
-                });
-            } else {
-                safeSetItem('amc_gallery', JSON.stringify(imgs));
-                loadGallerySlider();
-                loadAdminGalleryList();
-                Swal.fire('সফল!', 'ছবি আপলোড সম্পন্ন হয়েছে।', 'success');
-            }
+            Swal.fire('সফল!', 'ছবি আপলোড সম্পন্ন হয়েছে।', 'success');
 
             document.getElementById('galleryImgUrl').value = '';
             document.getElementById('galleryFileInput').value = '';
@@ -1765,7 +2633,7 @@
 
         function deleteGalleryImage(id) {
             let imgs = getArrayFromStorage('amc_gallery').filter(i => i.id !== id);
-            if (window.saveToFirebase) window.saveToFirebase('gallery', imgs);
+            saveCenterData('gallery', imgs);
         }
 
         function addFaqToDB() {
@@ -1775,7 +2643,7 @@
 
             let faqs = getArrayFromStorage('amc_faq_db');
             faqs.push({ id: 'FAQ_' + Date.now(), q, a });
-            if (window.saveToFirebase) window.saveToFirebase('faqs', faqs);
+            saveCenterData('faqs', faqs);
 
             Swal.fire('সফল!', 'FAQ যুক্ত হয়েছে।', 'success');
             document.getElementById('faqQuestionInput').value = '';
@@ -1785,6 +2653,7 @@
         function loadAdminFaqList() {
             let faqs = getArrayFromStorage('amc_faq_db');
             const container = document.getElementById('adminFaqList');
+            if (!container) return;
             if (faqs.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-500 text-xs py-2'>কোনো প্রশ্ন সেট করা নেই।</p>";
                 return;
@@ -1803,6 +2672,7 @@
         function loadFaqAccordion() {
             let faqs = getArrayFromStorage('amc_faq_db');
             const container = document.getElementById('faqAccordionContainer');
+            if (!container) return;
             if (faqs.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-400 text-sm py-4'>বর্তমানে কোনো প্রশ্ন উপলব্ধ নেই।</p>";
                 return;
@@ -1829,7 +2699,7 @@
 
         function deleteFaqRecord(id) {
             let faqs = getArrayFromStorage('amc_faq_db').filter(item => item.id !== id);
-            if (window.saveToFirebase) window.saveToFirebase('faqs', faqs);
+            saveCenterData('faqs', faqs);
         }
 
         function fetchPaymentStudentInfo() {
@@ -1865,7 +2735,7 @@
                 name: name || 'অজ্ঞাত শিক্ষার্থী',
                 month, amount, method, txnId, date
             });
-            if (window.saveToFirebase) window.saveToFirebase('payments', payments);
+            saveCenterData('payments', payments);
 
             Swal.fire('সফল!', 'পেমেন্ট লক করা হয়েছে।', 'success');
             ['payRoll', 'payName', 'payAmount', 'payTxnId'].forEach(f => document.getElementById(f).value = '');
@@ -1874,6 +2744,7 @@
         function loadPaymentList() {
             let payments = getArrayFromStorage('amc_payment_db');
             const container = document.getElementById('adminPaymentList');
+            if (!container) return;
             if (payments.length === 0) {
                 container.innerHTML = "<p class='text-center text-gray-500 text-xs py-2'>কোন পেমেন্ট রেকর্ড নেই।</p>";
                 return;
@@ -1902,6 +2773,7 @@
         }
 
         function getPaymentSlipHTML(p) {
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
             return `
             <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 25px; border: 4px double #4c1d95; border-radius: 15px; background: #fff; position: relative; overflow: hidden;">
                 <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 85px; font-weight: 800; color: rgba(16, 185, 129, 0.14); border: 8px solid rgba(16, 185, 129, 0.14); padding: 5px 25px; border-radius: 15px; text-transform: uppercase; letter-spacing: 5px; pointer-events: none; z-index: 0;">
@@ -1910,7 +2782,7 @@
                 <div style="position: relative; z-index: 1;">
                     <div style="text-align:center; margin-bottom: 20px; border-bottom: 2px dashed #4c1d95; padding-bottom: 10px;">
                         <img src="${siteLogo}" style="width:65px; height:65px; border-radius:50%; object-fit: cover; display: inline-block;">
-                        <h1 style="color:#4c1d95; margin:0; font-size: 24px; font-weight:600;">AMIRUL MATH CARE</h1>
+                        <h1 style="color:#4c1d95; margin:0; font-size: 22px; font-weight:600;">${centerName}</h1>
                         <p style="margin:2px 0; font-size:13px; color:#d97706;">টাকা প্রাপ্তির রশিদ</p>
                     </div>
                     <table style="width:100%; font-size:14px; line-height:2;">
@@ -1952,13 +2824,14 @@
             if (!student || !student.wa) {
                 return Swal.fire('হোয়াটসঅ্যাপ নম্বর নেই!', 'নম্বর পাওয়া যায়নি।', 'info');
             }
-            const message = `*AMIRUL MATH CARE - পেমেন্ট রসিদ*%0A--------------------------------%0A*নাম:* ${p.name}%0A*রোল:* ${p.roll} | *শ্রেণী:* ${p.cls}%0A*টাকা পরিমাণ:* ৳ ${p.amount}/-%0A*স্ট্যাটাস:* PAID ✔`;
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
+            const message = `*${centerName} - পেমেন্ট রসিদ*%0A--------------------------------%0A*নাম:* ${p.name}%0A*রোল:* ${p.roll} | *শ্রেণী:* ${p.cls}%0A*টাকা পরিমাণ:* ৳ ${p.amount}/-%0A*স্ট্যাটাস:* PAID ✔`;
             window.open(`https://wa.me/${student.wa}?text=${message}`, '_blank');
         }
 
         function deletePaymentRecord(id) {
             let payments = getArrayFromStorage('amc_payment_db').filter(item => item.id !== id);
-            if (window.saveToFirebase) window.saveToFirebase('payments', payments);
+            saveCenterData('payments', payments);
         }
 
         function downloadMeritListPDF() {
@@ -1975,6 +2848,7 @@
                 return Swal.fire('কোন তথ্য নেই!', 'কোন ডাটা পাওয়া যায়নি!', 'warning');
             }
 
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
             showSection('displayArea');
             let rows = data.map((s, idx) => `
                 <tr>
@@ -1986,7 +2860,7 @@
             `).join('');
 
             document.getElementById('pdfContent').innerHTML = `
-                <h2 style="text-align:center; color:#4c1d95; font-size:20px;">AMIRUL MATH CARE - মেধা তালিকা</h2>
+                <h2 style="text-align:center; color:#4c1d95; font-size:20px;">${centerName} - মেধা তালিকা</h2>
                 <p style="text-align:center; margin-bottom:10px;">শ্রেণী: ${fCls} | তারিখ: ${fDate}</p>
                 <table style="width:100%; border-collapse:collapse;" border="1">
                     <thead>
@@ -2008,6 +2882,7 @@
                 return Swal.fire('ডাটাবেজ খালি', 'কোন শিক্ষার্থীর ডাটা পাওয়া যায়নি', 'info');
             }
 
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
             showSection('displayArea');
             let rows = data.map((s, idx) => `
                 <tr>
@@ -2020,7 +2895,7 @@
             `).join('');
 
             document.getElementById('pdfContent').innerHTML = `
-                <h2 style="text-align:center; font-size:18px; margin-bottom:10px;">অফিসিয়াল শিক্ষার্থী তালিকা</h2>
+                <h2 style="text-align:center; font-size:18px; margin-bottom:10px;">${centerName} - অফিসিয়াল শিক্ষার্থী তালিকা</h2>
                 <table border="1" style="width:100%; border-collapse:collapse;">
                     <thead>
                         <tr style="background:#ef4444; color:white;">
@@ -2031,7 +2906,6 @@
                 </table>`;
         }
 
-        // ==================== AUTO ROLL & NAME BASED QR ADMIT CARD ====================
         async function generateAdmit() {
             const roll = document.getElementById('searchRoll').value.trim();
             const cls = document.getElementById('searchClass').value;
@@ -2045,9 +2919,9 @@
             const students = getObjectFromStorage('amc_student_db');
             const student = students[`${cls}_${roll}`] || students[`${cls}_${Number(roll)}`];
             const studentName = student ? student.name : 'অজ্ঞাত শিক্ষার্থী';
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
 
-            // অটো রোল ও নাম ভিত্তিক ইউনিক কিউআর ডাটা ফরম্যাট
-            const qrData = `AMC|${cls}|${roll}|${date}|${type}`;
+            const qrData = `AMC|${currentCenterId}|${cls}|${roll}|${date}|${type}`;
 
             showSection('displayArea');
             
@@ -2075,7 +2949,7 @@
             <div style="border:3px double #4c1d95; padding:20px; border-radius:12px; font-family:'Hind Siliguri',sans-serif; background:white;">
                 <div style="text-align:center; margin-bottom:15px;">
                     <img src="${siteLogo}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
-                    <h2 style="color:#4c1d95; margin:8px 0 2px 0; font-size:22px;">AMIRUL MATH CARE</h2>
+                    <h2 style="color:#4c1d95; margin:8px 0 2px 0; font-size:20px;">${centerName}</h2>
                     <p style="margin:0; color:#4a5568; font-size:13px;">Official Admit Card</p>
                 </div>
                 
@@ -2128,7 +3002,7 @@
             let presentRolls = Array.from(checks).map(c => c.value);
             let allAtt = getObjectFromStorage('amc_attendance');
             allAtt[date] = presentRolls;
-            if (window.saveToFirebase) window.saveToFirebase('attendance', allAtt);
+            saveCenterData('attendance', allAtt);
 
             Swal.fire('সংরক্ষিত!', 'আজকের উপস্থিতি সেভ করা হয়েছে!', 'success');
             document.getElementById('attendanceSystem').classList.add('hidden');
@@ -2164,7 +3038,8 @@
                 details += `%0A- *${sub}:* ${r.scores[sub].t} (MCQ: ${r.scores[sub].m}, CQ: ${r.scores[sub].c})`;
             }
 
-            const message = `*AMIRUL MATH CARE - রেজাল্ট আপডেট*%0A--------------------------------%0A*নাম:* ${r.name}%0A*রোল:* ${r.roll} | *শ্রেণী:* ${r.cls}%0A*তারিখ:* ${r.date}%0A*পরীক্ষার ধরন:* ${r.examType}%0A%0A*প্রাপ্ত নম্বর:* ${details}%0A--------------------------------%0A*মোট প্রাপ্ত নম্বর:* ${r.grandTotal}`;
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
+            const message = `*${centerName} - রেজাল্ট আপডেট*%0A--------------------------------%0A*নাম:* ${r.name}%0A*রোল:* ${r.roll} | *শ্রেণী:* ${r.cls}%0A*তারিখ:* ${r.date}%0A*পরীক্ষার ধরন:* ${r.examType}%0A%0A*প্রাপ্ত নম্বর:* ${details}%0A--------------------------------%0A*মোট প্রাপ্ত নম্বর:* ${r.grandTotal}`;
             window.open(`https://wa.me/${student.wa}?text=${message}`, '_blank');
         }
 
@@ -2191,7 +3066,7 @@
 
             let db = getObjectFromStorage('amc_student_db');
             db[`${cls}_${roll}`] = { roll, name, cls, wa };
-            if (window.saveToFirebase) window.saveToFirebase('students', db);
+            saveCenterData('students', db);
             cancelEditStudent();
         }
 
@@ -2210,7 +3085,7 @@
         function deleteStudent(id) {
             let db = getObjectFromStorage('amc_student_db');
             delete db[id];
-            if (window.saveToFirebase) window.saveToFirebase('students', db);
+            saveCenterData('students', db);
         }
 
         function cancelEditStudent() {
@@ -2222,7 +3097,9 @@
 
         function loadStudentList() {
             let db = getObjectFromStorage('amc_student_db');
-            document.getElementById('dbList').innerHTML = Object.keys(db).map(id => `
+            const el = document.getElementById('dbList');
+            if (!el) return;
+            el.innerHTML = Object.keys(db).map(id => `
                 <div class="flex justify-between items-center p-2 border-b text-xs text-black">
                     <div><b>[${db[id].cls}]</b> Roll: ${db[id].roll} - ${db[id].name}</div>
                     <div class="flex gap-4 text-sm">
@@ -2315,7 +3192,7 @@
                 data.push({ date, cls, roll, name, examType: type, scores, grandTotal });
             }
 
-            if (window.saveToFirebase) window.saveToFirebase('results', data);
+            saveCenterData('results', data);
             quickResetForm();
         }
 
@@ -2354,7 +3231,7 @@
 
         function deleteData(date, roll) {
             let data = getArrayFromStorage('amc_db_final').filter(s => !(s.date === date && s.roll == roll));
-            if (window.saveToFirebase) window.saveToFirebase('results', data);
+            saveCenterData('results', data);
         }
 
         function quickResetForm() {
@@ -2373,8 +3250,8 @@
 
         function renderTable() {
             let data = getArrayFromStorage('amc_db_final');
-            const fDate = document.getElementById('filterDate').value;
-            const fCls = document.getElementById('filterClass').value;
+            const fDate = document.getElementById('filterDate')?.value;
+            const fCls = document.getElementById('filterClass')?.value;
 
             if (fDate) data = data.filter(d => d.date === fDate);
             if (fCls && fCls !== "সব") data = data.filter(d => d.cls === fCls);
@@ -2382,6 +3259,7 @@
             data.sort((a, b) => b.grandTotal - a.grandTotal);
 
             const tbody = document.getElementById('dataTableBody');
+            if (!tbody) return;
             if (data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-500 text-xs">কোন রেজাল্ট পাওয়া যায়নি</td></tr>`;
                 return;
@@ -2405,6 +3283,10 @@
                     </td>
                 </tr>`;
             }).join('');
+        }
+
+        function loadResultList() {
+            renderTable();
         }
 
         function getStudentProgressData(cls, roll) {
@@ -2489,6 +3371,7 @@
             const res = results.find(item => item.roll == roll && item.cls === cls && item.date === date);
 
             if (res) {
+                const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
                 showSection('displayArea');
                 let detailsRows = "";
                 for (let sub in res.scores) {
@@ -2506,7 +3389,7 @@
                     <div style="font-family:'Hind Siliguri', sans-serif; padding:10px;">
                         <div style="text-align:center; border-bottom:2px solid #4c1d95; padding-bottom:10px; margin-bottom:15px;">
                             <img src="${siteLogo}" style="width:60px; height:60px; border-radius:50%; display:inline-block;">
-                            <h2 style="color:#4c1d95; margin:5px 0 0 0; font-size:22px;">AMIRUL MATH CARE</h2>
+                            <h2 style="color:#4c1d95; margin:5px 0 0 0; font-size:20px;">${centerName}</h2>
                             <p style="margin:0; font-size:12px; color:#555;">অফিসিয়াল পরীক্ষা ফলাফল কার্ড</p>
                         </div>
                         <div style="margin-bottom:15px; font-size:14px; line-height:1.6;">
@@ -2535,6 +3418,7 @@
             }
         }
 
+        // ==================== EXAM SYSTEM (scoped) ====================
         function addQuestionField(existingQ = null) {
             questionFieldCount++;
             const idx = questionFieldCount;
@@ -2640,7 +3524,7 @@
                 exams.push(examData);
             }
 
-            if (window.saveToFirebase) window.saveToFirebase('exams', exams);
+            saveCenterData('exams', exams);
 
             Swal.fire('সফল!', 'পরীক্ষা ও PDF প্রশ্নপত্র সফলভাবে সেভ হয়েছে।', 'success');
             cancelExamEdit();
@@ -2721,7 +3605,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     let exams = getArrayFromStorage('amc_exams').filter(e => e.id !== id);
-                    if (window.saveToFirebase) window.saveToFirebase('exams', exams);
+                    saveCenterData('exams', exams);
                     Swal.fire('মুছে ফেলা হয়েছে', '', 'success');
                 }
             });
@@ -2983,18 +3867,16 @@
 
             let attempts = getArrayFromStorage('amc_exam_attempts');
             attempts.push(attempt);
-            if (window.saveToFirebase) window.saveToFirebase('examAttempts', attempts);
+            saveCenterData('examAttempts', attempts);
 
             showExamResult(attempt);
         }
 
         function showExamResult(attempt) {
             showSection('displayArea');
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
 
             let reviewHTML = attempt.review.map((r, i) => `
-                <style>
-                    /* Force clean print styles */
-                </style>
                 <div style="margin-bottom:15px; padding:12px; border-radius:10px; background:${r.isCorrect ? '#ecfdf5' : '#fef2f2'}; border-left:4px solid ${r.isCorrect ? '#10b981' : '#ef4444'};">
                     <p style="font-weight:600; margin-bottom:6px;">${i + 1}. ${r.question}</p>
                     <p style="font-size:13px; margin:2px 0;">
@@ -3008,7 +3890,7 @@
                 <div style="font-family:'Hind Siliguri', sans-serif; padding:10px;">
                     <div style="text-align:center; border-bottom:2px solid #4c1d95; padding-bottom:12px; margin-bottom:18px;">
                         <img src="${siteLogo}" style="width:55px; height:55px; border-radius:50%; display:inline-block;">
-                        <h2 style="color:#4c1d95; margin:6px 0 0 0; font-size:20px;">AMIRUL MATH CARE</h2>
+                        <h2 style="color:#4c1d95; margin:6px 0 0 0; font-size:20px;">${centerName}</h2>
                         <p style="margin:0; font-size:13px; color:#555;">অনলাইন পরীক্ষার ফলাফল</p>
                     </div>
 
@@ -3033,6 +3915,7 @@
             `;
         }
 
+        // ==================== QR ATTENDANCE ====================
         function startQRScanner() {
             if (isScanning) return;
 
@@ -3073,21 +3956,36 @@
         }
 
         function processScannedQR(decodedText) {
+            // New format: AMC|centerId|cls|roll|date|type
+            // Old format support: AMC|cls|roll|date|type
             if (!decodedText.startsWith('AMC|')) {
                 Swal.fire('অবৈধ QR', 'এটি AMIRUL MATH CARE এর অ্যাডমিট কার্ড QR নয়।', 'warning');
                 return;
             }
 
             const parts = decodedText.split('|');
-            if (parts.length < 5) {
+            let cls, roll, examDate, examType;
+
+            if (parts.length >= 6) {
+                // New multi-center format
+                const qrCenterId = parts[1];
+                if (qrCenterId !== currentCenterId) {
+                    Swal.fire('ভিন্ন সেন্টার', 'এই QR কোড অন্য কোচিং সেন্টারের।', 'warning');
+                    return;
+                }
+                cls = parts[2];
+                roll = parts[3];
+                examDate = parts[4];
+                examType = parts[5];
+            } else if (parts.length >= 5) {
+                cls = parts[1];
+                roll = parts[2];
+                examDate = parts[3];
+                examType = parts[4];
+            } else {
                 Swal.fire('অসম্পূর্ণ QR', 'QR কোডের তথ্য অসম্পূর্ণ।', 'warning');
                 return;
             }
-
-            const cls = parts[1];
-            const roll = parts[2];
-            const examDate = parts[3];
-            const examType = parts[4];
 
             const students = getObjectFromStorage('amc_student_db');
             const student = students[`${cls}_${roll}`] || students[`${cls}_${Number(roll)}`];
@@ -3121,11 +4019,7 @@
             };
 
             attendanceList.unshift(record);
-            if (window.saveToFirebase) {
-                window.saveToFirebase('examAttendance', attendanceList);
-            } else {
-                safeSetItem('amc_exam_attendance', JSON.stringify(attendanceList));
-            }
+            saveCenterData('examAttendance', attendanceList);
 
             Swal.fire({
                 icon: 'success',
@@ -3182,8 +4076,7 @@
             }).then(result => {
                 if (result.isConfirmed) {
                     let list = getArrayFromStorage('amc_exam_attendance').filter(a => a.id !== id);
-                    if (window.saveToFirebase) window.saveToFirebase('examAttendance', list);
-                    else safeSetItem('amc_exam_attendance', JSON.stringify(list));
+                    saveCenterData('examAttendance', list);
                     loadQRAttendanceList();
                 }
             });
@@ -3202,6 +4095,7 @@
             }
 
             list.sort((a, b) => Number(a.roll) - Number(b.roll));
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
 
             showSection('displayArea');
 
@@ -3226,7 +4120,7 @@
                 <div style="font-family:'Hind Siliguri',sans-serif; padding:10px;">
                     <div style="text-align:center; margin-bottom:15px;">
                         <img src="${siteLogo}" style="width:55px; height:55px; border-radius:50%;">
-                        <h2 style="color:#4c1d95; margin:6px 0 0 0; font-size:20px;">AMIRUL MATH CARE</h2>
+                        <h2 style="color:#4c1d95; margin:6px 0 0 0; font-size:20px;">${centerName}</h2>
                         <p style="margin:2px 0; font-size:14px; color:#0891b2;">QR কোড পরীক্ষা অ্যাটেনডেন্স রিপোর্ট</p>
                         <p style="margin:0; font-size:12px; color:#666;">${filterText}</p>
                     </div>
@@ -3250,23 +4144,65 @@
                 </div>`;
         }
 
+        // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
             const today = new Date().toISOString().split('T')[0];
             if (document.getElementById('examDate')) document.getElementById('examDate').value = today;
             if (document.getElementById('searchDate')) document.getElementById('searchDate').value = today;
 
-            initHeroSlider();
-            loadMultiNotices();
-            loadRoutines();
-            loadGallerySlider();
-            loadFaqAccordion();
+            // Restore previous selection if any
+            const savedCenterId = sessionStorage.getItem('selected_center_id');
+            const isAdmin = sessionStorage.getItem('is_admin') === 'true';
+
+            if (isAdmin && savedCenterId) {
+                // Wait a bit for Firebase centers to load
+                setTimeout(() => {
+                    const centers = getCurrentCenters();
+                    if (centers[savedCenterId]) {
+                        currentCenterId = savedCenterId;
+                        currentCenterInfo = centers[savedCenterId];
+                        if (window.attachCenterDataListeners) window.attachCenterDataListeners(savedCenterId);
+                        document.getElementById('logoutBtn').classList.remove('hidden');
+                        document.getElementById('adminLoginBtn').classList.add('hidden');
+                        document.getElementById('navCenterName').innerText = currentCenterInfo.name;
+                        document.getElementById('navCenterName').classList.remove('hidden');
+                        showSection('adminPanel');
+                        updateSubscriptionBanner();
+                        loadStudentList();
+                        updateDashboardStats();
+                        renderTable();
+
+                        // Show manage-all button for main admin
+                        const manageBtn = document.getElementById('manageAllCentersBtn');
+                        if (manageBtn) {
+                            const isMain = currentCenterInfo.isDefault === true ||
+                                currentCenterInfo.name === 'AMIRUL MATH CARE' ||
+                                currentCenterInfo.name === 'Amirul Math Care';
+                            manageBtn.classList.toggle('hidden', !isMain);
+                        }
+                    } else {
+                        showSection('centerSelectSection');
+                    }
+                }, 800);
+            } else if (savedCenterId) {
+                setTimeout(() => {
+                    const centers = getCurrentCenters();
+                    if (centers[savedCenterId] && isSubscriptionActive(centers[savedCenterId])) {
+                        selectCenter(savedCenterId);
+                    } else {
+                        showSection('centerSelectSection');
+                    }
+                }, 800);
+            } else {
+                showSection('centerSelectSection');
+            }
 
             if (document.getElementById('questionsBuilder')) {
                 addQuestionField();
             }
 
             setTimeout(() => {
-                logSecurityEvent('page_load', 'হোমপেজ ভিজিট');
+                if (currentCenterId) logSecurityEvent('page_load', 'হোমপেজ ভিজিট');
             }, 1500);
         });
     </script>
