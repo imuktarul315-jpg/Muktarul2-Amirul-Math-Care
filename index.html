@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> কোচিং ম্যানেজমেন্ট সফটওয়্যার - Multi Coaching Center Pro</title>
+    <title>কোচিং ম্যানেজমেন্ট সফটওয়্যার</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -200,7 +200,7 @@
         <div class="container mx-auto px-4 flex items-center">
             <span class="bg-red-600 text-white text-[11px] px-2 py-0.5 rounded mr-3 animate-pulse tracking-wider">নোটিশ</span>
             <marquee id="mainNotice" class="text-sm text-black dark:text-yellow-100">
-                আমিরুল ম্যাথ কেয়ারে আপনাকে স্বাগত। আধুনিক পদ্ধতিতে গণিত শিখুন। একাধিক কোচিং সেন্টার সাপোর্ট যুক্ত।
+                কোচিং ম্যানেজমেন্ট সফটওয়্যারে আপনাকে স্বাগত। একাধিক কোচিং সেন্টার এক প্ল্যাটফর্মে পরিচালনা করুন।
             </marquee>
         </div>
     </div>
@@ -210,7 +210,7 @@
         <div class="flex items-center gap-3" onclick="goHome()" style="cursor: pointer;">
             <img id="navLogo" src="https://i.ibb.co/Lhy0W0P/1000018420.jpg" alt="Logo" class="w-10 h-10 rounded-full border-2 border-white object-cover shadow-lg">
             <div>
-                <h1 class="text-lg md:text-xl font-medium leading-tight">AMIRUL MATH CARE</h1>
+                <h1 class="text-lg md:text-xl font-medium leading-tight">কোচিং ম্যানেজমেন্ট সফটওয়্যার</h1>
                 <p id="navCenterName" class="text-[10px] text-yellow-300 hidden">—</p>
             </div>
         </div>
@@ -260,7 +260,7 @@
             <div class="space-y-4">
                 <div>
                     <label class="text-xs block mb-1 text-gray-600">কোচিং সেন্টারের নাম *</label>
-                    <input type="text" id="regCenterName" placeholder="যেমন: আমিরুল ম্যাথ কেয়ার - দিনাজপুর" class="w-full p-3 border rounded-xl outline-none text-black">
+                    <input type="text" id="regCenterName" placeholder="যেমন: আপনার কোচিং সেন্টারের নাম" class="w-full p-3 border rounded-xl outline-none text-black">
                 </div>
                 <div>
                     <label class="text-xs block mb-1 text-gray-600">মোবাইল নম্বর *</label>
@@ -679,7 +679,7 @@
                 <i class="fas fa-building mr-2"></i>সকল কোচিং সেন্টার ম্যানেজমেন্ট
             </h2>
             <p class="text-xs text-gray-500 mb-4">
-                শুধুমাত্র <b>AMIRUL MATH CARE</b> অ্যাডমিন এই প্যানেল দেখতে ও ব্যবহার করতে পারবেন। 
+                শুধুমাত্র <b>মূল অ্যাডমিন (AMIRUL MATH CARE)</b> এই প্যানেল দেখতে ও ব্যবহার করতে পারবেন। 
                 যেকোনো সময় (অ্যাক্টিভ বা মেয়াদ শেষ) যেকোনো কোচিং সেন্টার এখান থেকে ডিলিট করতে পারবেন।
             </p>
             <div class="flex gap-2 mb-4">
@@ -1904,7 +1904,7 @@
 
             // Only main admin can use this
             if (!currentCenterInfo || !(currentCenterInfo.isDefault || currentCenterInfo.name === 'AMIRUL MATH CARE' || currentCenterInfo.name === 'Amirul Math Care')) {
-                container.innerHTML = '<p class="text-center text-red-500 py-6 text-sm">এই প্যানেল শুধুমাত্র AMIRUL MATH CARE অ্যাডমিন ব্যবহার করতে পারবেন।</p>';
+                container.innerHTML = '<p class="text-center text-red-500 py-6 text-sm">এই প্যানেল শুধুমাত্র মূল অ্যাডমিন (AMIRUL MATH CARE) ব্যবহার করতে পারবেন।</p>';
                 return;
             }
 
@@ -1971,7 +1971,7 @@
         async function deleteOtherCenter(centerId, centerName) {
             // Security: only main admin
             if (!currentCenterInfo || !(currentCenterInfo.isDefault || currentCenterInfo.name === 'AMIRUL MATH CARE' || currentCenterInfo.name === 'Amirul Math Care')) {
-                return Swal.fire('অনুমতি নেই', 'শুধুমাত্র AMIRUL MATH CARE অ্যাডমিন এই কাজটি করতে পারবেন।', 'error');
+                return Swal.fire('অনুমতি নেই', 'শুধুমাত্র মূল অ্যাডমিন (AMIRUL MATH CARE) এই কাজটি করতে পারবেন।', 'error');
             }
 
             if (centerId === currentCenterId) {
@@ -2342,7 +2342,7 @@
 
         function initHeroSlider() {
             const slides = [
-                { title: "আমিরুল ম্যাথ কেয়ার", text: "আধুনিক পদ্ধতিতে গণিত শিখুন" },
+                { title: "কোচিং ম্যানেজমেন্ট সফটওয়্যার", text: "একাধিক কোচিং সেন্টার এক প্ল্যাটফর্মে" },
                 { title: "সেরা ফলাফলের নিশ্চয়তা", text: "প্রতিদিনের অনুশীলন ও পরীক্ষা" },
                 { title: "SSC ও মাধ্যমিক বিশেষ", text: "সাধারণ ও উচ্চতর গণিত" }
             ];
@@ -2773,7 +2773,7 @@
         }
 
         function getPaymentSlipHTML(p) {
-            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
             return `
             <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 25px; border: 4px double #4c1d95; border-radius: 15px; background: #fff; position: relative; overflow: hidden;">
                 <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 85px; font-weight: 800; color: rgba(16, 185, 129, 0.14); border: 8px solid rgba(16, 185, 129, 0.14); padding: 5px 25px; border-radius: 15px; text-transform: uppercase; letter-spacing: 5px; pointer-events: none; z-index: 0;">
@@ -2824,7 +2824,7 @@
             if (!student || !student.wa) {
                 return Swal.fire('হোয়াটসঅ্যাপ নম্বর নেই!', 'নম্বর পাওয়া যায়নি।', 'info');
             }
-            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
             const message = `*${centerName} - পেমেন্ট রসিদ*%0A--------------------------------%0A*নাম:* ${p.name}%0A*রোল:* ${p.roll} | *শ্রেণী:* ${p.cls}%0A*টাকা পরিমাণ:* ৳ ${p.amount}/-%0A*স্ট্যাটাস:* PAID ✔`;
             window.open(`https://wa.me/${student.wa}?text=${message}`, '_blank');
         }
@@ -2848,7 +2848,7 @@
                 return Swal.fire('কোন তথ্য নেই!', 'কোন ডাটা পাওয়া যায়নি!', 'warning');
             }
 
-            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
             showSection('displayArea');
             let rows = data.map((s, idx) => `
                 <tr>
@@ -2882,7 +2882,7 @@
                 return Swal.fire('ডাটাবেজ খালি', 'কোন শিক্ষার্থীর ডাটা পাওয়া যায়নি', 'info');
             }
 
-            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
             showSection('displayArea');
             let rows = data.map((s, idx) => `
                 <tr>
@@ -2919,7 +2919,7 @@
             const students = getObjectFromStorage('amc_student_db');
             const student = students[`${cls}_${roll}`] || students[`${cls}_${Number(roll)}`];
             const studentName = student ? student.name : 'অজ্ঞাত শিক্ষার্থী';
-            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
 
             const qrData = `AMC|${currentCenterId}|${cls}|${roll}|${date}|${type}`;
 
@@ -3038,7 +3038,7 @@
                 details += `%0A- *${sub}:* ${r.scores[sub].t} (MCQ: ${r.scores[sub].m}, CQ: ${r.scores[sub].c})`;
             }
 
-            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
             const message = `*${centerName} - রেজাল্ট আপডেট*%0A--------------------------------%0A*নাম:* ${r.name}%0A*রোল:* ${r.roll} | *শ্রেণী:* ${r.cls}%0A*তারিখ:* ${r.date}%0A*পরীক্ষার ধরন:* ${r.examType}%0A%0A*প্রাপ্ত নম্বর:* ${details}%0A--------------------------------%0A*মোট প্রাপ্ত নম্বর:* ${r.grandTotal}`;
             window.open(`https://wa.me/${student.wa}?text=${message}`, '_blank');
         }
@@ -3371,7 +3371,7 @@
             const res = results.find(item => item.roll == roll && item.cls === cls && item.date === date);
 
             if (res) {
-                const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
+                const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
                 showSection('displayArea');
                 let detailsRows = "";
                 for (let sub in res.scores) {
@@ -3874,7 +3874,7 @@
 
         function showExamResult(attempt) {
             showSection('displayArea');
-            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
 
             let reviewHTML = attempt.review.map((r, i) => `
                 <div style="margin-bottom:15px; padding:12px; border-radius:10px; background:${r.isCorrect ? '#ecfdf5' : '#fef2f2'}; border-left:4px solid ${r.isCorrect ? '#10b981' : '#ef4444'};">
@@ -3959,7 +3959,7 @@
             // New format: AMC|centerId|cls|roll|date|type
             // Old format support: AMC|cls|roll|date|type
             if (!decodedText.startsWith('AMC|')) {
-                Swal.fire('অবৈধ QR', 'এটি AMIRUL MATH CARE এর অ্যাডমিট কার্ড QR নয়।', 'warning');
+                Swal.fire('অবৈধ QR', 'এটি এই সফটওয়্যারের অ্যাডমিট কার্ড QR নয়।', 'warning');
                 return;
             }
 
@@ -4095,7 +4095,7 @@
             }
 
             list.sort((a, b) => Number(a.roll) - Number(b.roll));
-            const centerName = currentCenterInfo ? currentCenterInfo.name : 'AMIRUL MATH CARE';
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
 
             showSection('displayArea');
 
