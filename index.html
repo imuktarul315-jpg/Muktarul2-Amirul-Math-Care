@@ -274,6 +274,22 @@
                     <label class="text-xs block mb-1 text-gray-600">পাসওয়ার্ড নিশ্চিত করুন *</label>
                     <input type="password" id="regPasswordConfirm" placeholder="আবার পাসওয়ার্ড লিখুন" class="w-full p-3 border rounded-xl outline-none text-black">
                 </div>
+                <div>
+                    <label class="text-xs block mb-1 text-gray-600">যোগাযোগ নম্বর (Contact)</label>
+                    <input type="tel" id="regContact" placeholder="01XXXXXXXXX" class="w-full p-3 border rounded-xl outline-none text-black">
+                </div>
+                <div>
+                    <label class="text-xs block mb-1 text-gray-600">হোয়াটসঅ্যাপ নম্বর</label>
+                    <input type="tel" id="regWhatsapp" placeholder="01XXXXXXXXX" class="w-full p-3 border rounded-xl outline-none text-black">
+                </div>
+                <div>
+                    <label class="text-xs block mb-1 text-gray-600">কোচিং লোগো (ঐচ্ছিক)</label>
+                    <input type="file" id="regLogoFile" accept="image/*" class="w-full p-2 border rounded-xl outline-none text-xs text-black">
+                    <p class="text-[10px] text-gray-400 mt-1">PNG/JPG, সর্বোচ্চ ৫০০ KB — ফলাফল/অ্যাডমিট/স্লিপে দেখাবে</p>
+                    <div id="regLogoPreview" class="hidden mt-2 flex justify-center">
+                        <img id="regLogoImg" src="" class="h-16 w-16 rounded-full object-cover border-2 border-purple-300">
+                    </div>
+                </div>
                 <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
                     <i class="fas fa-info-circle mr-1"></i>
                     রেজিস্ট্রেশনের পর ১ বছরের সাবস্ক্রিপশন অ্যাক্টিভ থাকবে। মেয়াদ শেষ হলে নবায়ন করতে হবে।
@@ -325,6 +341,11 @@
                     <label class="text-xs block mb-1 text-gray-600 dark:text-gray-300">শ্রেণী</label>
                     <select id="searchClass" class="w-full p-3 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black">
                         <option value="">শ্রেণী নির্বাচন করুন</option>
+                        <option value="১ম">১ম</option>
+                        <option value="২য়">২য়</option>
+                        <option value="৩য়">৩য়</option>
+                        <option value="৪র্থ">৪র্থ</option>
+                        <option value="৫ম">৫ম</option>
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                         <option value="৭ম">৭ম</option>
                         <option value="৮ম">৮ম</option>
@@ -391,6 +412,11 @@
                     <label class="text-xs block mb-1 text-gray-600 dark:text-gray-300">শ্রেণী নির্বাচন করুন</label>
                     <select id="onlineExamClass" onchange="loadAvailableExams()" class="w-full p-3 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black">
                         <option value="">শ্রেণী সিলেক্ট করুন</option>
+                        <option value="১ম">১ম</option>
+                        <option value="২য়">২য়</option>
+                        <option value="৩য়">৩য়</option>
+                        <option value="৪র্থ">৪র্থ</option>
+                        <option value="৫ম">৫ম</option>
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                         <option value="৭ম">৭ম</option>
                         <option value="৮ম">৮ম</option>
@@ -416,6 +442,11 @@
                         <label class="text-xs block mb-1 text-gray-600 dark:text-gray-300">শ্রেণী</label>
                         <select id="progressClass" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black text-sm">
                             <option value="">সিলেক্ট</option>
+                            <option value="১ম">১ম</option>
+                            <option value="২য়">২য়</option>
+                            <option value="৩য়">৩য়</option>
+                            <option value="৪র্থ">৪র্থ</option>
+                            <option value="৫ম">৫ম</option>
                             <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                             <option value="৭ম">৭ম</option>
                             <option value="৮ম">৮ম</option>
@@ -523,21 +554,21 @@
             </div>
         </div>
 
-        <!-- Contact -->
+        <!-- Contact (dynamic per center) -->
         <div class="contact-section bg-white p-6 rounded-3xl shadow-xl border-t-8 border-green-600 transition-colors">
             <h3 class="text-gray-800 dark:text-white text-xl mb-4 text-center font-medium">
                 <i class="fas fa-phone-alt mr-2 text-green-600"></i>যোগাযোগ করুন
             </h3>
             <div class="space-y-3 text-sm text-gray-700 dark:text-gray-300 text-center">
-                <p>যেকোনো তথ্যের জন্য আমাদের সাথে সরাসরি বা হোয়াটসঅ্যাপে যোগাযোগ করুন।</p>
-                <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
-                    <a href="tel:+8801773167795" class="flex items-center justify-center gap-2 bg-purple-50 dark:bg-gray-700 px-4 py-2.5 rounded-xl border border-purple-200 dark:border-gray-600 hover:bg-purple-100 transition">
+                <p id="contactCenterName">যেকোনো তথ্যের জন্য আমাদের সাথে সরাসরি বা হোয়াটসঅ্যাপে যোগাযোগ করুন।</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2" id="contactButtons">
+                    <a id="contactPhoneLink" href="tel:+8801773167795" class="flex items-center justify-center gap-2 bg-purple-50 dark:bg-gray-700 px-4 py-2.5 rounded-xl border border-purple-200 dark:border-gray-600 hover:bg-purple-100 transition">
                         <i class="fas fa-phone text-purple-700 dark:text-purple-400"></i>
-                        <span>+8801773167795</span>
+                        <span id="contactPhoneText">+8801773167795</span>
                     </a>
-                    <a href="https://wa.me/8801774275248" target="_blank" class="flex items-center justify-center gap-2 bg-green-50 dark:bg-gray-700 px-4 py-2.5 rounded-xl border border-green-200 dark:border-gray-600 hover:bg-green-100 transition">
+                    <a id="contactWaLink" href="https://wa.me/8801774275248" target="_blank" class="flex items-center justify-center gap-2 bg-green-50 dark:bg-gray-700 px-4 py-2.5 rounded-xl border border-green-200 dark:border-gray-600 hover:bg-green-100 transition">
                         <i class="fab fa-whatsapp text-green-600 text-base"></i>
-                        <span>01774275248 (WhatsApp)</span>
+                        <span id="contactWaText">01774275248 (WhatsApp)</span>
                     </a>
                 </div>
             </div>
@@ -705,7 +736,7 @@
             <div id="subscriptionDetails" class="bg-rose-50 p-5 rounded-xl mb-4">
                 <!-- filled by JS -->
             </div>
-            <div class="bg-gray-50 p-4 rounded-xl">
+            <div class="bg-gray-50 p-4 rounded-xl mb-4">
                 <p class="text-sm text-gray-700 mb-3">সাবস্ক্রিপশন নবায়ন করতে নিচের তথ্য পূরণ করুন (ম্যানুয়াল কনফার্মেশন)।</p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <input type="text" id="subTxnId" placeholder="পেমেন্ট ট্রানজেকশন আইডি" class="p-2.5 border rounded-xl">
@@ -720,6 +751,34 @@
                     </button>
                 </div>
                 <p class="text-xs text-gray-500 mt-3">নবায়ন হলে মেয়াদ আরও ৩৬৫ দিন বাড়বে।</p>
+            </div>
+
+            <!-- Center Profile: Logo + Contact + WhatsApp -->
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-5 mb-4">
+                <h3 class="text-indigo-900 font-medium mb-3">
+                    <i class="fas fa-id-card mr-2"></i>সেন্টার প্রোফাইল (লোগো ও যোগাযোগ)
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs block mb-1 text-gray-600">যোগাযোগ নম্বর</label>
+                        <input type="tel" id="profileContact" placeholder="01XXXXXXXXX" class="w-full p-2.5 border rounded-xl">
+                    </div>
+                    <div>
+                        <label class="text-xs block mb-1 text-gray-600">হোয়াটসঅ্যাপ নম্বর</label>
+                        <input type="tel" id="profileWhatsapp" placeholder="01XXXXXXXXX" class="w-full p-2.5 border rounded-xl">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="text-xs block mb-1 text-gray-600">কোচিং লোগো আপলোড</label>
+                        <div class="flex items-center gap-4">
+                            <input type="file" id="profileLogoFile" accept="image/*" class="flex-1 p-2 border rounded-xl text-xs">
+                            <img id="profileLogoPreview" src="" class="h-14 w-14 rounded-full object-cover border-2 border-indigo-300 hidden">
+                        </div>
+                        <p class="text-[10px] text-gray-500 mt-1">লোগো ফলাফল কার্ড, অ্যাডমিট কার্ড, পেমেন্ট স্লিপ ও PDF-এ স্বয়ংক্রিয়ভাবে দেখাবে</p>
+                    </div>
+                </div>
+                <button onclick="saveCenterProfile()" class="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl transition">
+                    <i class="fas fa-save mr-1"></i> প্রোফাইল সেভ করুন
+                </button>
             </div>
 
             <!-- CENTER DELETE SECTION -->
@@ -769,6 +828,11 @@
                     <div class="grid grid-cols-2 gap-2 mb-3">
                         <select id="qrFilterClass" onchange="loadQRAttendanceList()" class="p-2 border rounded-lg text-sm">
                             <option value="">সব শ্রেণী</option>
+                            <option value="১ম">১ম</option>
+                            <option value="২য়">২য়</option>
+                            <option value="৩য়">৩য়</option>
+                            <option value="৪র্থ">৪র্থ</option>
+                            <option value="৫ম">৫ম</option>
                             <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                             <option value="৭ম">৭ম</option>
                             <option value="৮ম">৮ম</option>
@@ -797,6 +861,11 @@
                     <input type="text" id="examTitle" placeholder="পরীক্ষার শিরোনাম (উদা: SSC মডেল টেস্ট - ১)" class="p-2.5 border rounded-xl outline-none">
                     <select id="examClass" class="p-2.5 border rounded-xl outline-none">
                         <option value="">শ্রেণী সিলেক্ট</option>
+                        <option value="১ম">১ম</option>
+                        <option value="২য়">২য়</option>
+                        <option value="৩য়">৩য়</option>
+                        <option value="৪র্থ">৪র্থ</option>
+                        <option value="৫ম">৫ম</option>
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                         <option value="৭ম">৭ম</option>
                         <option value="৮ম">৮ম</option>
@@ -854,6 +923,11 @@
                 <input type="text" id="routineTitle" placeholder="রুটিনের শিরোনাম (উদা: SSC ২০২৭ মডেল টেস্ট)" class="p-2 border rounded outline-none md:col-span-2">
                 <select id="routineClass" class="p-2 border rounded outline-none">
                     <option value="সব শ্রেণী">সব শ্রেণী</option>
+                    <option value="১ম">১ম</option>
+                    <option value="২য়">২য়</option>
+                    <option value="৩য়">৩য়</option>
+                    <option value="৪র্থ">৪র্থ</option>
+                    <option value="৫ম">৫ম</option>
                     <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                     <option value="৭ম">৭ম</option>
                     <option value="৮ম">৮ম</option>
@@ -994,6 +1068,11 @@
                 <input type="number" id="newRoll" placeholder="রোল" class="p-2 border rounded outline-none">
                 <input type="text" id="newName" placeholder="নাম" class="p-2 border rounded outline-none">
                 <select id="newClass" class="p-2 border rounded outline-none">
+                    <option value="১ম">১ম</option>
+                    <option value="২য়">২য়</option>
+                    <option value="৩য়">৩য়</option>
+                    <option value="৪র্থ">৪র্থ</option>
+                    <option value="৫ম">৫ম</option>
                     <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                     <option value="৭ম">৭ম</option>
                     <option value="৮ম">৮ম</option>
@@ -1024,6 +1103,11 @@
                     <label class="text-xs block mb-1 text-gray-600">শ্রেণী</label>
                     <select id="stdClass" onchange="fetchStudentInfo(); updateSubjectInputs();" class="w-full p-2 border rounded-lg">
                         <option value="">সিলেক্ট</option>
+                        <option value="১ম">১ম</option>
+                        <option value="২য়">২য়</option>
+                        <option value="৩য়">৩য়</option>
+                        <option value="৪র্থ">৪র্থ</option>
+                        <option value="৫ম">৫ম</option>
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                         <option value="৭ম">৭ম</option>
                         <option value="৮ম">৮ম</option>
@@ -1072,6 +1156,11 @@
                     <input type="date" id="filterDate" onchange="renderTable()" class="text-black p-1 rounded text-xs">
                     <select id="filterClass" onchange="renderTable()" class="text-black p-1 rounded text-xs">
                         <option value="সব">সব শ্রেণী</option>
+                        <option value="১ম">১ম</option>
+                        <option value="২য়">২য়</option>
+                        <option value="৩য়">৩য়</option>
+                        <option value="৪র্থ">৪র্থ</option>
+                        <option value="৫ম">৫ম</option>
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                         <option value="৭ম">৭ম</option>
                         <option value="৮ম">৮ম</option>
@@ -1263,6 +1352,9 @@
                     name: 'AMIRUL MATH CARE',
                     mobile: '01773167795',
                     password: 'amc123',
+                    contact: '01773167795',
+                    whatsapp: '01774275248',
+                    logo: '',
                     createdAt: now.toISOString(),
                     subscriptionExpiry: expiry.toISOString(),
                     isDefault: true,
@@ -1525,6 +1617,12 @@
             document.getElementById('navCenterName').innerText = center.name;
             document.getElementById('navCenterName').classList.remove('hidden');
 
+            // Apply center logo
+            applyCenterLogo(center);
+
+            // Update contact / WhatsApp on student portal
+            updateContactUI(center);
+
             // Attach Firebase listeners for this center
             if (window.attachCenterDataListeners) {
                 window.attachCenterDataListeners(centerId);
@@ -1565,6 +1663,8 @@
             const mobile = document.getElementById('regMobile').value.trim().replace(/\D/g, '');
             const pass = document.getElementById('regPassword').value;
             const pass2 = document.getElementById('regPasswordConfirm').value;
+            const contact = (document.getElementById('regContact')?.value || '').trim().replace(/\D/g, '') || mobile;
+            const whatsapp = (document.getElementById('regWhatsapp')?.value || '').trim().replace(/\D/g, '') || mobile;
 
             if (!name || name.length < 3) {
                 return Swal.fire('ত্রুটি', 'সেন্টারের নাম কমপক্ষে ৩ অক্ষরের হতে হবে।', 'warning');
@@ -1586,6 +1686,16 @@
                 return Swal.fire('ইতিমধ্যে রেজিস্টারড', 'এই মোবাইল নম্বর দিয়ে ইতিমধ্যে একটি সেন্টার রেজিস্টার আছে।', 'error');
             }
 
+            // Logo (optional base64)
+            let logoData = '';
+            const logoFile = document.getElementById('regLogoFile')?.files?.[0];
+            if (logoFile) {
+                if (logoFile.size > 500 * 1024) {
+                    return Swal.fire('ফাইল বড়', 'লোগো সর্বোচ্চ ৫০০ KB হতে হবে।', 'warning');
+                }
+                logoData = await readFileAsDataURL(logoFile);
+            }
+
             const centerId = 'CTR_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
             const now = new Date();
             const expiry = new Date(now);
@@ -1596,6 +1706,9 @@
                 name: name,
                 mobile: mobile,
                 password: pass, // Note: client-side only, not secure for production
+                contact: contact,
+                whatsapp: whatsapp,
+                logo: logoData || '',
                 createdAt: now.toISOString(),
                 subscriptionExpiry: expiry.toISOString(),
                 subscriptionHistory: [{
@@ -1621,9 +1734,14 @@
                 });
 
                 // Clear form
-                ['regCenterName', 'regMobile', 'regPassword', 'regPasswordConfirm'].forEach(id => {
-                    document.getElementById(id).value = '';
+                ['regCenterName', 'regMobile', 'regPassword', 'regPasswordConfirm', 'regContact', 'regWhatsapp'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = '';
                 });
+                const logoFile = document.getElementById('regLogoFile');
+                if (logoFile) logoFile.value = '';
+                const prev = document.getElementById('regLogoPreview');
+                if (prev) prev.classList.add('hidden');
             } catch (err) {
                 Swal.fire('ত্রুটি', 'রেজিস্ট্রেশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।', 'error');
                 console.error(err);
@@ -1677,6 +1795,10 @@
             document.getElementById('navCenterName').innerText = foundCenter.name;
             document.getElementById('navCenterName').classList.remove('hidden');
 
+            // Apply center logo
+            applyCenterLogo(foundCenter);
+            updateContactUI(foundCenter);
+
             // Attach listeners
             if (window.attachCenterDataListeners) {
                 window.attachCenterDataListeners(foundId);
@@ -1684,6 +1806,7 @@
 
             showSection('adminPanel');
             updateSubscriptionBanner();
+            populateProfileFields();
             loadStudentList();
             loadPaymentList();
             updateDashboardStats();
@@ -1957,10 +2080,20 @@
                                 <div><i class="fas fa-hourglass-end mr-1 text-gray-400"></i> মেয়াদ শেষ: ${expiryStr}</div>
                             </div>
                         </div>
-                        <div class="flex gap-2">
+                        <div class="flex flex-wrap gap-2">
+                            ${active
+                                ? `<button onclick="deactivateCenter('${c.id}', '${(c.name || '').replace(/'/g, "\\'")}')" 
+                                    class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-2 rounded-lg transition flex items-center gap-1">
+                                    <i class="fas fa-ban"></i> ডিঅ্যাক্টিভ
+                                </button>`
+                                : `<button onclick="activateCenter('${c.id}', '${(c.name || '').replace(/'/g, "\\'")}')" 
+                                    class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-2 rounded-lg transition flex items-center gap-1">
+                                    <i class="fas fa-check-circle"></i> অ্যাক্টিভ করুন
+                                </button>`
+                            }
                             <button onclick="deleteOtherCenter('${c.id}', '${(c.name || '').replace(/'/g, "\\'")}')" 
-                                class="bg-red-600 hover:bg-red-700 text-white text-xs px-4 py-2 rounded-lg transition flex items-center gap-1">
-                                <i class="fas fa-trash"></i> ডিলিট করুন
+                                class="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-2 rounded-lg transition flex items-center gap-1">
+                                <i class="fas fa-trash"></i> ডিলিট
                             </button>
                         </div>
                     </div>
@@ -2118,6 +2251,52 @@
         let questionFieldCount = 0;
 
         const subjectsConfig = {
+            "১ম": [
+                "বাংলা",
+                "ইংরেজি",
+                "গণিত",
+                "প্রাথমিক বিজ্ঞান",
+                "বাংলাদেশ ও বিশ্বপরিচয়",
+                "ধর্ম ও নৈতিক শিক্ষা"
+            ],
+            "২য়": [
+                "বাংলা",
+                "ইংরেজি",
+                "গণিত",
+                "প্রাথমিক বিজ্ঞান",
+                "বাংলাদেশ ও বিশ্বপরিচয়",
+                "ধর্ম ও নৈতিক শিক্ষা"
+            ],
+            "৩য়": [
+                "বাংলা",
+                "ইংরেজি",
+                "গণিত",
+                "প্রাথমিক বিজ্ঞান",
+                "বাংলাদেশ ও বিশ্বপরিচয়",
+                "ধর্ম ও নৈতিক শিক্ষা",
+                "চারু ও কারুকলা"
+            ],
+            "৪র্থ": [
+                "বাংলা",
+                "ইংরেজি",
+                "গণিত",
+                "প্রাথমিক বিজ্ঞান",
+                "বাংলাদেশ ও বিশ্বপরিচয়",
+                "ধর্ম ও নৈতিক শিক্ষা",
+                "চারু ও কারুকলা",
+                "শারীরিক শিক্ষা ও স্বাস্থ্য"
+            ],
+            "৫ম": [
+                "বাংলা",
+                "ইংরেজি",
+                "গণিত",
+                "প্রাথমিক বিজ্ঞান",
+                "বাংলাদেশ ও বিশ্বপরিচয়",
+                "ধর্ম ও নৈতিক শিক্ষা",
+                "চারু ও কারুকলা",
+                "শারীরিক শিক্ষা ও স্বাস্থ্য",
+                "তথ্য ও যোগাযোগ প্রযুক্তি"
+            ],
             "৬ষ্ঠ": [
                 "বাংলা",
                 "ইংরেজি",
@@ -4249,6 +4428,238 @@
                 </div>`;
         }
 
+
+        // ==================== CENTER LOGO & CONTACT HELPERS ====================
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function applyCenterLogo(center) {
+            const logoUrl = (center && center.logo) ? center.logo : DEFAULT_LOGO;
+            siteLogo = logoUrl;
+            const navLogo = document.getElementById('navLogo');
+            if (navLogo) navLogo.src = logoUrl;
+            // Also keep a per-center localStorage key for offline fallback
+            try {
+                if (currentCenterId) localStorage.setItem(lsKey('amc_site_logo'), logoUrl);
+            } catch (e) {}
+        }
+
+        function updateContactUI(center) {
+            if (!center) return;
+            const phone = center.contact || center.mobile || '01773167795';
+            const wa = center.whatsapp || center.mobile || '01774275248';
+            const phoneClean = phone.replace(/\D/g, '');
+            const waClean = wa.replace(/\D/g, '');
+            const phoneDisplay = phoneClean.startsWith('880') ? '+' + phoneClean : (phoneClean.length === 11 ? '+88' + phoneClean : phoneClean);
+            const waDisplay = waClean.replace(/^880/, '').replace(/^88/, '');
+
+            const phoneLink = document.getElementById('contactPhoneLink');
+            const phoneText = document.getElementById('contactPhoneText');
+            const waLink = document.getElementById('contactWaLink');
+            const waText = document.getElementById('contactWaText');
+            const nameEl = document.getElementById('contactCenterName');
+
+            if (phoneLink) phoneLink.href = 'tel:+' + (phoneClean.startsWith('880') ? phoneClean : '88' + phoneClean);
+            if (phoneText) phoneText.innerText = phoneDisplay;
+            if (waLink) waLink.href = 'https://wa.me/' + (waClean.startsWith('880') ? waClean : '88' + waClean);
+            if (waText) waText.innerText = waDisplay + ' (WhatsApp)';
+            if (nameEl) nameEl.innerText = (center.name || '') + ' — যেকোনো তথ্যের জন্য যোগাযোগ করুন।';
+        }
+
+        function populateProfileFields() {
+            if (!currentCenterInfo) return;
+            const contactEl = document.getElementById('profileContact');
+            const waEl = document.getElementById('profileWhatsapp');
+            const logoPrev = document.getElementById('profileLogoPreview');
+            if (contactEl) contactEl.value = currentCenterInfo.contact || currentCenterInfo.mobile || '';
+            if (waEl) waEl.value = currentCenterInfo.whatsapp || currentCenterInfo.mobile || '';
+            if (logoPrev && currentCenterInfo.logo) {
+                logoPrev.src = currentCenterInfo.logo;
+                logoPrev.classList.remove('hidden');
+            }
+        }
+
+        async function saveCenterProfile() {
+            if (!currentCenterId || !currentCenterInfo) {
+                return Swal.fire('ত্রুটি', 'কোনো সেন্টার লোড নেই।', 'error');
+            }
+            const contact = (document.getElementById('profileContact')?.value || '').trim().replace(/\D/g, '');
+            const whatsapp = (document.getElementById('profileWhatsapp')?.value || '').trim().replace(/\D/g, '');
+            let logo = currentCenterInfo.logo || '';
+
+            const logoFile = document.getElementById('profileLogoFile')?.files?.[0];
+            if (logoFile) {
+                if (logoFile.size > 500 * 1024) {
+                    return Swal.fire('ফাইল বড়', 'লোগো সর্বোচ্চ ৫০০ KB হতে হবে।', 'warning');
+                }
+                logo = await readFileAsDataURL(logoFile);
+            }
+
+            const updated = {
+                ...currentCenterInfo,
+                contact: contact || currentCenterInfo.mobile,
+                whatsapp: whatsapp || currentCenterInfo.mobile,
+                logo: logo
+            };
+
+            try {
+                if (window.saveToFirebase) {
+                    await window.saveToFirebase(`centers/${currentCenterId}`, updated);
+                }
+                currentCenterInfo = updated;
+                if (window._centersCache) window._centersCache[currentCenterId] = updated;
+                applyCenterLogo(updated);
+                updateContactUI(updated);
+                populateProfileFields();
+                Swal.fire('সফল!', 'সেন্টার প্রোফাইল আপডেট হয়েছে। লোগো ও যোগাযোগ নম্বর সব PDF/কার্ডে দেখাবে।', 'success');
+            } catch (err) {
+                console.error(err);
+                Swal.fire('ত্রুটি', 'সেভ করতে সমস্যা হয়েছে।', 'error');
+            }
+        }
+
+        // Preview logo on registration
+        document.addEventListener('change', function(e) {
+            if (e.target && e.target.id === 'regLogoFile') {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                if (file.size > 500 * 1024) {
+                    Swal.fire('ফাইল বড়', 'লোগো সর্বোচ্চ ৫০০ KB।', 'warning');
+                    e.target.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const img = document.getElementById('regLogoImg');
+                    const box = document.getElementById('regLogoPreview');
+                    if (img) img.src = ev.target.result;
+                    if (box) box.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+            if (e.target && e.target.id === 'profileLogoFile') {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                if (file.size > 500 * 1024) {
+                    Swal.fire('ফাইল বড়', 'লোগো সর্বোচ্চ ৫০০ KB।', 'warning');
+                    e.target.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const img = document.getElementById('profileLogoPreview');
+                    if (img) {
+                        img.src = ev.target.result;
+                        img.classList.remove('hidden');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ==================== ACTIVATE / DEACTIVATE CENTER (Main Admin) ====================
+        async function activateCenter(centerId, centerName) {
+            if (!currentCenterInfo || !(currentCenterInfo.isDefault || currentCenterInfo.name === 'AMIRUL MATH CARE' || currentCenterInfo.name === 'Amirul Math Care')) {
+                return Swal.fire('অনুমতি নেই', 'শুধুমাত্র মূল অ্যাডমিন (AMIRUL MATH CARE) এই কাজটি করতে পারবেন।', 'error');
+            }
+            const centers = getCurrentCenters();
+            const target = centers[centerId];
+            if (!target) return Swal.fire('ত্রুটি', 'সেন্টার পাওয়া যায়নি।', 'error');
+
+            const confirm = await Swal.fire({
+                title: 'অ্যাক্টিভ করবেন?',
+                html: `<b>${centerName}</b> এর সাবস্ক্রিপশন ১ বছরের জন্য অ্যাক্টিভ হবে।`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, অ্যাক্টিভ করুন',
+                cancelButtonText: 'বাতিল',
+                confirmButtonColor: '#059669'
+            });
+            if (!confirm.isConfirmed) return;
+
+            const now = new Date();
+            const newExpiry = new Date(now);
+            newExpiry.setFullYear(newExpiry.getFullYear() + 1);
+            const history = target.subscriptionHistory || [];
+            history.push({
+                action: 'activate',
+                date: now.toISOString(),
+                method: 'Main Admin Activate',
+                txnId: 'ACT-' + Date.now()
+            });
+            const updated = {
+                ...target,
+                subscriptionExpiry: newExpiry.toISOString(),
+                subscriptionHistory: history
+            };
+            try {
+                if (window.saveToFirebase) {
+                    await window.saveToFirebase(`centers/${centerId}`, updated);
+                }
+                if (window._centersCache) window._centersCache[centerId] = updated;
+                loadAllCentersList();
+                loadCentersList();
+                Swal.fire('সফল!', `"${centerName}" অ্যাক্টিভ হয়েছে। মেয়াদ: ${newExpiry.toLocaleDateString('bn-BD')}`, 'success');
+            } catch (err) {
+                console.error(err);
+                Swal.fire('ত্রুটি', 'অ্যাক্টিভেট করতে সমস্যা হয়েছে।', 'error');
+            }
+        }
+
+        async function deactivateCenter(centerId, centerName) {
+            if (!currentCenterInfo || !(currentCenterInfo.isDefault || currentCenterInfo.name === 'AMIRUL MATH CARE' || currentCenterInfo.name === 'Amirul Math Care')) {
+                return Swal.fire('অনুমতি নেই', 'শুধুমাত্র মূল অ্যাডমিন (AMIRUL MATH CARE) এই কাজটি করতে পারবেন।', 'error');
+            }
+            const centers = getCurrentCenters();
+            const target = centers[centerId];
+            if (!target) return Swal.fire('ত্রুটি', 'সেন্টার পাওয়া যায়নি।', 'error');
+
+            const confirm = await Swal.fire({
+                title: 'ডিঅ্যাক্টিভ করবেন?',
+                html: `<b>${centerName}</b> এর সাবস্ক্রিপশন অবিলম্বে বন্ধ হবে। শিক্ষার্থীরা আর সেন্টার সিলেক্ট করতে পারবে না।`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, ডিঅ্যাক্টিভ করুন',
+                cancelButtonText: 'বাতিল',
+                confirmButtonColor: '#d97706'
+            });
+            if (!confirm.isConfirmed) return;
+
+            const past = new Date();
+            past.setDate(past.getDate() - 1);
+            const history = target.subscriptionHistory || [];
+            history.push({
+                action: 'deactivate',
+                date: new Date().toISOString(),
+                method: 'Main Admin Deactivate',
+                txnId: 'DEACT-' + Date.now()
+            });
+            const updated = {
+                ...target,
+                subscriptionExpiry: past.toISOString(),
+                subscriptionHistory: history
+            };
+            try {
+                if (window.saveToFirebase) {
+                    await window.saveToFirebase(`centers/${centerId}`, updated);
+                }
+                if (window._centersCache) window._centersCache[centerId] = updated;
+                loadAllCentersList();
+                loadCentersList();
+                Swal.fire('ডিঅ্যাক্টিভ', `"${centerName}" ডিঅ্যাক্টিভ করা হয়েছে।`, 'success');
+            } catch (err) {
+                console.error(err);
+                Swal.fire('ত্রুটি', 'ডিঅ্যাক্টিভেট করতে সমস্যা হয়েছে।', 'error');
+            }
+        }
+
+
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
             const today = new Date().toISOString().split('T')[0];
@@ -4271,8 +4682,11 @@
                         document.getElementById('adminLoginBtn').classList.add('hidden');
                         document.getElementById('navCenterName').innerText = currentCenterInfo.name;
                         document.getElementById('navCenterName').classList.remove('hidden');
+                        applyCenterLogo(currentCenterInfo);
+                        updateContactUI(currentCenterInfo);
                         showSection('adminPanel');
                         updateSubscriptionBanner();
+                        populateProfileFields();
                         loadStudentList();
                         updateDashboardStats();
                         renderTable();
