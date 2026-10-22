@@ -781,6 +781,31 @@
                 </button>
             </div>
 
+            <!-- Password Change -->
+            <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 mb-4">
+                <h3 class="text-purple-900 font-medium mb-3">
+                    <i class="fas fa-key mr-2"></i>পাসওয়ার্ড পরিবর্তন
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="text-xs block mb-1 text-gray-600">বর্তমান পাসওয়ার্ড *</label>
+                        <input type="password" id="changePassCurrent" placeholder="বর্তমান পাসওয়ার্ড" class="w-full p-2.5 border rounded-xl">
+                    </div>
+                    <div>
+                        <label class="text-xs block mb-1 text-gray-600">নতুন পাসওয়ার্ড *</label>
+                        <input type="password" id="changePassNew" placeholder="কমপক্ষে ৬ অক্ষর" class="w-full p-2.5 border rounded-xl">
+                    </div>
+                    <div>
+                        <label class="text-xs block mb-1 text-gray-600">নতুন পাসওয়ার্ড নিশ্চিত *</label>
+                        <input type="password" id="changePassConfirm" placeholder="আবার নতুন পাসওয়ার্ড" class="w-full p-2.5 border rounded-xl">
+                    </div>
+                </div>
+                <button onclick="changeAdminPassword()" class="mt-4 w-full bg-purple-700 hover:bg-purple-800 text-white py-2.5 rounded-xl transition">
+                    <i class="fas fa-lock mr-1"></i> পাসওয়ার্ড পরিবর্তন করুন
+                </button>
+                <p class="text-xs text-gray-500 mt-2">পাসওয়ার্ড পরিবর্তনের পর নতুন পাসওয়ার্ড দিয়েই লগইন করতে হবে।</p>
+            </div>
+
             <!-- CENTER DELETE SECTION -->
             <div class="mt-6 bg-red-50 border-2 border-red-200 rounded-xl p-5">
                 <h3 class="text-red-800 font-medium mb-2">
@@ -4521,6 +4546,68 @@
             } catch (err) {
                 console.error(err);
                 Swal.fire('ত্রুটি', 'সেভ করতে সমস্যা হয়েছে।', 'error');
+            }
+        }
+
+        async function changeAdminPassword() {
+            if (!currentCenterId || !currentCenterInfo) {
+                return Swal.fire('ত্রুটি', 'কোনো সেন্টার লোড নেই।', 'error');
+            }
+
+            const currentPass = document.getElementById('changePassCurrent')?.value || '';
+            const newPass = document.getElementById('changePassNew')?.value || '';
+            const confirmPass = document.getElementById('changePassConfirm')?.value || '';
+
+            if (!currentPass || !newPass || !confirmPass) {
+                return Swal.fire('ফিল্ড খালি', 'সবগুলো পাসওয়ার্ড ফিল্ড পূরণ করুন।', 'warning');
+            }
+            if (currentPass !== currentCenterInfo.password) {
+                await logSecurityEvent('password_change_fail', `ভুল বর্তমান পাসওয়ার্ড (সেন্টার: ${currentCenterInfo.name})`);
+                return Swal.fire('ভুল পাসওয়ার্ড', 'বর্তমান পাসওয়ার্ড সঠিক নয়।', 'error');
+            }
+            if (newPass.length < 6) {
+                return Swal.fire('দুর্বল পাসওয়ার্ড', 'নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।', 'warning');
+            }
+            if (newPass !== confirmPass) {
+                return Swal.fire('মিলছে না', 'নতুন পাসওয়ার্ড ও নিশ্চিতকরণ পাসওয়ার্ড একই নয়।', 'warning');
+            }
+            if (newPass === currentPass) {
+                return Swal.fire('একই পাসওয়ার্ড', 'নতুন পাসওয়ার্ড বর্তমান পাসওয়ার্ড থেকে আলাদা হতে হবে।', 'info');
+            }
+
+            const confirm = await Swal.fire({
+                title: 'পাসওয়ার্ড পরিবর্তন?',
+                text: 'পরিবর্তনের পর নতুন পাসওয়ার্ড দিয়েই লগইন করতে হবে।',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, পরিবর্তন করুন',
+                cancelButtonText: 'বাতিল',
+                confirmButtonColor: '#6d28d9'
+            });
+            if (!confirm.isConfirmed) return;
+
+            const updated = {
+                ...currentCenterInfo,
+                password: newPass
+            };
+
+            try {
+                if (window.saveToFirebase) {
+                    await window.saveToFirebase(`centers/${currentCenterId}`, updated);
+                }
+                currentCenterInfo = updated;
+                if (window._centersCache) window._centersCache[currentCenterId] = updated;
+
+                ['changePassCurrent', 'changePassNew', 'changePassConfirm'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = '';
+                });
+
+                await logSecurityEvent('password_change_success', `পাসওয়ার্ড পরিবর্তন সফল (সেন্টার: ${currentCenterInfo.name})`);
+                Swal.fire('সফল!', 'পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে। পরবর্তী লগইনে নতুন পাসওয়ার্ড ব্যবহার করুন।', 'success');
+            } catch (err) {
+                console.error(err);
+                Swal.fire('ত্রুটি', 'পাসওয়ার্ড পরিবর্তন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।', 'error');
             }
         }
 
