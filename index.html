@@ -44,7 +44,7 @@
 
         @media print {
             body { background: white !important; color: black !important; }
-            .no-print, nav, #studentView, #loginSection, #adminPanel, #centerSelectSection, #registerSection, .slider-container, button, .contact-section {
+            .no-print, nav, #studentView, #loginSection, #adminPanel, #teacherPanel, #centerSelectSection, #registerSection, .slider-container, button, .contact-section {
                 display: none !important;
             }
             #displayArea {
@@ -231,23 +231,75 @@
         </div>
     </nav>
 
-    <!-- CENTER SELECTION (Student Entry Point) -->
-    <div id="centerSelectSection" class="container mx-auto mt-8 p-4 max-w-2xl no-print">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl border-t-8 border-purple-800 text-center">
-            <i class="fas fa-school text-5xl text-purple-700 mb-4"></i>
-            <h2 class="text-2xl font-medium text-gray-800 dark:text-white mb-2">কোচিং সেন্টার নির্বাচন করুন</h2>
-            <p class="text-sm text-gray-500 mb-6">যে সেন্টারে আপনি পড়াশোনা করেন সেটি বেছে নিন</p>
-            
-            <div id="centersList" class="space-y-3 max-h-96 overflow-y-auto text-left">
-                <p class="text-center text-gray-400 py-8">লোড হচ্ছে...</p>
-            </div>
+    <!-- MODERN HOME / ROLE + CENTER SELECTION -->
+    <div id="centerSelectSection" class="container mx-auto mt-6 p-4 max-w-4xl no-print">
 
-            <div class="mt-8 pt-6 border-t">
-                <p class="text-xs text-gray-500 mb-3">নতুন কোচিং সেন্টার রেজিস্ট্রেশন করতে চান?</p>
-                <button onclick="showSection('registerSection')" class="bg-purple-100 text-purple-800 px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-200 transition">
-                    <i class="fas fa-plus-circle mr-1"></i> নতুন সেন্টার রেজিস্টার
-                </button>
+        <!-- Hero -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-700 to-indigo-600 shadow-lg mb-4">
+                <i class="fas fa-graduation-cap text-3xl text-white"></i>
             </div>
+            <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-white mb-2">কোচিং ম্যানেজমেন্ট সফটওয়্যার</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto">ছাত্র-ছাত্রী ও শিক্ষকদের জন্য আলাদা পোর্টাল • একাধিক কোচিং সেন্টার এক প্ল্যাটফর্মে</p>
+        </div>
+
+        <!-- Role Cards -->
+        <div id="roleCardsRow" class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+            <!-- Student Portal Card -->
+            <button type="button" onclick="chooseRole('student')" class="group relative overflow-hidden bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border-2 border-transparent hover:border-purple-400 transition-all text-left hover:-translate-y-1 duration-300">
+                <div class="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-purple-100 to-transparent rounded-bl-full opacity-80 group-hover:opacity-100"></div>
+                <div class="relative z-10">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-500 flex items-center justify-center mb-4 shadow-md group-hover:scale-105 transition">
+                        <i class="fas fa-user-graduate text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-1">ছাত্র-ছাত্রী পোর্টাল</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">রেজাল্ট দেখুন, অ্যাডমিট কার্ড ডাউনলোড করুন, অনলাইন পরীক্ষা দিন ও পেমেন্ট স্লিপ প্রিন্ট করুন</p>
+                    <span class="inline-flex items-center gap-1.5 text-sm font-medium text-purple-700 dark:text-purple-300">
+                        প্রবেশ করুন <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition"></i>
+                    </span>
+                </div>
+            </button>
+
+            <!-- Teacher Portal Card -->
+            <button type="button" onclick="chooseRole('teacher')" class="group relative overflow-hidden bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border-2 border-transparent hover:border-teal-400 transition-all text-left hover:-translate-y-1 duration-300">
+                <div class="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-teal-100 to-transparent rounded-bl-full opacity-80 group-hover:opacity-100"></div>
+                <div class="relative z-10">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-600 to-emerald-500 flex items-center justify-center mb-4 shadow-md group-hover:scale-105 transition">
+                        <i class="fas fa-chalkboard-teacher text-2xl text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-1">শিক্ষক প্যানেল</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">উপস্থিতি, রেজাল্ট এন্ট্রি, পেমেন্ট, রুটিন, অনলাইন পরীক্ষা ও সেন্টার ম্যানেজমেন্ট পরিচালনা করুন</p>
+                    <span class="inline-flex items-center gap-1.5 text-sm font-medium text-teal-700 dark:text-teal-300">
+                        প্রবেশ করুন <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition"></i>
+                    </span>
+                </div>
+            </button>
+        </div>
+
+        <!-- Center List (shown after role chosen) -->
+        <div id="centerPickBlock" class="hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-2xl border-t-8 border-purple-700">
+                <div class="flex items-center justify-between mb-5 flex-wrap gap-2">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white" id="centerPickTitle">কোচিং সেন্টার নির্বাচন করুন</h3>
+                        <p class="text-xs text-gray-500 mt-0.5" id="centerPickSubtitle">যে সেন্টারে আপনি পড়াশোনা করেন সেটি বেছে নিন</p>
+                    </div>
+                    <button onclick="backToRoleCards()" class="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 px-3 py-1.5 rounded-lg border transition flex items-center gap-1">
+                        <i class="fas fa-arrow-left"></i> ফিরে যান
+                    </button>
+                </div>
+                <div id="centersList" class="space-y-3 max-h-96 overflow-y-auto text-left">
+                    <p class="text-center text-gray-400 py-8">লোড হচ্ছে...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register CTA -->
+        <div class="mt-8 text-center">
+            <p class="text-xs text-gray-500 mb-3">নতুন কোচিং সেন্টার রেজিস্ট্রেশন করতে চান?</p>
+            <button onclick="showSection('registerSection')" class="bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-200 px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-200 transition shadow-sm">
+                <i class="fas fa-plus-circle mr-1"></i> নতুন সেন্টার রেজিস্টার
+            </button>
         </div>
     </div>
 
@@ -831,6 +883,17 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-cyan-50 p-5 rounded-xl">
                     <h3 class="font-medium text-cyan-900 mb-3">ক্যামেরা দিয়ে QR স্ক্যান করুন</h3>
+                    <div class="mb-3">
+                        <label class="text-xs text-gray-600 block mb-1">উপস্থিতির ধরন (স্ক্যানের আগে বেছে নিন)</label>
+                        <select id="qrScanPurpose" class="w-full p-2.5 border rounded-xl text-sm bg-white">
+                            <option value="দৈনিক উপস্থিতি">দৈনিক উপস্থিতি</option>
+                            <option value="সাপ্তাহিক">সাপ্তাহিক পরীক্ষা</option>
+                            <option value="মাসিক">মাসিক পরীক্ষা</option>
+                            <option value="বার্ষিক">বার্ষিক পরীক্ষা</option>
+                            <option value="দৈনিক">দৈনিক পরীক্ষা</option>
+                            <option value="মডেল টেস্ট">মডেল টেস্ট</option>
+                        </select>
+                    </div>
                     <div id="qr-reader" class="mb-3"></div>
                     <div class="flex gap-2">
                         <button id="startScanBtn" onclick="startQRScanner()" class="flex-1 bg-cyan-600 text-white py-2.5 rounded-xl hover:bg-cyan-700 transition">
@@ -840,7 +903,7 @@
                             <i class="fas fa-stop mr-1"></i> বন্ধ করুন
                         </button>
                     </div>
-                    <p class="text-xs text-gray-600 mt-3 text-center">অ্যাডমিট কার্ডের QR কোড স্ক্যান করুন। সফল স্ক্যান হলে অ্যাটেনডেন্স অটো সেভ হবে।</p>
+                    <p class="text-xs text-gray-600 mt-3 text-center">বার্ষিক অ্যাডমিট QR একবার প্রিন্ট করুন — সারা বছর যেকোনো দিন স্ক্যান করে উপস্থিতি নেওয়া যাবে। আজকের তারিখে অটো সেভ হবে।</p>
                 </div>
 
                 <div>
@@ -1210,6 +1273,115 @@
                     <tbody id="dataTableBody"></tbody>
                 </table>
             </div>
+        </div>
+    </div>
+
+
+    <!-- TEACHER PANEL -->
+    <div id="teacherPanel" class="container mx-auto mt-6 p-4 hidden no-print">
+        <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+                <h2 class="text-2xl font-semibold text-gray-800 dark:text-white flex items-center gap-2">
+                    <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-600 to-emerald-500 flex items-center justify-center">
+                        <i class="fas fa-chalkboard-teacher text-white"></i>
+                    </span>
+                    শিক্ষক প্যানেল
+                </h2>
+                <p class="text-sm text-gray-500 mt-1" id="teacherCenterLabel">—</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="openTeacherFullAdmin()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl border transition">
+                    <i class="fas fa-cogs mr-1"></i> সম্পূর্ণ অ্যাডমিন টুলস
+                </button>
+                <button onclick="logout()" class="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-xl border transition">
+                    <i class="fas fa-sign-out-alt mr-1"></i> লগ আউট
+                </button>
+            </div>
+        </div>
+
+        <!-- Teacher Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border-b-4 border-blue-500 text-center">
+                <p class="text-xs text-gray-500">মোট শিক্ষার্থী</p>
+                <h3 id="tStatTotalStudent" class="text-2xl text-blue-600 mt-1 font-medium">0</h3>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border-b-4 border-green-500 text-center">
+                <p class="text-xs text-gray-500">আজ উপস্থিত</p>
+                <h3 id="tStatTodayAtt" class="text-2xl text-green-600 mt-1 font-medium">0</h3>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border-b-4 border-purple-500 text-center">
+                <p class="text-xs text-gray-500">মোট রেজাল্ট</p>
+                <h3 id="tStatTotalResult" class="text-2xl text-purple-600 mt-1 font-medium">0</h3>
+            </div>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border-b-4 border-rose-500 text-center">
+                <p class="text-xs text-gray-500">উপস্থিতির হার</p>
+                <h3 id="tStatAttPercentage" class="text-2xl text-rose-600 mt-1 font-medium">0%</h3>
+            </div>
+        </div>
+
+        <!-- Teacher Action Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+            <button onclick="openTeacherModule('studentManager')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-blue-100 hover:border-blue-400 hover:-translate-y-1 transition text-left group">
+                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                    <i class="fas fa-users text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">স্টুডেন্ট ডাটাবেজ</h4>
+                <p class="text-[11px] text-gray-500 mt-1">ছাত্র যোগ / এডিট</p>
+            </button>
+            <button onclick="openTeacherModule('attendanceSystem')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-green-100 hover:border-green-400 hover:-translate-y-1 transition text-left group">
+                <div class="w-12 h-12 rounded-xl bg-green-100 text-green-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                    <i class="fas fa-calendar-check text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">উপস্থিতি</h4>
+                <p class="text-[11px] text-gray-500 mt-1">দৈনিক উপস্থিতি এন্ট্রি</p>
+            </button>
+            <button onclick="openTeacherModule('resultEntry')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-purple-100 hover:border-purple-400 hover:-translate-y-1 transition text-left group">
+                <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                    <i class="fas fa-poll text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">রেজাল্ট এন্ট্রি</h4>
+                <p class="text-[11px] text-gray-500 mt-1">MCQ + CQ নম্বর</p>
+            </button>
+            <button onclick="openTeacherModule('paymentSystem')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-amber-100 hover:border-amber-400 hover:-translate-y-1 transition text-left group">
+                <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                    <i class="fas fa-hand-holding-usd text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">পেমেন্ট</h4>
+                <p class="text-[11px] text-gray-500 mt-1">ফি এন্ট্রি ও রশিদ</p>
+            </button>
+            <button onclick="openTeacherModule('routineManagerSystem')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-indigo-100 hover:border-indigo-400 hover:-translate-y-1 transition text-left group">
+                <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                    <i class="fas fa-calendar-alt text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">রুটিন</h4>
+                <p class="text-[11px] text-gray-500 mt-1">পরীক্ষা রুটিন আপলোড</p>
+            </button>
+            <button onclick="openTeacherModule('examManagerSystem')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-pink-100 hover:border-pink-400 hover:-translate-y-1 transition text-left group">
+                <div class="w-12 h-12 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                    <i class="fas fa-laptop-code text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">অনলাইন পরীক্ষা</h4>
+                <p class="text-[11px] text-gray-500 mt-1">প্রশ্নপত্র ও MCQ</p>
+            </button>
+            <button onclick="openTeacherModule('qrAttendanceSystem')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-cyan-100 hover:border-cyan-400 hover:-translate-y-1 transition text-left group">
+                <div class="w-12 h-12 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                    <i class="fas fa-qrcode text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">QR অ্যাটেনডেন্স</h4>
+                <p class="text-[11px] text-gray-500 mt-1">স্ক্যান করে উপস্থিতি</p>
+            </button>
+            <button onclick="openTeacherModule('galleryManagerSystem')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-yellow-100 hover:border-yellow-400 hover:-translate-y-1 transition text-left group">
+                <div class="w-12 h-12 rounded-xl bg-yellow-100 text-yellow-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                    <i class="fas fa-images text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">গ্যালারি</h4>
+                <p class="text-[11px] text-gray-500 mt-1">ছবি আপলোড</p>
+            </button>
+        </div>
+
+        <div class="bg-teal-50 dark:bg-gray-800 border border-teal-200 rounded-2xl p-4 text-sm text-teal-900 dark:text-teal-200">
+            <i class="fas fa-info-circle mr-1"></i>
+            উপরের যেকোনো টুল ক্লিক করলে সম্পূর্ণ ম্যানেজমেন্ট স্ক্রিন খুলবে। সেখান থেকে কাজ শেষে <b>লোগো/নামে ক্লিক</b> করে আবার শিক্ষক প্যানেলে ফিরতে পারবেন।
         </div>
     </div>
 
@@ -1594,18 +1766,20 @@
             container.innerHTML = list.map(c => {
                 const active = isSubscriptionActive(c);
                 const left = daysLeft(c.subscriptionExpiry);
+                const logo = c.logo || 'https://i.ibb.co/Lhy0W0P/1000018420.jpg';
                 return `
-                <div class="center-card p-4 border-2 rounded-2xl cursor-pointer ${active ? 'border-purple-200 hover:border-purple-500' : 'border-red-200 subscription-expired'}"
-                     onclick="${active ? `selectCenter('${c.id}')` : `showExpiredAlert('${c.name}')`}">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="font-medium text-purple-900 dark:text-yellow-300 text-base">${c.name}</h3>
-                            <p class="text-xs text-gray-500 mt-1"><i class="fas fa-phone-alt mr-1"></i>${c.mobile}</p>
+                <div class="center-card p-4 border-2 rounded-2xl cursor-pointer transition-all ${active ? 'border-purple-100 hover:border-purple-400 hover:shadow-lg' : 'border-red-200 subscription-expired'}"
+                     onclick="${active ? `selectCenter('${c.id}')` : `showExpiredAlert('${c.name.replace(/'/g, "\\'")}')`}">
+                    <div class="flex items-center gap-3">
+                        <img src="${logo}" class="w-12 h-12 rounded-full object-cover border-2 border-purple-200 shadow" onerror="this.src='https://i.ibb.co/Lhy0W0P/1000018420.jpg'">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-semibold text-purple-900 dark:text-yellow-300 text-base truncate">${c.name}</h3>
+                            <p class="text-xs text-gray-500 mt-0.5"><i class="fas fa-phone-alt mr-1"></i>${c.mobile}</p>
                         </div>
-                        <div class="text-right">
+                        <div class="text-right shrink-0">
                             ${active 
-                                ? `<span class="bg-green-100 text-green-700 text-[10px] px-2 py-1 rounded-full">অ্যাক্টিভ • ${left} দিন বাকি</span>`
-                                : `<span class="bg-red-100 text-red-700 text-[10px] px-2 py-1 rounded-full">মেয়াদ শেষ</span>`
+                                ? `<span class="bg-green-100 text-green-700 text-[10px] px-2.5 py-1 rounded-full font-medium">অ্যাক্টিভ • ${left} দিন</span>`
+                                : `<span class="bg-red-100 text-red-700 text-[10px] px-2.5 py-1 rounded-full font-medium">মেয়াদ শেষ</span>`
                             }
                         </div>
                     </div>
@@ -1660,7 +1834,19 @@
             loadFaqAccordion();
             initHeroSlider();
 
-            showSection('studentView');
+            const role = window.pendingRole || sessionStorage.getItem('pending_role') || 'student';
+            if (role === 'teacher') {
+                // Pre-fill login and go to teacher/admin login
+                const mobileEl = document.getElementById('adminMobile');
+                if (mobileEl && center.mobile) mobileEl.value = center.mobile;
+                const loginTitle = document.querySelector('#loginSection h2');
+                if (loginTitle) loginTitle.innerText = 'শিক্ষক / অ্যাডমিন লগইন';
+                const loginHint = document.querySelector('#loginSection p.text-xs');
+                if (loginHint) loginHint.innerText = 'মোবাইল নম্বর ও পাসওয়ার্ড দিয়ে শিক্ষক প্যানেলে প্রবেশ করুন';
+                showSection('loginSection');
+            } else {
+                showSection('studentView');
+            }
         }
 
         function changeCenter() {
@@ -1669,13 +1855,15 @@
             sessionStorage.removeItem('selected_center_id');
             sessionStorage.removeItem('selected_center_name');
             document.getElementById('navCenterName').classList.add('hidden');
+            backToRoleCards();
             showSection('centerSelectSection');
-            loadCentersList();
         }
 
         function goHome() {
             if (sessionStorage.getItem('is_admin') === 'true') {
-                showSection('adminPanel');
+                const role = sessionStorage.getItem('user_role');
+                if (role === 'teacher') showSection('teacherPanel');
+                else showSection('adminPanel');
             } else if (currentCenterId) {
                 showSection('studentView');
             } else {
@@ -1829,7 +2017,6 @@
                 window.attachCenterDataListeners(foundId);
             }
 
-            showSection('adminPanel');
             updateSubscriptionBanner();
             populateProfileFields();
             loadStudentList();
@@ -1840,6 +2027,7 @@
             loadExamAttemptsList();
             loadQRAttendanceList();
             renderTable();
+            syncTeacherStats();
 
             // Show "Manage All Centers" only for default / AMIRUL MATH CARE admin
             const manageBtn = document.getElementById('manageAllCentersBtn');
@@ -1850,7 +2038,17 @@
                 manageBtn.classList.toggle('hidden', !isMainAdmin);
             }
 
-            await logSecurityEvent('login_success', `অ্যাডমিন লগইন: ${foundCenter.name} (${mobile})`);
+            const role = window.pendingRole || sessionStorage.getItem('pending_role') || 'admin';
+            sessionStorage.setItem('user_role', role === 'teacher' ? 'teacher' : 'admin');
+            if (role === 'teacher') {
+                const tLabel = document.getElementById('teacherCenterLabel');
+                if (tLabel) tLabel.innerText = foundCenter.name + ' • শিক্ষক প্যানেল';
+                showSection('teacherPanel');
+            } else {
+                showSection('adminPanel');
+            }
+
+            await logSecurityEvent('login_success', `${role === 'teacher' ? 'শিক্ষক' : 'অ্যাডমিন'} লগইন: ${foundCenter.name} (${mobile})`);
         }
 
         function updateSubscriptionBanner() {
@@ -2564,7 +2762,7 @@
         }
 
         function showSection(id) {
-            ['studentView', 'loginSection', 'adminPanel', 'displayArea', 'examTakingArea', 'centerSelectSection', 'registerSection'].forEach(s => {
+            ['studentView', 'loginSection', 'adminPanel', 'teacherPanel', 'displayArea', 'examTakingArea', 'centerSelectSection', 'registerSection'].forEach(s => {
                 const el = document.getElementById(s);
                 if (el) el.classList.add('hidden');
             });
@@ -2574,7 +2772,9 @@
 
         function closeDisplayArea() {
             if (sessionStorage.getItem('is_admin') === 'true') {
-                showSection('adminPanel');
+                const role = sessionStorage.getItem('user_role');
+                if (role === 'teacher') showSection('teacherPanel');
+                else showSection('adminPanel');
             } else if (currentCenterId) {
                 showSection('studentView');
             } else {
@@ -2585,20 +2785,23 @@
         function logout() {
             sessionStorage.removeItem('is_admin');
             sessionStorage.removeItem('admin_center_id');
+            sessionStorage.removeItem('user_role');
+            sessionStorage.removeItem('pending_role');
+            window.pendingRole = null;
             document.getElementById('logoutBtn').classList.add('hidden');
             document.getElementById('adminLoginBtn').classList.remove('hidden');
             const manageBtn = document.getElementById('manageAllCentersBtn');
             if (manageBtn) manageBtn.classList.add('hidden');
-            // Hide all-centers panel if open
             const acm = document.getElementById('allCentersManager');
             if (acm) acm.classList.add('hidden');
             stopQRScanner();
-            // Keep selected center for student view if wanted, or clear
-            if (currentCenterId) {
-                showSection('studentView');
-            } else {
-                showSection('centerSelectSection');
-            }
+            currentCenterId = null;
+            currentCenterInfo = null;
+            sessionStorage.removeItem('selected_center_id');
+            sessionStorage.removeItem('selected_center_name');
+            document.getElementById('navCenterName')?.classList.add('hidden');
+            backToRoleCards();
+            showSection('centerSelectSection');
         }
 
         function updateDashboardStats() {
@@ -2618,6 +2821,7 @@
             document.getElementById('statAttPercentage').innerText = attRate + "%";
 
             renderAttendanceChart(todayPresent, Math.max(0, totalStudents - todayPresent));
+            if (typeof syncTeacherStats === 'function') syncTeacherStats();
         }
 
         function renderAttendanceChart(present, absent) {
@@ -3215,8 +3419,8 @@
             const date = document.getElementById('searchDate').value;
             const type = document.getElementById('searchExamType').value;
             
-            if (!roll || !cls || !date) {
-                return Swal.fire('তথ্য অসম্পূর্ণ!', 'সব ঘর পূরণ করুন!', 'warning');
+            if (!roll || !cls) {
+                return Swal.fire('তথ্য অসম্পূর্ণ!', 'রোল ও শ্রেণী পূরণ করুন!', 'warning');
             }
 
             const students = getObjectFromStorage('amc_student_db');
@@ -3224,7 +3428,10 @@
             const studentName = student ? student.name : 'অজ্ঞাত শিক্ষার্থী';
             const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
 
-            const qrData = `AMC|${currentCenterId}|${cls}|${roll}|${date}|${type}`;
+            // Year-long student QR (valid for entire calendar year)
+            const year = new Date().getFullYear();
+            // Format: AMC|centerId|cls|roll|Y2026  — date/type NOT bound to QR
+            const qrData = `AMC|${currentCenterId}|${cls}|${roll}|Y${year}`;
 
             showSection('displayArea');
             
@@ -3248,26 +3455,29 @@
                 qrDataUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qrData)}`;
             }
 
+            const validUntil = `৩১ ডিসেম্বর ${year}`;
             document.getElementById('pdfContent').innerHTML = `
             <div style="border:3px double #4c1d95; padding:20px; border-radius:12px; font-family:'Hind Siliguri',sans-serif; background:white;">
                 <div style="text-align:center; margin-bottom:15px;">
                     <img src="${siteLogo}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
                     <h2 style="color:#4c1d95; margin:8px 0 2px 0; font-size:20px;">${centerName}</h2>
-                    <p style="margin:0; color:#4a5568; font-size:13px;">Official Admit Card</p>
+                    <p style="margin:0; color:#4a5568; font-size:13px;">Official Admit / ID Card</p>
+                    <p style="margin:4px 0 0 0; font-size:11px; color:#059669; font-weight:600;">QR বৈধতা: সারা বছর ${year} (মেয়াদ: ${validUntil})</p>
                 </div>
                 
                 <table style="width:100%; font-size:14px; line-height:1.8; margin-bottom:15px;">
                     <tr><td style="width:35%;">নাম:</td><td><b>${studentName}</b></td></tr>
                     <tr><td>শ্রেণী:</td><td><b>${cls}</b></td></tr>
                     <tr><td>রোল:</td><td><b>${roll}</b></td></tr>
-                    <tr><td>পরীক্ষা:</td><td><b>${type}</b></td></tr>
-                    <tr><td>তারিখ:</td><td><b>${date}</b></td></tr>
+                    ${type ? `<tr><td>পরীক্ষা:</td><td><b>${type}</b></td></tr>` : ''}
+                    ${date ? `<tr><td>তারিখ:</td><td><b>${date}</b></td></tr>` : ''}
                 </table>
 
                 <div style="text-align:center; margin-top:10px; border-top:2px dashed #4c1d95; padding-top:15px;">
                     <img src="${qrDataUrl}" alt="QR Code" style="width:160px; height:160px; display:inline-block;">
-                    <p style="font-size:11px; color:#666; margin-top:6px;">স্ক্যান করে পরীক্ষার উপস্থিতি নিন</p>
-                    <p style="font-size:10px; color:#999;">QR: ${cls} | রোল ${roll}</p>
+                    <p style="font-size:12px; color:#4c1d95; margin-top:8px; font-weight:600;">বার্ষিক উপস্থিতি QR কোড</p>
+                    <p style="font-size:11px; color:#666; margin-top:4px;">একবার প্রিন্ট করুন • সারা বছর স্ক্যান করে উপস্থিতি নেওয়া যাবে</p>
+                    <p style="font-size:10px; color:#999; margin-top:4px;">${cls} | রোল ${roll} | ${year}</p>
                 </div>
             </div>`;
         }
@@ -4265,51 +4475,91 @@
         }
 
         function processScannedQR(decodedText) {
-            // New format: AMC|centerId|cls|roll|date|type
-            // Old format support: AMC|cls|roll|date|type
+            // Year-long format:  AMC|centerId|cls|roll|Y2026
+            // Legacy formats:   AMC|centerId|cls|roll|date|type
+            //                   AMC|cls|roll|date|type
             if (!decodedText.startsWith('AMC|')) {
                 Swal.fire('অবৈধ QR', 'এটি এই সফটওয়্যারের অ্যাডমিট কার্ড QR নয়।', 'warning');
                 return;
             }
 
             const parts = decodedText.split('|');
-            let cls, roll, examDate, examType;
+            let cls, roll, qrYear = null;
+            let legacyDate = null, legacyType = null;
 
-            if (parts.length >= 6) {
-                // New multi-center format
+            if (parts.length >= 5 && String(parts[4]).startsWith('Y')) {
+                // Year-long student QR
                 const qrCenterId = parts[1];
-                if (qrCenterId !== currentCenterId) {
+                if (currentCenterId && qrCenterId !== currentCenterId) {
                     Swal.fire('ভিন্ন সেন্টার', 'এই QR কোড অন্য কোচিং সেন্টারের।', 'warning');
                     return;
                 }
                 cls = parts[2];
                 roll = parts[3];
-                examDate = parts[4];
-                examType = parts[5];
+                qrYear = parseInt(String(parts[4]).replace(/^Y/i, ''), 10);
+            } else if (parts.length >= 6) {
+                // Legacy multi-center with date|type
+                const qrCenterId = parts[1];
+                if (currentCenterId && qrCenterId !== currentCenterId) {
+                    Swal.fire('ভিন্ন সেন্টার', 'এই QR কোড অন্য কোচিং সেন্টারের।', 'warning');
+                    return;
+                }
+                cls = parts[2];
+                roll = parts[3];
+                legacyDate = parts[4];
+                legacyType = parts[5];
             } else if (parts.length >= 5) {
                 cls = parts[1];
                 roll = parts[2];
-                examDate = parts[3];
-                examType = parts[4];
+                legacyDate = parts[3];
+                legacyType = parts[4];
+            } else if (parts.length >= 4) {
+                // Minimal: AMC|centerId|cls|roll
+                const maybeCenter = parts[1];
+                if (currentCenterId && maybeCenter === currentCenterId) {
+                    cls = parts[2];
+                    roll = parts[3];
+                } else {
+                    cls = parts[1];
+                    roll = parts[2];
+                }
             } else {
                 Swal.fire('অসম্পূর্ণ QR', 'QR কোডের তথ্য অসম্পূর্ণ।', 'warning');
                 return;
             }
+
+            const currentYear = new Date().getFullYear();
+            if (qrYear && qrYear !== currentYear) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'QR মেয়াদ শেষ',
+                    html: `এই অ্যাডমিট কার্ডের QR <b>${qrYear}</b> সালের জন্য।<br>বর্তমান বছর: <b>${currentYear}</b><br>নতুন অ্যাডমিট কার্ড প্রিন্ট করুন।`
+                });
+                return;
+            }
+
+            // Attendance always recorded for TODAY (year-long QR)
+            const todayStr = new Date().toISOString().split('T')[0];
+            const examDate = legacyDate || todayStr;
+            // Purpose: from scanner dropdown if present, else legacy type, else daily
+            const purposeEl = document.getElementById('qrScanPurpose');
+            const examType = (purposeEl && purposeEl.value) ? purposeEl.value : (legacyType || 'দৈনিক উপস্থিতি');
 
             const students = getObjectFromStorage('amc_student_db');
             const student = students[`${cls}_${roll}`] || students[`${cls}_${Number(roll)}`];
             const studentName = student ? student.name : 'অজ্ঞাত শিক্ষার্থী';
 
             let attendanceList = getArrayFromStorage('amc_exam_attendance');
+            // Duplicate = same student already scanned TODAY (for same purpose)
             const alreadyScanned = attendanceList.find(a => 
-                a.cls === cls && String(a.roll) === String(roll) && a.examDate === examDate && a.examType === examType
+                a.cls === cls && String(a.roll) === String(roll) && a.examDate === todayStr && a.examType === examType
             );
 
             if (alreadyScanned) {
                 Swal.fire({
                     icon: 'info',
-                    title: 'ইতিমধ্যে স্ক্যান হয়েছে',
-                    html: `<b>${studentName}</b> (রোল: ${roll})<br>শ্রেণী: ${cls}<br>ইতিমধ্যে উপস্থিত হিসেবে মার্ক করা আছে।`,
+                    title: 'আজ ইতিমধ্যে উপস্থিত',
+                    html: `<b>${studentName}</b> (রোল: ${roll})<br>শ্রেণী: ${cls}<br>আজ (${todayStr}) ইতিমধ্যে <b>${examType}</b> হিসেবে মার্ক আছে।`,
                     timer: 2500,
                     showConfirmButton: false
                 });
@@ -4321,19 +4571,32 @@
                 cls,
                 roll,
                 name: studentName,
-                examDate,
+                examDate: todayStr,
                 examType,
                 scannedAt: new Date().toLocaleString('bn-BD'),
-                scannedTimestamp: Date.now()
+                scannedTimestamp: Date.now(),
+                yearLong: true
             };
 
             attendanceList.unshift(record);
             saveCenterData('examAttendance', attendanceList);
 
+            // Also mark in daily attendance tracker
+            try {
+                let allAtt = getObjectFromStorage('amc_attendance');
+                if (!allAtt[todayStr]) allAtt[todayStr] = [];
+                const key = `${cls}_${roll}`;
+                if (!allAtt[todayStr].includes(key)) {
+                    allAtt[todayStr].push(key);
+                    saveCenterData('attendance', allAtt);
+                }
+                if (typeof updateDashboardStats === 'function') updateDashboardStats();
+            } catch (e) {}
+
             Swal.fire({
                 icon: 'success',
                 title: 'উপস্থিতি নেওয়া হয়েছে!',
-                html: `<b>${studentName}</b><br>রোল: ${roll} | শ্রেণী: ${cls}<br>পরীক্ষা: ${examType}<br>তারিখ: ${examDate}`,
+                html: `<b>${studentName}</b><br>রোল: ${roll} | শ্রেণী: ${cls}<br>ধরন: ${examType}<br>তারিখ: ${todayStr}`,
                 timer: 2200,
                 showConfirmButton: false
             });
@@ -4744,6 +5007,108 @@
                 console.error(err);
                 Swal.fire('ত্রুটি', 'ডিঅ্যাক্টিভেট করতে সমস্যা হয়েছে।', 'error');
             }
+        }
+
+
+
+        // ==================== ROLE SELECTION & TEACHER PANEL ====================
+        window.pendingRole = null;
+
+        function chooseRole(role) {
+            window.pendingRole = role;
+            sessionStorage.setItem('pending_role', role);
+            const roleRow = document.getElementById('roleCardsRow');
+            const pickBlock = document.getElementById('centerPickBlock');
+            if (roleRow) roleRow.classList.add('hidden');
+            if (pickBlock) pickBlock.classList.remove('hidden');
+
+            const title = document.getElementById('centerPickTitle');
+            const sub = document.getElementById('centerPickSubtitle');
+            if (role === 'teacher') {
+                if (title) title.innerText = 'শিক্ষক প্যানেল — সেন্টার নির্বাচন';
+                if (sub) sub.innerText = 'যে কোচিং সেন্টারে আপনি শিক্ষকতা করেন সেটি বেছে নিন, তারপর লগইন করুন';
+            } else {
+                if (title) title.innerText = 'ছাত্র-ছাত্রী পোর্টাল — সেন্টার নির্বাচন';
+                if (sub) sub.innerText = 'যে সেন্টারে আপনি পড়াশোনা করেন সেটি বেছে নিন';
+            }
+            loadCentersList();
+        }
+
+        function backToRoleCards() {
+            window.pendingRole = null;
+            sessionStorage.removeItem('pending_role');
+            const roleRow = document.getElementById('roleCardsRow');
+            const pickBlock = document.getElementById('centerPickBlock');
+            if (roleRow) roleRow.classList.remove('hidden');
+            if (pickBlock) pickBlock.classList.add('hidden');
+        }
+
+        function syncTeacherStats() {
+            const map = [
+                ['statTotalStudent', 'tStatTotalStudent'],
+                ['statTodayAtt', 'tStatTodayAtt'],
+                ['statTotalResult', 'tStatTotalResult'],
+                ['statAttPercentage', 'tStatAttPercentage']
+            ];
+            map.forEach(([from, to]) => {
+                const a = document.getElementById(from);
+                const b = document.getElementById(to);
+                if (a && b) b.innerText = a.innerText;
+            });
+        }
+
+        function openTeacherModule(moduleId) {
+            // Open full admin panel with the requested module visible
+            showSection('adminPanel');
+            // Hide super-admin only sections for cleaner teacher experience
+            const hideIds = ['allCentersManager', 'subscriptionManager'];
+            hideIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            // Hide all toggleable modules first
+            const modules = ['studentManager','attendanceSystem','paymentSystem','routineManagerSystem',
+                'galleryManagerSystem','faqManagerSystem','examManagerSystem','qrAttendanceSystem'];
+            modules.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            if (moduleId === 'resultEntry') {
+                // Scroll to result entry form (always visible in admin)
+                const form = document.getElementById('resultFormTitle');
+                if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                const el = document.getElementById(moduleId);
+                if (el) {
+                    el.classList.remove('hidden');
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                // Trigger side-effects of toggleSectionElement
+                if (moduleId === 'attendanceSystem') {
+                    const d = document.getElementById('attDate');
+                    if (d && !d.value) d.valueAsDate = new Date();
+                }
+                if (moduleId === 'paymentSystem') {
+                    const d = document.getElementById('payDate');
+                    if (d && !d.value) d.valueAsDate = new Date();
+                }
+                if (moduleId === 'examManagerSystem') {
+                    if (typeof loadAdminExamList === 'function') loadAdminExamList();
+                    if (typeof loadExamAttemptsList === 'function') loadExamAttemptsList();
+                }
+                if (moduleId === 'qrAttendanceSystem') {
+                    if (typeof loadQRAttendanceList === 'function') loadQRAttendanceList();
+                    const qd = document.getElementById('qrFilterDate');
+                    if (qd && !qd.value) qd.valueAsDate = new Date();
+                }
+            }
+        }
+
+        function openTeacherFullAdmin() {
+            showSection('adminPanel');
+            updateDashboardStats();
+            syncTeacherStats();
         }
 
 
