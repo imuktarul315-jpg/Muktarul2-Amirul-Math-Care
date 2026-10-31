@@ -190,6 +190,55 @@
             border-color: #ef4444 !important;
             opacity: 0.85;
         }
+
+        /* Stylish icon wrappers */
+        .icon-stylish {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 0.75rem;
+            color: white;
+            box-shadow: 0 4px 12px rgba(76, 29, 149, 0.25);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .icon-stylish:hover {
+            transform: scale(1.08) translateY(-1px);
+            box-shadow: 0 6px 16px rgba(76, 29, 149, 0.35);
+        }
+        .icon-stylish i {
+            font-size: 1rem;
+        }
+        .feature-icon {
+            width: 2.75rem;
+            height: 2.75rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+            transition: all 0.25s ease;
+        }
+        .feature-icon:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        .nav-icon-btn {
+            transition: all 0.2s ease;
+        }
+        .nav-icon-btn:hover {
+            transform: scale(1.1);
+        }
+        .action-btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 0.5rem;
+            background: rgba(255,255,255,0.15);
+        }
     </style>
 </head>
 
@@ -214,19 +263,22 @@
                 <p id="navCenterName" class="text-[10px] text-yellow-300 hidden">—</p>
             </div>
         </div>
-        <div class="flex gap-2 items-center">
+        <div class="flex gap-2 items-center flex-wrap justify-end">
             <div class="live-users-badge text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-md">
                 <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
                 <span id="liveActiveCount">০</span> জন অনলাইন
             </div>
-            <button onclick="toggleDarkMode()" class="p-2 w-9 h-9 flex items-center justify-center rounded-full hover:bg-purple-700 transition" title="ডার্ক মোড টগল">
-                <i class="fas fa-moon"></i>
+            <button onclick="toggleDarkMode()" class="p-2 w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition" title="ডার্ক মোড টগল">
+                <i class="fas fa-moon text-yellow-300"></i>
             </button>
-            <button id="logoutBtn" onclick="logout()" class="hidden bg-red-500 hover:bg-red-600 px-4 py-1.5 rounded-full text-xs transition shadow-md">
-                লগ আউট
+            <button id="logoutBtn" onclick="logout()" class="hidden bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-full text-xs font-medium transition shadow-md">
+                <i class="fas fa-sign-out-alt mr-1"></i>লগ আউট
             </button>
-            <button id="adminLoginBtn" onclick="showSection('loginSection')" class="bg-yellow-400 text-purple-900 hover:bg-yellow-500 px-5 py-1.5 rounded-full text-xs transition shadow-md">
-                অ্যাডমিন প্যানেল
+            <button id="teacherLoginBtn" onclick="openTeacherLogin()" class="bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-1.5 rounded-full text-xs font-semibold transition shadow-md border border-emerald-300/40">
+                <i class="fas fa-chalkboard-teacher mr-1"></i>শিক্ষক লগইন
+            </button>
+            <button id="adminLoginBtn" onclick="openAdminLogin()" class="bg-amber-400 hover:bg-amber-300 text-purple-950 px-4 py-1.5 rounded-full text-xs font-semibold transition shadow-md border border-amber-200/50">
+                <i class="fas fa-user-shield mr-1"></i>অ্যাডমিন লগইন
             </button>
         </div>
     </nav>
@@ -269,8 +321,8 @@
                 <button type="button" onclick="chooseRole('student')" class="group relative overflow-hidden bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border-2 border-transparent hover:border-purple-400 transition-all text-left hover:-translate-y-1 duration-300">
                     <div class="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-purple-100 to-transparent rounded-bl-full opacity-80 group-hover:opacity-100"></div>
                     <div class="relative z-10">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-500 flex items-center justify-center mb-4 shadow-md group-hover:scale-105 transition">
-                            <i class="fas fa-user-graduate text-2xl text-white"></i>
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-500 flex items-center justify-center mb-4 shadow-lg shadow-purple-500/30 group-hover:scale-110 group-hover:shadow-purple-500/50 transition-all duration-300">
+                            <i class="fas fa-user-graduate text-2xl text-white drop-shadow"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-1">ছাত্র-ছাত্রী পোর্টাল</h3>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">রেজাল্ট দেখুন, অ্যাডমিট কার্ড ডাউনলোড করুন, অনলাইন পরীক্ষা দিন ও পেমেন্ট স্লিপ প্রিন্ট করুন</p>
@@ -283,8 +335,8 @@
                 <button type="button" onclick="chooseRole('teacher')" class="group relative overflow-hidden bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border-2 border-transparent hover:border-teal-400 transition-all text-left hover:-translate-y-1 duration-300">
                     <div class="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-teal-100 to-transparent rounded-bl-full opacity-80 group-hover:opacity-100"></div>
                     <div class="relative z-10">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-600 to-emerald-500 flex items-center justify-center mb-4 shadow-md group-hover:scale-105 transition">
-                            <i class="fas fa-chalkboard-teacher text-2xl text-white"></i>
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-600 to-emerald-500 flex items-center justify-center mb-4 shadow-lg shadow-teal-500/30 group-hover:scale-110 group-hover:shadow-teal-500/50 transition-all duration-300">
+                            <i class="fas fa-chalkboard-teacher text-2xl text-white drop-shadow"></i>
                         </div>
                         <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-1">শিক্ষক প্যানেল</h3>
                         <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">উপস্থিতি, রেজাল্ট এন্ট্রি, পেমেন্ট, রুটিন, অনলাইন পরীক্ষা ও সেন্টার ম্যানেজমেন্ট পরিচালনা করুন</p>
@@ -338,36 +390,36 @@
         <div class="mb-10">
             <h3 class="text-lg font-semibold text-gray-800 dark:text-white text-center mb-5">সফটওয়্যারের প্রধান সুবিধাসমূহ</h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
-                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center"><i class="fas fa-user-plus"></i></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center group">
+                    <div class="feature-icon mx-auto mb-3 bg-gradient-to-br from-purple-500 to-indigo-600 text-white group-hover:shadow-purple-300/50"><i class="fas fa-user-plus"></i></div>
                     <p class="text-xs font-medium text-gray-800 dark:text-white">শিক্ষার্থী ভর্তি ও ডাটাবেজ</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
-                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center"><i class="fas fa-laptop-code"></i></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center group">
+                    <div class="feature-icon mx-auto mb-3 bg-gradient-to-br from-indigo-500 to-blue-600 text-white"><i class="fas fa-laptop-code"></i></div>
                     <p class="text-xs font-medium text-gray-800 dark:text-white">অনলাইন পরীক্ষা ও MCQ</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
-                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center"><i class="fas fa-poll"></i></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center group">
+                    <div class="feature-icon mx-auto mb-3 bg-gradient-to-br from-blue-500 to-cyan-500 text-white"><i class="fas fa-poll"></i></div>
                     <p class="text-xs font-medium text-gray-800 dark:text-white">ফলাফল প্রকাশ ও মেধা তালিকা</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
-                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-orange-100 text-orange-700 flex items-center justify-center"><i class="fas fa-id-card"></i></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center group">
+                    <div class="feature-icon mx-auto mb-3 bg-gradient-to-br from-orange-400 to-amber-500 text-white"><i class="fas fa-id-card"></i></div>
                     <p class="text-xs font-medium text-gray-800 dark:text-white">অ্যাডমিট কার্ড + QR</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
-                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center"><i class="fas fa-hand-holding-usd"></i></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center group">
+                    <div class="feature-icon mx-auto mb-3 bg-gradient-to-br from-amber-400 to-yellow-500 text-white"><i class="fas fa-hand-holding-usd"></i></div>
                     <p class="text-xs font-medium text-gray-800 dark:text-white">বেতন ও পেমেন্ট ব্যবস্থাপনা</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
-                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-green-100 text-green-700 flex items-center justify-center"><i class="fas fa-calendar-check"></i></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center group">
+                    <div class="feature-icon mx-auto mb-3 bg-gradient-to-br from-emerald-500 to-green-600 text-white"><i class="fas fa-calendar-check"></i></div>
                     <p class="text-xs font-medium text-gray-800 dark:text-white">উপস্থিতি (QR স্ক্যান)</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
-                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center"><i class="fas fa-calendar-alt"></i></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center group">
+                    <div class="feature-icon mx-auto mb-3 bg-gradient-to-br from-teal-500 to-cyan-600 text-white"><i class="fas fa-calendar-alt"></i></div>
                     <p class="text-xs font-medium text-gray-800 dark:text-white">রুটিন ও নোটিশ বোর্ড</p>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
-                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center"><i class="fas fa-file-pdf"></i></div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center group">
+                    <div class="feature-icon mx-auto mb-3 bg-gradient-to-br from-rose-500 to-pink-600 text-white"><i class="fas fa-file-pdf"></i></div>
                     <p class="text-xs font-medium text-gray-800 dark:text-white">PDF রিপোর্ট ডাউনলোড</p>
                 </div>
             </div>
@@ -455,8 +507,19 @@
                     <input type="password" id="regPassword" placeholder="কমপক্ষে ৬ অক্ষর" class="w-full p-3 border rounded-xl outline-none text-black">
                 </div>
                 <div>
-                    <label class="text-xs block mb-1 text-gray-600">পাসওয়ার্ড নিশ্চিত করুন *</label>
+                    <label class="text-xs block mb-1 text-gray-600">অ্যাডমিন পাসওয়ার্ড নিশ্চিত করুন *</label>
                     <input type="password" id="regPasswordConfirm" placeholder="আবার পাসওয়ার্ড লিখুন" class="w-full p-3 border rounded-xl outline-none text-black">
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 space-y-3">
+                    <p class="text-xs font-medium text-emerald-800"><i class="fas fa-chalkboard-teacher mr-1"></i> শিক্ষক লগইন (ঐচ্ছিক — পরেও সেট করা যাবে)</p>
+                    <div>
+                        <label class="text-xs block mb-1 text-gray-600">শিক্ষক ইউজারনেম</label>
+                        <input type="text" id="regTeacherUsername" placeholder="যেমন: teacher1" class="w-full p-3 border rounded-xl outline-none text-black" autocomplete="off">
+                    </div>
+                    <div>
+                        <label class="text-xs block mb-1 text-gray-600">শিক্ষক পাসওয়ার্ড</label>
+                        <input type="password" id="regTeacherPassword" placeholder="কমপক্ষে ৬ অক্ষর" class="w-full p-3 border rounded-xl outline-none text-black" autocomplete="new-password">
+                    </div>
                 </div>
                 <div>
                     <label class="text-xs block mb-1 text-gray-600">যোগাযোগ নম্বর (Contact)</label>
@@ -781,6 +844,10 @@
                         <i class="fas fa-phone text-purple-700 dark:text-purple-400"></i>
                         <span id="contactPhoneText">+8801773167795</span>
                     </a>
+                    <a id="contactSmsLink" href="sms:+8801773167795" class="flex items-center justify-center gap-2 bg-blue-50 dark:bg-gray-700 px-4 py-2.5 rounded-xl border border-blue-200 dark:border-gray-600 hover:bg-blue-100 transition">
+                        <i class="fas fa-sms text-blue-600 text-base"></i>
+                        <span id="contactSmsText">মেসেজ পাঠান</span>
+                    </a>
                     <a id="contactWaLink" href="https://wa.me/8801774275248" target="_blank" class="flex items-center justify-center gap-2 bg-green-50 dark:bg-gray-700 px-4 py-2.5 rounded-xl border border-green-200 dark:border-gray-600 hover:bg-green-100 transition">
                         <i class="fab fa-whatsapp text-green-600 text-base"></i>
                         <span id="contactWaText">01774275248 (WhatsApp)</span>
@@ -792,23 +859,41 @@
 
     <!-- Login Section -->
     <div id="loginSection" class="container mx-auto mt-12 p-6 max-w-md hidden no-print">
-        <div class="bg-white p-10 rounded-2xl shadow-2xl text-center border-t-4 border-purple-700 transition-colors">
-            <h2 class="text-2xl mb-2 text-black dark:text-white font-medium">অ্যাডমিন লগইন</h2>
-            <p class="text-xs text-gray-500 mb-6">মোবাইল নম্বর ও পাসওয়ার্ড দিয়ে লগইন করুন</p>
+        <div id="loginCard" class="bg-white p-8 md:p-10 rounded-2xl shadow-2xl text-center border-t-4 border-purple-700 transition-colors">
+            <h2 id="loginTitle" class="text-2xl mb-1 text-black dark:text-white font-medium">অ্যাডমিন লগইন</h2>
+            <p id="loginHint" class="text-xs text-gray-500 mb-5">মোবাইল নম্বর ও পাসওয়ার্ড দিয়ে লগইন করুন</p>
+
+            <!-- Role switcher -->
+            <div class="flex rounded-xl overflow-hidden border border-gray-200 mb-6 text-sm font-semibold">
+                <button type="button" id="loginRoleTeacherBtn" onclick="setLoginRole('teacher')" class="flex-1 py-2.5 bg-gray-50 text-gray-600 hover:bg-emerald-50 transition flex items-center justify-center gap-1.5">
+                    <i class="fas fa-chalkboard-teacher"></i> শিক্ষক
+                </button>
+                <button type="button" id="loginRoleAdminBtn" onclick="setLoginRole('admin')" class="flex-1 py-2.5 bg-purple-700 text-white transition flex items-center justify-center gap-1.5">
+                    <i class="fas fa-user-shield"></i> অ্যাডমিন
+                </button>
+            </div>
             
             <div class="space-y-4 text-left">
-                <div>
+                <div id="loginMobileField">
                     <label class="text-xs block mb-1 text-gray-600">মোবাইল নম্বর</label>
-                    <input type="tel" id="adminMobile" placeholder="01XXXXXXXXX" class="w-full p-3.5 border rounded-xl outline-none text-black">
+                    <input type="tel" id="adminMobile" placeholder="01XXXXXXXXX" class="w-full p-3.5 border rounded-xl outline-none text-black focus:ring-2 focus:ring-purple-400">
+                </div>
+                <div id="loginUsernameField" class="hidden">
+                    <label class="text-xs block mb-1 text-gray-600">শিক্ষক ইউজারনেম</label>
+                    <input type="text" id="teacherUsername" placeholder="ইউজারনেম লিখুন" class="w-full p-3.5 border rounded-xl outline-none text-black focus:ring-2 focus:ring-emerald-400" autocomplete="username">
                 </div>
                 <div>
-                    <label class="text-xs block mb-1 text-gray-600">পাসওয়ার্ড</label>
-                    <input type="password" id="adminPass" placeholder="পাসওয়ার্ড" class="w-full p-3.5 border rounded-xl outline-none text-black">
+                    <label id="loginPassLabel" class="text-xs block mb-1 text-gray-600">পাসওয়ার্ড</label>
+                    <input type="password" id="adminPass" placeholder="পাসওয়ার্ড" class="w-full p-3.5 border rounded-xl outline-none text-black focus:ring-2 focus:ring-purple-400" autocomplete="current-password">
                 </div>
             </div>
             <div class="flex gap-3 mt-6">
-                <button onclick="adminLogin()" class="flex-1 bg-purple-700 text-white py-4 rounded-xl shadow-md hover:bg-purple-800 transition">লগইন</button>
-                <button onclick="showSection('centerSelectSection')" class="flex-1 bg-gray-500 text-white py-4 rounded-xl shadow-md hover:bg-gray-600 transition">ফিরে যান</button>
+                <button id="loginSubmitBtn" onclick="adminLogin()" class="flex-1 bg-purple-700 text-white py-3.5 rounded-xl shadow-md hover:bg-purple-800 transition font-medium">
+                    <i class="fas fa-sign-in-alt mr-1"></i> লগইন
+                </button>
+                <button onclick="showSection('centerSelectSection')" class="flex-1 bg-slate-600 text-white py-3.5 rounded-xl shadow-md hover:bg-slate-700 transition font-medium">
+                    ফিরে যান
+                </button>
             </div>
             <p class="text-xs text-gray-500 mt-5">
                 নতুন সেন্টার? <a href="#" onclick="showSection('registerSection')" class="text-purple-700 font-medium underline">রেজিস্টার করুন</a>
@@ -996,10 +1081,32 @@
                 </button>
             </div>
 
+            <!-- Teacher Login Credentials -->
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5 mb-4">
+                <h3 class="text-emerald-900 font-medium mb-2">
+                    <i class="fas fa-chalkboard-teacher mr-2"></i>শিক্ষক লগইন (ইউজারনেম ও পাসওয়ার্ড)
+                </h3>
+                <p class="text-xs text-emerald-700 mb-3">শিক্ষক প্যানেলে প্রবেশের জন্য আলাদা ইউজারনেম ও পাসওয়ার্ড সেট করুন। অ্যাডমিন মোবাইল/পাসওয়ার্ড দিয়ে শিক্ষক লগইন হবে না।</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs block mb-1 text-gray-600">শিক্ষক ইউজারনেম *</label>
+                        <input type="text" id="profileTeacherUsername" placeholder="যেমন: bangla_teacher" class="w-full p-2.5 border rounded-xl" autocomplete="off">
+                    </div>
+                    <div>
+                        <label class="text-xs block mb-1 text-gray-600">শিক্ষক পাসওয়ার্ড *</label>
+                        <input type="password" id="profileTeacherPassword" placeholder="কমপক্ষে ৬ অক্ষর" class="w-full p-2.5 border rounded-xl" autocomplete="new-password">
+                    </div>
+                </div>
+                <p id="teacherCredStatus" class="text-xs text-gray-500 mt-2"></p>
+                <button onclick="saveTeacherCredentials()" class="mt-3 w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl transition">
+                    <i class="fas fa-save mr-1"></i> শিক্ষক লগইন সেভ করুন
+                </button>
+            </div>
+
             <!-- Password Change -->
             <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 mb-4">
                 <h3 class="text-purple-900 font-medium mb-3">
-                    <i class="fas fa-key mr-2"></i>পাসওয়ার্ড পরিবর্তন
+                    <i class="fas fa-key mr-2"></i>অ্যাডমিন পাসওয়ার্ড পরিবর্তন
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
@@ -1365,9 +1472,11 @@
         <!-- Student Manager -->
         <div id="studentManager" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-blue-600 hidden text-black transition-colors">
             <h2 id="smTitle" class="text-xl text-blue-800 mb-4 font-medium">শিক্ষার্থী ডাটাবেজ এন্ট্রি</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4 bg-blue-50 p-4 rounded-xl">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 bg-blue-50 p-4 rounded-xl">
                 <input type="number" id="newRoll" placeholder="রোল" class="p-2 border rounded outline-none">
                 <input type="text" id="newName" placeholder="নাম" class="p-2 border rounded outline-none">
+                <input type="text" id="newFather" placeholder="পিতার নাম (ঐচ্ছিক)" class="p-2 border rounded outline-none">
+                <input type="text" id="newMother" placeholder="মাতার নাম (ঐচ্ছিক)" class="p-2 border rounded outline-none">
                 <select id="newClass" class="p-2 border rounded outline-none">
                     <option value="১ম">১ম</option>
                     <option value="২য়">২য়</option>
@@ -1392,10 +1501,10 @@
                     <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                 </select>
                 <input type="text" id="newWa" placeholder="হোয়াটসঅ্যাপ (Ex: 88017...)" class="p-2 border rounded outline-none">
-                <button onclick="addStudentToDB()" id="saveStudentBtn" class="md:col-span-4 bg-green-600 text-white py-2.5 rounded hover:bg-green-700 transition">
+                <button onclick="addStudentToDB()" id="saveStudentBtn" class="md:col-span-3 bg-green-600 text-white py-2.5 rounded hover:bg-green-700 transition">
                     সংরক্ষণ করুন
                 </button>
-                <button onclick="cancelEditStudent()" id="cancelStudentEditBtn" class="md:col-span-4 bg-gray-500 text-white py-2.5 rounded hidden hover:bg-gray-600 transition">
+                <button onclick="cancelEditStudent()" id="cancelStudentEditBtn" class="md:col-span-3 bg-gray-500 text-white py-2.5 rounded hidden hover:bg-gray-600 transition">
                     বাতিল করুন
                 </button>
             </div>
@@ -1404,15 +1513,22 @@
 
         <!-- Result Entry Form -->
         <div class="bg-white p-8 rounded-2xl shadow-lg mb-6 border-l-8 border-purple-600 text-black transition-colors">
-            <h2 id="resultFormTitle" class="text-xl text-purple-900 mb-6 font-medium">রেজাল্ট এন্ট্রি ফর্ম (MCQ + CQ)</h2>
-            <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
+            <h2 id="resultFormTitle" class="text-xl text-purple-900 mb-4 font-medium flex items-center gap-2">
+                <span class="icon-stylish bg-gradient-to-br from-purple-600 to-indigo-600"><i class="fas fa-edit"></i></span>
+                রেজাল্ট এন্ট্রি ফর্ম (বিষয়ভিত্তিক / মার্জ)
+            </h2>
+            <p class="text-xs text-gray-500 mb-5 bg-indigo-50 border border-indigo-100 rounded-xl px-3 py-2">
+                <i class="fas fa-info-circle text-indigo-500 mr-1"></i>
+                বাংলা শিক্ষক শুধু <b>বাংলা</b>, গণিত শিক্ষক শুধু <b>গণিত</b> এন্ট্রি করতে পারবেন। একই তারিখ + রোল + শ্রেণীতে নম্বরগুলো স্বয়ংক্রিয়ভাবে এক রেজাল্ট সিটে মার্জ হয়ে যাবে।
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-4">
                 <div>
                     <label class="text-xs block mb-1 text-gray-600">তারিখ</label>
                     <input type="date" id="examDate" class="w-full p-2 border rounded-lg">
                 </div>
                 <div>
                     <label class="text-xs block mb-1 text-gray-600">শ্রেণী</label>
-                    <select id="stdClass" onchange="fetchStudentInfo(); updateSubjectInputs();" class="w-full p-2 border rounded-lg">
+                    <select id="stdClass" onchange="fetchStudentInfo(); populateSubjectSelector(); updateSubjectInputs();" class="w-full p-2 border rounded-lg">
                         <option value="">সিলেক্ট</option>
                         <option value="১ম">১ম</option>
                         <option value="২য়">২য়</option>
@@ -1455,10 +1571,18 @@
                     <input type="text" id="stdName" class="w-full p-2 border rounded-lg bg-gray-100" readonly placeholder="অটো আসবে">
                 </div>
             </div>
+            <div class="mb-4">
+                <label class="text-xs block mb-1 text-gray-600 font-medium">বিষয় নির্বাচন (শিক্ষক অনুযায়ী)</label>
+                <select id="entrySubjectSelect" onchange="updateSubjectInputs()" class="w-full p-2.5 border-2 border-purple-300 rounded-xl outline-none bg-purple-50 text-sm font-medium">
+                    <option value="__ALL__">সব বিষয় একসাথে</option>
+                </select>
+                <p class="text-[10px] text-gray-400 mt-1">একটি বিষয় বেছে নিলে শুধু সেই বিষয়ের নম্বর এন্ট্রি হবে এবং একই তারিখের রেজাল্টে মার্জ হবে।</p>
+            </div>
             <div id="subjectInputs" class="bg-purple-50 p-4 rounded-xl mb-6 min-h-[50px]"></div>
+            <div id="mergePreviewBox" class="hidden mb-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800"></div>
             <div class="flex gap-2">
-                <button id="saveResultBtn" onclick="saveData()" class="flex-1 brand-purple text-white py-4 rounded-xl shadow-xl transition hover:opacity-95">
-                    সেভ করুন
+                <button id="saveResultBtn" onclick="saveData()" class="flex-1 brand-purple text-white py-4 rounded-xl shadow-xl transition hover:opacity-95 flex items-center justify-center gap-2">
+                    <i class="fas fa-save"></i> সেভ / মার্জ করুন
                 </button>
                 <button id="cancelResultEditBtn" onclick="cancelResultEdit()" class="hidden flex-1 bg-gray-500 text-white py-4 rounded-xl shadow-xl transition">
                     বাতিল
@@ -1585,13 +1709,6 @@
                 <h4 class="font-semibold text-gray-800 dark:text-white text-sm">রেজাল্ট এন্ট্রি</h4>
                 <p class="text-[11px] text-gray-500 mt-1">MCQ + CQ নম্বর</p>
             </button>
-            <button onclick="openTeacherModule('paymentSystem')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-amber-100 hover:border-amber-400 hover:-translate-y-1 transition text-left group">
-                <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
-                    <i class="fas fa-hand-holding-usd text-xl"></i>
-                </div>
-                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">পেমেন্ট</h4>
-                <p class="text-[11px] text-gray-500 mt-1">ফি এন্ট্রি ও রশিদ</p>
-            </button>
             <button onclick="openTeacherModule('routineManagerSystem')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-indigo-100 hover:border-indigo-400 hover:-translate-y-1 transition text-left group">
                 <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
                     <i class="fas fa-calendar-alt text-xl"></i>
@@ -1612,13 +1729,6 @@
                 </div>
                 <h4 class="font-semibold text-gray-800 dark:text-white text-sm">QR অ্যাটেনডেন্স</h4>
                 <p class="text-[11px] text-gray-500 mt-1">স্ক্যান করে উপস্থিতি</p>
-            </button>
-            <button onclick="openTeacherModule('galleryManagerSystem')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-yellow-100 hover:border-yellow-400 hover:-translate-y-1 transition text-left group">
-                <div class="w-12 h-12 rounded-xl bg-yellow-100 text-yellow-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
-                    <i class="fas fa-images text-xl"></i>
-                </div>
-                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">গ্যালারি</h4>
-                <p class="text-[11px] text-gray-500 mt-1">ছবি আপলোড</p>
             </button>
         </div>
 
@@ -2079,13 +2189,11 @@
 
             const role = window.pendingRole || sessionStorage.getItem('pending_role') || 'student';
             if (role === 'teacher') {
-                // Pre-fill login and go to teacher/admin login
-                const mobileEl = document.getElementById('adminMobile');
-                if (mobileEl && center.mobile) mobileEl.value = center.mobile;
-                const loginTitle = document.querySelector('#loginSection h2');
-                if (loginTitle) loginTitle.innerText = 'শিক্ষক / অ্যাডমিন লগইন';
-                const loginHint = document.querySelector('#loginSection p.text-xs');
-                if (loginHint) loginHint.innerText = 'মোবাইল নম্বর ও পাসওয়ার্ড দিয়ে শিক্ষক প্যানেলে প্রবেশ করুন';
+                setLoginRole('teacher');
+                const userEl = document.getElementById('teacherUsername');
+                if (userEl) userEl.value = center.teacherUsername || '';
+                const passEl = document.getElementById('adminPass');
+                if (passEl) passEl.value = '';
                 showSection('loginSection');
             } else {
                 showSection('studentView');
@@ -2157,11 +2265,27 @@
             const expiry = new Date(now);
             expiry.setFullYear(expiry.getFullYear() + 1);
 
+            const teacherUsername = (document.getElementById('regTeacherUsername')?.value || '').trim().toLowerCase();
+            const teacherPassword = document.getElementById('regTeacherPassword')?.value || '';
+            if (teacherUsername && teacherPassword && teacherPassword.length < 6) {
+                return Swal.fire('ত্রুটি', 'শিক্ষক পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।', 'warning');
+            }
+            if (teacherUsername) {
+                const userTaken = Object.values(centers).some(c =>
+                    (c.teacherUsername || '').trim().toLowerCase() === teacherUsername
+                );
+                if (userTaken) {
+                    return Swal.fire('ইউজারনেম নেওয়া', 'এই শিক্ষক ইউজারনেম অন্য সেন্টারে ব্যবহৃত হচ্ছে। অন্য নাম দিন।', 'error');
+                }
+            }
+
             const centerData = {
                 id: centerId,
                 name: name,
                 mobile: mobile,
                 password: pass, // Note: client-side only, not secure for production
+                teacherUsername: teacherUsername || '',
+                teacherPassword: (teacherUsername && teacherPassword) ? teacherPassword : '',
                 contact: contact,
                 whatsapp: whatsapp,
                 logo: logoData || '',
@@ -2190,7 +2314,7 @@
                 });
 
                 // Clear form
-                ['regCenterName', 'regMobile', 'regPassword', 'regPasswordConfirm', 'regContact', 'regWhatsapp'].forEach(id => {
+                ['regCenterName', 'regMobile', 'regPassword', 'regPasswordConfirm', 'regTeacherUsername', 'regTeacherPassword', 'regContact', 'regWhatsapp'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) el.value = '';
                 });
@@ -2204,29 +2328,142 @@
             }
         }
 
-        async function adminLogin() {
-            const mobile = document.getElementById('adminMobile').value.trim().replace(/\D/g, '');
-            const pass = document.getElementById('adminPass').value;
+        function setLoginRole(role) {
+            window.pendingRole = role;
+            sessionStorage.setItem('pending_role', role);
+            const teacherBtn = document.getElementById('loginRoleTeacherBtn');
+            const adminBtn = document.getElementById('loginRoleAdminBtn');
+            const title = document.getElementById('loginTitle');
+            const hint = document.getElementById('loginHint');
+            const card = document.getElementById('loginCard');
+            const submitBtn = document.getElementById('loginSubmitBtn');
+            const mobileField = document.getElementById('loginMobileField');
+            const usernameField = document.getElementById('loginUsernameField');
+            const passLabel = document.getElementById('loginPassLabel');
+            const passInput = document.getElementById('adminPass');
 
-            if (!mobile || !pass) {
-                return Swal.fire('ফিল্ড খালি', 'মোবাইল ও পাসওয়ার্ড দিন।', 'warning');
+            if (role === 'teacher') {
+                if (title) title.innerText = 'শিক্ষক লগইন';
+                if (hint) hint.innerText = 'শিক্ষক ইউজারনেম ও পাসওয়ার্ড দিয়ে লগইন করুন';
+                if (card) {
+                    card.classList.remove('border-purple-700');
+                    card.classList.add('border-emerald-600');
+                }
+                if (teacherBtn) {
+                    teacherBtn.className = 'flex-1 py-2.5 bg-emerald-600 text-white transition flex items-center justify-center gap-1.5';
+                }
+                if (adminBtn) {
+                    adminBtn.className = 'flex-1 py-2.5 bg-gray-50 text-gray-600 hover:bg-purple-50 transition flex items-center justify-center gap-1.5';
+                }
+                if (submitBtn) {
+                    submitBtn.className = 'flex-1 bg-emerald-600 text-white py-3.5 rounded-xl shadow-md hover:bg-emerald-700 transition font-medium';
+                    submitBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-1"></i> শিক্ষক লগইন';
+                }
+                if (mobileField) mobileField.classList.add('hidden');
+                if (usernameField) usernameField.classList.remove('hidden');
+                if (passLabel) passLabel.innerText = 'শিক্ষক পাসওয়ার্ড';
+                if (passInput) {
+                    passInput.placeholder = 'শিক্ষক পাসওয়ার্ড';
+                    passInput.className = 'w-full p-3.5 border rounded-xl outline-none text-black focus:ring-2 focus:ring-emerald-400';
+                }
+            } else {
+                if (title) title.innerText = 'অ্যাডমিন লগইন';
+                if (hint) hint.innerText = 'মোবাইল নম্বর ও পাসওয়ার্ড দিয়ে অ্যাডমিন প্যানেলে প্রবেশ করুন';
+                if (card) {
+                    card.classList.remove('border-emerald-600');
+                    card.classList.add('border-purple-700');
+                }
+                if (teacherBtn) {
+                    teacherBtn.className = 'flex-1 py-2.5 bg-gray-50 text-gray-600 hover:bg-emerald-50 transition flex items-center justify-center gap-1.5';
+                }
+                if (adminBtn) {
+                    adminBtn.className = 'flex-1 py-2.5 bg-purple-700 text-white transition flex items-center justify-center gap-1.5';
+                }
+                if (submitBtn) {
+                    submitBtn.className = 'flex-1 bg-purple-700 text-white py-3.5 rounded-xl shadow-md hover:bg-purple-800 transition font-medium';
+                    submitBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-1"></i> অ্যাডমিন লগইন';
+                }
+                if (mobileField) mobileField.classList.remove('hidden');
+                if (usernameField) usernameField.classList.add('hidden');
+                if (passLabel) passLabel.innerText = 'পাসওয়ার্ড';
+                if (passInput) {
+                    passInput.placeholder = 'অ্যাডমিন পাসওয়ার্ড';
+                    passInput.className = 'w-full p-3.5 border rounded-xl outline-none text-black focus:ring-2 focus:ring-purple-400';
+                }
             }
+        }
 
+        function openTeacherLogin() {
+            setLoginRole('teacher');
+            showSection('loginSection');
+        }
+
+        function openAdminLogin() {
+            setLoginRole('admin');
+            showSection('loginSection');
+        }
+
+        function hideLoginButtons() {
+            const adminBtn = document.getElementById('adminLoginBtn');
+            const teacherBtn = document.getElementById('teacherLoginBtn');
+            if (adminBtn) adminBtn.classList.add('hidden');
+            if (teacherBtn) teacherBtn.classList.add('hidden');
+        }
+
+        function showLoginButtons() {
+            const adminBtn = document.getElementById('adminLoginBtn');
+            const teacherBtn = document.getElementById('teacherLoginBtn');
+            if (adminBtn) adminBtn.classList.remove('hidden');
+            if (teacherBtn) teacherBtn.classList.remove('hidden');
+        }
+
+        async function adminLogin() {
+            const role = window.pendingRole || sessionStorage.getItem('pending_role') || 'admin';
+            const pass = document.getElementById('adminPass').value;
             const centers = getCurrentCenters();
             let foundId = null;
             let foundCenter = null;
+            let loginIdentity = '';
 
-            for (const [id, c] of Object.entries(centers)) {
-                if (c.mobile === mobile && c.password === pass) {
-                    foundId = id;
-                    foundCenter = c;
-                    break;
+            if (role === 'teacher') {
+                const username = (document.getElementById('teacherUsername')?.value || '').trim().toLowerCase();
+                if (!username || !pass) {
+                    return Swal.fire('ফিল্ড খালি', 'শিক্ষক ইউজারনেম ও পাসওয়ার্ড দিন।', 'warning');
                 }
-            }
-
-            if (!foundId) {
-                await logSecurityEvent('login_fail', `ভুল মোবাইল/পাসওয়ার্ড: ${mobile}`);
-                return Swal.fire('লগইন ব্যর্থ', 'মোবাইল নম্বর বা পাসওয়ার্ড ভুল।', 'error');
+                loginIdentity = username;
+                for (const [id, c] of Object.entries(centers)) {
+                    const tUser = (c.teacherUsername || '').trim().toLowerCase();
+                    if (tUser && tUser === username && c.teacherPassword === pass) {
+                        foundId = id;
+                        foundCenter = c;
+                        break;
+                    }
+                }
+                if (!foundId) {
+                    await logSecurityEvent('login_fail', `ভুল শিক্ষক ইউজারনেম/পাসওয়ার্ড: ${username}`);
+                    return Swal.fire({
+                        icon: 'error',
+                        title: 'লগইন ব্যর্থ',
+                        html: 'ইউজারনেম বা পাসওয়ার্ড ভুল।<br><span class="text-xs text-gray-500">অ্যাডমিন প্যানেল → সাবস্ক্রিপশন থেকে শিক্ষক ইউজারনেম/পাসওয়ার্ড সেট করুন।</span>'
+                    });
+                }
+            } else {
+                const mobile = document.getElementById('adminMobile').value.trim().replace(/\D/g, '');
+                if (!mobile || !pass) {
+                    return Swal.fire('ফিল্ড খালি', 'মোবাইল ও পাসওয়ার্ড দিন।', 'warning');
+                }
+                loginIdentity = mobile;
+                for (const [id, c] of Object.entries(centers)) {
+                    if (c.mobile === mobile && c.password === pass) {
+                        foundId = id;
+                        foundCenter = c;
+                        break;
+                    }
+                }
+                if (!foundId) {
+                    await logSecurityEvent('login_fail', `ভুল মোবাইল/পাসওয়ার্ড: ${mobile}`);
+                    return Swal.fire('লগইন ব্যর্থ', 'মোবাইল নম্বর বা পাসওয়ার্ড ভুল।', 'error');
+                }
             }
 
             // Check subscription
@@ -2247,7 +2484,7 @@
             sessionStorage.setItem('selected_center_name', foundCenter.name);
 
             document.getElementById('logoutBtn').classList.remove('hidden');
-            document.getElementById('adminLoginBtn').classList.add('hidden');
+            hideLoginButtons();
             document.getElementById('navCenterName').innerText = foundCenter.name;
             document.getElementById('navCenterName').classList.remove('hidden');
 
@@ -2281,17 +2518,19 @@
                 manageBtn.classList.toggle('hidden', !isMainAdmin);
             }
 
-            const role = window.pendingRole || sessionStorage.getItem('pending_role') || 'admin';
             sessionStorage.setItem('user_role', role === 'teacher' ? 'teacher' : 'admin');
             if (role === 'teacher') {
                 const tLabel = document.getElementById('teacherCenterLabel');
                 if (tLabel) tLabel.innerText = foundCenter.name + ' • শিক্ষক প্যানেল';
                 showSection('teacherPanel');
+                if (typeof applyTeacherAdminRestrictions === 'function') applyTeacherAdminRestrictions();
             } else {
                 showSection('adminPanel');
+                // অ্যাডমিনের জন্য সাবস্ক্রিপশনসহ সব বাটন দেখান
+                if (typeof applyTeacherAdminRestrictions === 'function') applyTeacherAdminRestrictions();
             }
 
-            await logSecurityEvent('login_success', `${role === 'teacher' ? 'শিক্ষক' : 'অ্যাডমিন'} লগইন: ${foundCenter.name} (${mobile})`);
+            await logSecurityEvent('login_success', `${role === 'teacher' ? 'শিক্ষক' : 'অ্যাডমিন'} লগইন: ${foundCenter.name} (${loginIdentity})`);
         }
 
         function updateSubscriptionBanner() {
@@ -2468,7 +2707,7 @@
                 currentCenterInfo = null;
 
                 document.getElementById('logoutBtn').classList.add('hidden');
-                document.getElementById('adminLoginBtn').classList.remove('hidden');
+                showLoginButtons();
                 document.getElementById('navCenterName').classList.add('hidden');
 
                 Swal.fire({
@@ -3137,6 +3376,13 @@
         }
 
         function toggleSectionElement(id) {
+            // Teachers blocked from subscription, payment, all centers, gallery
+            if (sessionStorage.getItem('user_role') === 'teacher') {
+                const blocked = ['subscriptionManager', 'paymentSystem', 'allCentersManager', 'galleryManagerSystem'];
+                if (blocked.includes(id)) {
+                    return Swal.fire('অনুমতি নেই', 'শিক্ষক অ্যাকাউন্ট থেকে এই ফিচার ব্যবহার করা যাবে না। শুধু অ্যাডমিন ব্যবহার করতে পারবেন।', 'warning');
+                }
+            }
             document.getElementById(id).classList.toggle('hidden');
             if (id === 'attendanceSystem') document.getElementById('attDate').valueAsDate = new Date();
             if (id === 'paymentSystem') document.getElementById('payDate').valueAsDate = new Date();
@@ -3189,11 +3435,18 @@
             sessionStorage.removeItem('pending_role');
             window.pendingRole = null;
             document.getElementById('logoutBtn').classList.add('hidden');
-            document.getElementById('adminLoginBtn').classList.remove('hidden');
+            showLoginButtons();
             const manageBtn = document.getElementById('manageAllCentersBtn');
             if (manageBtn) manageBtn.classList.add('hidden');
             const acm = document.getElementById('allCentersManager');
             if (acm) acm.classList.add('hidden');
+            // শিক্ষক সেশনে লুকানো অ্যাডমিন বাটনগুলো আবার দেখান
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanel) {
+                ['subscriptionManager', 'paymentSystem', 'galleryManagerSystem'].forEach(id => {
+                    adminPanel.querySelectorAll('button[onclick*="' + id + '"]').forEach(btn => btn.classList.remove('hidden'));
+                });
+            }
             stopQRScanner();
             currentCenterId = null;
             currentCenterInfo = null;
@@ -3681,6 +3934,10 @@
 
         function getPaymentSlipHTML(p) {
             const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
+            const sdb = getObjectFromStorage('amc_student_db');
+            const st = sdb[`${p.cls}_${p.roll}`] || sdb[`${p.cls}_${Number(p.roll)}`] || {};
+            const fatherRow = st.father ? `<tr><td>পিতার নাম:</td><td><b>${st.father}</b></td></tr>` : '';
+            const motherRow = st.mother ? `<tr><td>মাতার নাম:</td><td><b>${st.mother}</b></td></tr>` : '';
             return `
             <div style="font-family: 'Hind Siliguri', sans-serif; color: black; padding: 25px; border: 4px double #4c1d95; border-radius: 15px; background: #fff; position: relative; overflow: hidden;">
                 <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 85px; font-weight: 800; color: rgba(16, 185, 129, 0.14); border: 8px solid rgba(16, 185, 129, 0.14); padding: 5px 25px; border-radius: 15px; text-transform: uppercase; letter-spacing: 5px; pointer-events: none; z-index: 0;">
@@ -3694,6 +3951,8 @@
                     </div>
                     <table style="width:100%; font-size:14px; line-height:2;">
                         <tr><td style="width:40%;">শিক্ষার্থীর নাম:</td><td><b>${p.name}</b></td></tr>
+                        ${fatherRow}
+                        ${motherRow}
                         <tr><td>শ্রেণী & রোল:</td><td><b>${p.cls} (রোল: ${p.roll})</b></td></tr>
                         <tr><td>ফি বিবরণ:</td><td><b>${p.month} মাস</b></td></tr>
                         <tr><td>পরিশোধিত টাকা:</td><td style="color:#10b981;"><b>৳${p.amount}/-</b></td></tr>
@@ -3703,6 +3962,7 @@
                 </div>
             </div>`;
         }
+
 
         function viewPaymentSlipPortal() {
             const roll = document.getElementById('searchRoll').value;
@@ -3867,6 +4127,8 @@
                 
                 <table style="width:100%; font-size:14px; line-height:1.8; margin-bottom:15px;">
                     <tr><td style="width:35%;">নাম:</td><td><b>${studentName}</b></td></tr>
+                    ${student && student.father ? `<tr><td>পিতার নাম:</td><td><b>${student.father}</b></td></tr>` : ''}
+                    ${student && student.mother ? `<tr><td>মাতার নাম:</td><td><b>${student.mother}</b></td></tr>` : ''}
                     <tr><td>শ্রেণী:</td><td><b>${cls}</b></td></tr>
                     <tr><td>রোল:</td><td><b>${roll}</b></td></tr>
                     ${type ? `<tr><td>পরীক্ষা:</td><td><b>${type}</b></td></tr>` : ''}
@@ -3971,6 +4233,8 @@
         function addStudentToDB() {
             const roll = document.getElementById('newRoll').value.trim();
             const name = document.getElementById('newName').value.trim();
+            const father = (document.getElementById('newFather')?.value || '').trim();
+            const mother = (document.getElementById('newMother')?.value || '').trim();
             const cls = document.getElementById('newClass').value;
             const wa = document.getElementById('newWa').value.trim();
             if (!roll || !name || !cls) {
@@ -3978,7 +4242,16 @@
             }
 
             let db = getObjectFromStorage('amc_student_db');
-            db[`${cls}_${roll}`] = { roll, name, cls, wa };
+            const entry = { roll, name, cls, wa };
+            if (father) entry.father = father;
+            if (mother) entry.mother = mother;
+            // Keep previous optional fields if updating without retyping
+            if (currentEditStudentId && db[currentEditStudentId]) {
+                const prev = db[currentEditStudentId];
+                if (!father && prev.father) entry.father = prev.father;
+                if (!mother && prev.mother) entry.mother = prev.mother;
+            }
+            db[`${cls}_${roll}`] = entry;
             saveCenterData('students', db);
             cancelEditStudent();
         }
@@ -3988,8 +4261,10 @@
             const s = db[id];
             document.getElementById('newRoll').value = s.roll;
             document.getElementById('newName').value = s.name;
+            if (document.getElementById('newFather')) document.getElementById('newFather').value = s.father || '';
+            if (document.getElementById('newMother')) document.getElementById('newMother').value = s.mother || '';
             document.getElementById('newClass').value = s.cls;
-            document.getElementById('newWa').value = s.wa;
+            document.getElementById('newWa').value = s.wa || '';
             document.getElementById('saveStudentBtn').innerText = "আপডেট প্রোফাইল";
             document.getElementById('cancelStudentEditBtn').classList.remove('hidden');
             currentEditStudentId = id;
@@ -4002,7 +4277,10 @@
         }
 
         function cancelEditStudent() {
-            ['newRoll', 'newName', 'newWa'].forEach(f => document.getElementById(f).value = '');
+            ['newRoll', 'newName', 'newFather', 'newMother', 'newWa'].forEach(f => {
+                const el = document.getElementById(f);
+                if (el) el.value = '';
+            });
             document.getElementById('saveStudentBtn').innerText = "সংরক্ষণ করুন";
             document.getElementById('cancelStudentEditBtn').classList.add('hidden');
             currentEditStudentId = null;
@@ -4012,57 +4290,146 @@
             let db = getObjectFromStorage('amc_student_db');
             const el = document.getElementById('dbList');
             if (!el) return;
-            el.innerHTML = Object.keys(db).map(id => `
-                <div class="flex justify-between items-center p-2 border-b text-xs text-black">
-                    <div><b>[${db[id].cls}]</b> Roll: ${db[id].roll} - ${db[id].name}</div>
-                    <div class="flex gap-4 text-sm">
+            el.innerHTML = Object.keys(db).map(id => {
+                const s = db[id];
+                const parents = [s.father ? 'পিতা: ' + s.father : '', s.mother ? 'মাতা: ' + s.mother : ''].filter(Boolean).join(' | ');
+                const phoneRaw = (s.wa || '').replace(/\D/g, '');
+                let phoneActions = '';
+                if (phoneRaw) {
+                    const tel = phoneRaw.startsWith('880') ? phoneRaw : (phoneRaw.length === 11 ? '88' + phoneRaw : phoneRaw);
+                    const wa = tel.startsWith('880') ? tel : '88' + tel;
+                    phoneActions = `
+                        <a href="tel:+${tel}" class="text-purple-600" title="কল করুন"><i class="fas fa-phone"></i></a>
+                        <a href="sms:+${tel}" class="text-blue-600" title="মেসেজ পাঠান"><i class="fas fa-sms"></i></a>
+                        <a href="https://wa.me/${wa}" target="_blank" class="text-green-600" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    `;
+                }
+                return `
+                <div class="flex justify-between items-center p-2 border-b text-xs text-black gap-2">
+                    <div class="min-w-0">
+                        <div><b>[${s.cls}]</b> Roll: ${s.roll} - ${s.name}</div>
+                        ${parents ? `<div class="text-[10px] text-gray-500 mt-0.5">${parents}</div>` : ''}
+                    </div>
+                    <div class="flex gap-3 text-sm items-center shrink-0">
+                        ${phoneActions}
                         <button onclick="editStudent('${id}')" class="text-blue-600"><i class="fas fa-edit"></i></button>
                         <button onclick="deleteStudent('${id}')" class="text-red-500"><i class="fas fa-trash"></i></button>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
+        }
+
+        function populateSubjectSelector() {
+            const cls = document.getElementById('stdClass').value;
+            const sel = document.getElementById('entrySubjectSelect');
+            if (!sel) return;
+            const prev = sel.value;
+            sel.innerHTML = '<option value="__ALL__">সব বিষয় একসাথে</option>';
+            if (cls && subjectsConfig[cls]) {
+                subjectsConfig[cls].forEach(sub => {
+                    const opt = document.createElement('option');
+                    opt.value = sub;
+                    opt.textContent = sub;
+                    sel.appendChild(opt);
+                });
+            }
+            if (prev && Array.from(sel.options).some(o => o.value === prev)) {
+                sel.value = prev;
+            }
         }
 
         function updateSubjectInputs() {
             const cls = document.getElementById('stdClass').value;
             const container = document.getElementById('subjectInputs');
+            const selectedSub = document.getElementById('entrySubjectSelect')?.value || '__ALL__';
             if (!cls || !subjectsConfig[cls]) {
                 container.innerHTML = "";
                 return;
             }
 
-            container.innerHTML = subjectsConfig[cls].map(sub => `
-                <div class="mb-3 p-3 bg-white rounded-lg border">
-                    <h4 class="font-medium text-sm text-purple-900 mb-2">${sub}</h4>
+            const subjectsToShow = (selectedSub === '__ALL__')
+                ? subjectsConfig[cls]
+                : [selectedSub];
+
+            // Pre-fill existing scores if same date/roll already has a record
+            const date = document.getElementById('examDate')?.value;
+            const roll = document.getElementById('stdRoll')?.value?.trim();
+            let existingScores = {};
+            if (date && roll) {
+                const data = getArrayFromStorage('amc_db_final');
+                const existing = data.find(r => r.date === date && r.cls === cls && String(r.roll) === String(roll));
+                if (existing && existing.scores) existingScores = existing.scores;
+            }
+
+            container.innerHTML = subjectsToShow.map(sub => {
+                const prev = existingScores[sub] || {};
+                return `
+                <div class="mb-3 p-3 bg-white rounded-xl border border-purple-100 shadow-sm">
+                    <h4 class="font-medium text-sm text-purple-900 mb-2 flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-500 text-white flex items-center justify-center text-xs shadow"><i class="fas fa-book"></i></span>
+                        ${sub}
+                        ${prev.t !== undefined ? '<span class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full ml-auto">পূর্বের নম্বর আছে</span>' : ''}
+                    </h4>
                     <div class="grid grid-cols-4 gap-2 text-xs">
                         <div>
                             <label class="block mb-1">পূর্ণমান</label>
-                            <input type="number" id="full_${safeId(sub)}" value="100" class="w-full p-1.5 border rounded">
+                            <input type="number" id="full_${safeId(sub)}" value="${prev.f !== undefined ? prev.f : 100}" class="w-full p-1.5 border rounded">
                         </div>
                         <div>
                             <label class="block mb-1">MCQ</label>
-                            <input type="number" id="mcq_${safeId(sub)}" oninput="calcSubGrade('${sub}')" class="w-full p-1.5 border rounded">
+                            <input type="number" id="mcq_${safeId(sub)}" value="${prev.m !== undefined ? prev.m : ''}" oninput="calcSubGrade('${sub}')" class="w-full p-1.5 border rounded">
                         </div>
                         <div>
                             <label class="block mb-1">CQ</label>
-                            <input type="number" id="cq_${safeId(sub)}" oninput="calcSubGrade('${sub}')" class="w-full p-1.5 border rounded">
+                            <input type="number" id="cq_${safeId(sub)}" value="${prev.c !== undefined ? prev.c : ''}" oninput="calcSubGrade('${sub}')" class="w-full p-1.5 border rounded">
                         </div>
                         <div>
                             <label class="block mb-1">গ্রেড</label>
-                            <span id="grade_${safeId(sub)}" class="font-bold text-purple-700 block mt-1.5">N/A</span>
+                            <span id="grade_${safeId(sub)}" class="font-bold text-purple-700 block mt-1.5">${prev.g || 'N/A'}</span>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
+
+            // Show merge preview
+            updateMergePreview();
+        }
+
+        function updateMergePreview() {
+            const box = document.getElementById('mergePreviewBox');
+            if (!box) return;
+            const date = document.getElementById('examDate')?.value;
+            const cls = document.getElementById('stdClass')?.value;
+            const roll = document.getElementById('stdRoll')?.value?.trim();
+            const selectedSub = document.getElementById('entrySubjectSelect')?.value || '__ALL__';
+            if (!date || !cls || !roll || selectedSub === '__ALL__') {
+                box.classList.add('hidden');
+                return;
+            }
+            const data = getArrayFromStorage('amc_db_final');
+            const existing = data.find(r => r.date === date && r.cls === cls && String(r.roll) === String(roll));
+            if (existing && existing.scores) {
+                const subs = Object.keys(existing.scores);
+                box.classList.remove('hidden');
+                box.innerHTML = `<i class="fas fa-link mr-1"></i> এই তারিখে ইতিমধ্যে <b>${subs.length}</b>টি বিষয় আছে: ${subs.join(', ')}. <b>${selectedSub}</b> মার্জ/আপডেট হবে।`;
+            } else {
+                box.classList.remove('hidden');
+                box.innerHTML = `<i class="fas fa-plus-circle mr-1"></i> নতুন রেজাল্ট তৈরি হবে। পরে অন্য বিষয়ের শিক্ষক একই তারিখে এন্ট্রি করলে স্বয়ংক্রিয় মার্জ হবে।`;
+            }
         }
 
         function calcSubGrade(sub) {
             const sid = safeId(sub);
-            const m = Number(document.getElementById(`mcq_${sid}`).value || 0);
-            const c = Number(document.getElementById(`cq_${sid}`).value || 0);
-            const f = Number(document.getElementById(`full_${sid}`).value || 100);
+            const mEl = document.getElementById(`mcq_${sid}`);
+            const cEl = document.getElementById(`cq_${sid}`);
+            const fEl = document.getElementById(`full_${sid}`);
+            const gEl = document.getElementById(`grade_${sid}`);
+            if (!mEl || !cEl || !fEl || !gEl) return;
+            const m = Number(mEl.value || 0);
+            const c = Number(cEl.value || 0);
+            const f = Number(fEl.value || 100);
             const total = m + c;
-            const pct = (total / f) * 100;
+            const pct = f > 0 ? (total / f) * 100 : 0;
             let g = 'F';
             if (pct >= 80) g = 'A+';
             else if (pct >= 70) g = 'A';
@@ -4070,7 +4437,7 @@
             else if (pct >= 50) g = 'B';
             else if (pct >= 40) g = 'C';
             else if (pct >= 33) g = 'D';
-            document.getElementById(`grade_${sid}`).innerText = g;
+            gEl.innerText = g;
         }
 
         function saveData() {
@@ -4079,34 +4446,99 @@
             const roll = document.getElementById('stdRoll').value.trim();
             const name = document.getElementById('stdName').value;
             const type = document.getElementById('stdExamType').value;
+            const selectedSub = document.getElementById('entrySubjectSelect')?.value || '__ALL__';
 
             if (!date || !cls || !roll || !name) {
                 return Swal.fire('যাচাইকরণ ব্যর্থ', 'সঠিক শিক্ষার্থী নির্বাচন নিশ্চিত করুন।', 'error');
             }
 
-            let scores = {};
-            let grandTotal = 0;
+            // Collect scores currently visible in the form
+            let newScores = {};
+            const subjectsToSave = (selectedSub === '__ALL__')
+                ? (subjectsConfig[cls] || [])
+                : [selectedSub];
 
-            subjectsConfig[cls].forEach(sub => {
+            subjectsToSave.forEach(sub => {
                 const sid = safeId(sub);
-                const f = Number(document.getElementById(`full_${sid}`).value || 100);
-                const m = Number(document.getElementById(`mcq_${sid}`).value || 0);
-                const c = Number(document.getElementById(`cq_${sid}`).value || 0);
+                const fEl = document.getElementById(`full_${sid}`);
+                const mEl = document.getElementById(`mcq_${sid}`);
+                const cEl = document.getElementById(`cq_${sid}`);
+                const gEl = document.getElementById(`grade_${sid}`);
+                if (!fEl || !mEl || !cEl) return;
+                const f = Number(fEl.value || 100);
+                const m = Number(mEl.value || 0);
+                const c = Number(cEl.value || 0);
                 const t = m + c;
-                scores[sub] = { f, m, c, t, g: document.getElementById(`grade_${sid}`).innerText };
-                grandTotal += t;
+                // Only include if at least one mark entered (or full entry mode)
+                if (selectedSub === '__ALL__' || m > 0 || c > 0 || (mEl.value !== '' || cEl.value !== '')) {
+                    newScores[sub] = { f, m, c, t, g: gEl ? gEl.innerText : 'N/A' };
+                }
             });
 
+            if (Object.keys(newScores).length === 0) {
+                return Swal.fire('নম্বর নেই', 'কমপক্ষে একটি বিষয়ে MCQ বা CQ নম্বর দিন।', 'warning');
+            }
+
             let data = getArrayFromStorage('amc_db_final');
+            let existingIdx = -1;
+
             if (currentEditResultIndex !== null) {
-                data[currentEditResultIndex] = { date, cls, roll, name, examType: type, scores, grandTotal };
-                cancelResultEdit();
+                existingIdx = currentEditResultIndex;
             } else {
-                data.push({ date, cls, roll, name, examType: type, scores, grandTotal });
+                // Auto-merge: find same date + class + roll
+                existingIdx = data.findIndex(r =>
+                    r.date === date && r.cls === cls && String(r.roll) === String(roll)
+                );
+            }
+
+            if (existingIdx !== -1) {
+                // MERGE into existing record
+                const existing = data[existingIdx];
+                const mergedScores = { ...(existing.scores || {}), ...newScores };
+                let grandTotal = 0;
+                for (const s in mergedScores) {
+                    grandTotal += Number(mergedScores[s].t || 0);
+                }
+                data[existingIdx] = {
+                    ...existing,
+                    date,
+                    cls,
+                    roll,
+                    name: name || existing.name,
+                    examType: type || existing.examType,
+                    scores: mergedScores,
+                    grandTotal
+                };
+                cancelResultEdit();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'মার্জ সফল!',
+                    html: `একই তারিখের রেজাল্টে নম্বর যুক্ত হয়েছে।<br>মোট বিষয়: <b>${Object.keys(mergedScores).length}</b> | মোট নম্বর: <b>${grandTotal}</b>`,
+                    timer: 2200,
+                    showConfirmButton: false
+                });
+            } else {
+                // New record
+                let grandTotal = 0;
+                for (const s in newScores) grandTotal += Number(newScores[s].t || 0);
+                data.push({
+                    date, cls, roll, name, examType: type,
+                    scores: newScores,
+                    grandTotal
+                });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'সেভ হয়েছে!',
+                    html: `নতুন রেজাল্ট তৈরি। পরে অন্য বিষয় একই তারিখে এন্ট্রি করলে মার্জ হবে।`,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
             }
 
             saveCenterData('results', data);
             quickResetForm();
+            if (typeof renderTable === 'function') renderTable();
+            if (typeof updateDashboardStats === 'function') updateDashboardStats();
         }
 
         function editResult(idx) {
@@ -4121,6 +4553,9 @@
             document.getElementById('stdName').value = target.name;
             document.getElementById('stdExamType').value = target.examType;
 
+            populateSubjectSelector();
+            const sel = document.getElementById('entrySubjectSelect');
+            if (sel) sel.value = '__ALL__';
             updateSubjectInputs();
 
             for (let sub in target.scores) {
@@ -4131,13 +4566,15 @@
                 if (document.getElementById(`grade_${sid}`)) document.getElementById(`grade_${sid}`).innerText = target.scores[sub].g;
             }
 
-            document.getElementById('saveResultBtn').innerText = "আপডেট রেজাল্ট";
+            const btn = document.getElementById('saveResultBtn');
+            if (btn) btn.innerHTML = '<i class="fas fa-sync-alt"></i> আপডেট রেজাল্ট';
             document.getElementById('cancelResultEditBtn').classList.remove('hidden');
         }
 
         function cancelResultEdit() {
             currentEditResultIndex = null;
-            document.getElementById('saveResultBtn').innerText = "সেভ করুন";
+            const btn = document.getElementById('saveResultBtn');
+            if (btn) btn.innerHTML = '<i class="fas fa-save"></i> সেভ / মার্জ করুন';
             document.getElementById('cancelResultEditBtn').classList.add('hidden');
             quickResetForm();
         }
@@ -4150,16 +4587,16 @@
         function quickResetForm() {
             document.getElementById('stdRoll').value = "";
             document.getElementById('stdName').value = "";
-            const cls = document.getElementById('stdClass').value;
-            if (subjectsConfig[cls]) {
-                subjectsConfig[cls].forEach(sub => {
-                    const sid = safeId(sub);
-                    if (document.getElementById(`mcq_${sid}`)) document.getElementById(`mcq_${sid}`).value = "";
-                    if (document.getElementById(`cq_${sid}`)) document.getElementById(`cq_${sid}`).value = "";
-                    if (document.getElementById(`grade_${sid}`)) document.getElementById(`grade_${sid}`).innerText = "N/A";
+            // Keep subject selection; clear only visible mark fields
+            const container = document.getElementById('subjectInputs');
+            if (container) {
+                container.querySelectorAll('input[type="number"]').forEach(inp => {
+                    if (inp.id && inp.id.startsWith('mcq_') || inp.id && inp.id.startsWith('cq_')) inp.value = '';
                 });
+                container.querySelectorAll('[id^="grade_"]').forEach(el => el.innerText = 'N/A');
             }
-            // রেজাল্ট সেভের পর রোল নম্বর ঘরে কার্সর ফোকাস
+            const mergeBox = document.getElementById('mergePreviewBox');
+            if (mergeBox) mergeBox.classList.add('hidden');
             const rollInput = document.getElementById('stdRoll');
             if (rollInput) {
                 rollInput.focus();
@@ -4292,6 +4729,10 @@
             if (res) {
                 const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট সফটওয়্যার';
                 showSection('displayArea');
+                const sdb = getObjectFromStorage('amc_student_db');
+                const stInfo = sdb[`${res.cls}_${res.roll}`] || sdb[`${res.cls}_${Number(res.roll)}`] || {};
+                const fatherLine = stInfo.father ? `<p style="margin:2px 0;">পিতার নাম: <b>${stInfo.father}</b></p>` : '';
+                const motherLine = stInfo.mother ? `<p style="margin:2px 0;">মাতার নাম: <b>${stInfo.mother}</b></p>` : '';
                 let detailsRows = "";
                 for (let sub in res.scores) {
                     detailsRows += `
@@ -4313,6 +4754,8 @@
                         </div>
                         <div style="margin-bottom:15px; font-size:14px; line-height:1.6;">
                             <p style="margin:2px 0;">শিক্ষার্থীর নাম: <b>${res.name}</b></p>
+                            ${fatherLine}
+                            ${motherLine}
                             <p style="margin:2px 0;">শ্রেণী: <b>${res.cls}</b> &nbsp;|&nbsp; রোল: <b>${res.roll}</b></p>
                             <p style="margin:2px 0;">পরীক্ষার ধরন: <b>${res.examType}</b> &nbsp;|&nbsp; তারিখ: <b>${res.date}</b></p>
                         </div>
@@ -5153,8 +5596,12 @@
             const waText = document.getElementById('contactWaText');
             const nameEl = document.getElementById('contactCenterName');
 
-            if (phoneLink) phoneLink.href = 'tel:+' + (phoneClean.startsWith('880') ? phoneClean : '88' + phoneClean);
+            const telHref = 'tel:+' + (phoneClean.startsWith('880') ? phoneClean : '88' + phoneClean);
+            const smsHref = 'sms:+' + (phoneClean.startsWith('880') ? phoneClean : '88' + phoneClean);
+            if (phoneLink) phoneLink.href = telHref;
             if (phoneText) phoneText.innerText = phoneDisplay;
+            const smsLink = document.getElementById('contactSmsLink');
+            if (smsLink) smsLink.href = smsHref;
             if (waLink) waLink.href = 'https://wa.me/' + (waClean.startsWith('880') ? waClean : '88' + waClean);
             if (waText) waText.innerText = waDisplay + ' (WhatsApp)';
             if (nameEl) nameEl.innerText = (center.name || '') + ' — যেকোনো তথ্যের জন্য যোগাযোগ করুন।';
@@ -5170,6 +5617,73 @@
             if (logoPrev && currentCenterInfo.logo) {
                 logoPrev.src = currentCenterInfo.logo;
                 logoPrev.classList.remove('hidden');
+            }
+            const tUser = document.getElementById('profileTeacherUsername');
+            const tPass = document.getElementById('profileTeacherPassword');
+            const tStatus = document.getElementById('teacherCredStatus');
+            if (tUser) tUser.value = currentCenterInfo.teacherUsername || '';
+            if (tPass) tPass.value = '';
+            if (tStatus) {
+                if (currentCenterInfo.teacherUsername) {
+                    tStatus.innerHTML = `<span class="text-emerald-700"><i class="fas fa-check-circle mr-1"></i>শিক্ষক লগইন সেট আছে — ইউজারনেম: <b>${currentCenterInfo.teacherUsername}</b></span>`;
+                } else {
+                    tStatus.innerHTML = `<span class="text-amber-700"><i class="fas fa-exclamation-circle mr-1"></i>এখনো শিক্ষক ইউজারনেম সেট নেই। নিচে সেট করুন।</span>`;
+                }
+            }
+        }
+
+        async function saveTeacherCredentials() {
+            if (!currentCenterId || !currentCenterInfo) {
+                return Swal.fire('ত্রুটি', 'কোনো সেন্টার লোড নেই।', 'error');
+            }
+            const username = (document.getElementById('profileTeacherUsername')?.value || '').trim().toLowerCase();
+            const password = document.getElementById('profileTeacherPassword')?.value || '';
+
+            if (!username) {
+                return Swal.fire('ফিল্ড খালি', 'শিক্ষক ইউজারনেম দিন।', 'warning');
+            }
+            if (username.length < 3) {
+                return Swal.fire('ছোট ইউজারনেম', 'ইউজারনেম কমপক্ষে ৩ অক্ষরের হতে হবে।', 'warning');
+            }
+            // Password required if new, or if changing
+            const isNew = !currentCenterInfo.teacherUsername;
+            if (isNew && (!password || password.length < 6)) {
+                return Swal.fire('পাসওয়ার্ড দরকার', 'নতুন শিক্ষক অ্যাকাউন্টের জন্য কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন।', 'warning');
+            }
+            if (password && password.length < 6) {
+                return Swal.fire('দুর্বল পাসওয়ার্ড', 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।', 'warning');
+            }
+
+            // Unique username across centers
+            const centers = getCurrentCenters();
+            const taken = Object.entries(centers).some(([id, c]) =>
+                id !== currentCenterId &&
+                (c.teacherUsername || '').trim().toLowerCase() === username
+            );
+            if (taken) {
+                return Swal.fire('ইউজারনেম নেওয়া', 'এই ইউজারনেম অন্য সেন্টারে ব্যবহৃত হচ্ছে।', 'error');
+            }
+
+            const updated = {
+                ...currentCenterInfo,
+                teacherUsername: username,
+                teacherPassword: password ? password : (currentCenterInfo.teacherPassword || '')
+            };
+            if (!updated.teacherPassword) {
+                return Swal.fire('পাসওয়ার্ড দরকার', 'শিক্ষক পাসওয়ার্ড সেট করুন।', 'warning');
+            }
+
+            try {
+                if (window.saveToFirebase) {
+                    await window.saveToFirebase(`centers/${currentCenterId}`, updated);
+                }
+                currentCenterInfo = updated;
+                if (window._centersCache) window._centersCache[currentCenterId] = updated;
+                populateProfileFields();
+                Swal.fire('সফল!', `শিক্ষক লগইন সেভ হয়েছে।\nইউজারনেম: ${username}`, 'success');
+            } catch (err) {
+                console.error(err);
+                Swal.fire('ত্রুটি', 'সেভ করতে সমস্যা হয়েছে।', 'error');
             }
         }
 
@@ -5458,24 +5972,23 @@
         }
 
         function openTeacherModule(moduleId) {
-            // Open full admin panel with the requested module visible
+            // Teachers cannot access subscription, payment, all-centers, gallery
+            const teacherBlocked = ['subscriptionManager', 'paymentSystem', 'allCentersManager', 'galleryManagerSystem'];
+            if (sessionStorage.getItem('user_role') === 'teacher' && teacherBlocked.includes(moduleId)) {
+                return Swal.fire('অনুমতি নেই', 'শিক্ষক অ্যাকাউন্ট থেকে এই ফিচার ব্যবহার করা যাবে না। শুধু অ্যাডমিন ব্যবহার করতে পারবেন।', 'warning');
+            }
+
             showSection('adminPanel');
-            // Hide super-admin only sections for cleaner teacher experience
-            const hideIds = ['allCentersManager', 'subscriptionManager'];
-            hideIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
-            });
-            // Hide all toggleable modules first
+            applyTeacherAdminRestrictions();
+
             const modules = ['studentManager','attendanceSystem','paymentSystem','routineManagerSystem',
-                'galleryManagerSystem','faqManagerSystem','examManagerSystem','qrAttendanceSystem'];
+                'galleryManagerSystem','faqManagerSystem','examManagerSystem','qrAttendanceSystem','subscriptionManager','allCentersManager'];
             modules.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
 
             if (moduleId === 'resultEntry') {
-                // Scroll to result entry form (always visible in admin)
                 const form = document.getElementById('resultFormTitle');
                 if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
@@ -5484,13 +5997,8 @@
                     el.classList.remove('hidden');
                     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
-                // Trigger side-effects of toggleSectionElement
                 if (moduleId === 'attendanceSystem') {
                     const d = document.getElementById('attDate');
-                    if (d && !d.value) d.valueAsDate = new Date();
-                }
-                if (moduleId === 'paymentSystem') {
-                    const d = document.getElementById('payDate');
                     if (d && !d.value) d.valueAsDate = new Date();
                 }
                 if (moduleId === 'examManagerSystem') {
@@ -5505,11 +6013,53 @@
             }
         }
 
+        function applyTeacherAdminRestrictions() {
+            const isTeacher = sessionStorage.getItem('user_role') === 'teacher';
+            const restrictedIds = ['paymentSystem', 'galleryManagerSystem', 'subscriptionManager', 'allCentersManager'];
+
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanel) {
+                adminPanel.querySelectorAll('button[onclick]').forEach(btn => {
+                    const oc = btn.getAttribute('onclick') || '';
+                    const isRestricted = restrictedIds.some(id => oc.includes("'" + id + "'") || oc.includes('"' + id + '"'));
+                    if (btn.id === 'manageAllCentersBtn') {
+                        if (isTeacher) btn.classList.add('hidden');
+                        return;
+                    }
+                    if (!isRestricted) return;
+                    // subscription / payment / gallery toolbar buttons
+                    if (isTeacher) btn.classList.add('hidden');
+                    else btn.classList.remove('hidden');
+                });
+            }
+
+            if (isTeacher) {
+                restrictedIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
+                });
+            }
+        }
+
+        function isTeacherUser() {
+            return sessionStorage.getItem('user_role') === 'teacher';
+        }
+
         function openTeacherFullAdmin() {
             showSection('adminPanel');
+            applyTeacherAdminRestrictions();
             updateDashboardStats();
             syncTeacherStats();
+            if (isTeacherUser()) {
+                ['paymentSystem','galleryManagerSystem','subscriptionManager','allCentersManager'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
+                });
+            }
         }
+
+
+
 
 
         // ==================== INIT ====================
@@ -5517,6 +6067,15 @@
             const today = new Date().toISOString().split('T')[0];
             if (document.getElementById('examDate')) document.getElementById('examDate').value = today;
             if (document.getElementById('searchDate')) document.getElementById('searchDate').value = today;
+
+            // Subject-merge: refresh inputs when date or roll changes
+            ['examDate', 'stdRoll'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('change', () => { if (typeof updateSubjectInputs === 'function') updateSubjectInputs(); });
+                    el.addEventListener('input', () => { if (typeof updateMergePreview === 'function') updateMergePreview(); });
+                }
+            });
 
             // Restore previous selection if any
             const savedCenterId = sessionStorage.getItem('selected_center_id');
@@ -5531,12 +6090,22 @@
                         currentCenterInfo = centers[savedCenterId];
                         if (window.attachCenterDataListeners) window.attachCenterDataListeners(savedCenterId);
                         document.getElementById('logoutBtn').classList.remove('hidden');
-                        document.getElementById('adminLoginBtn').classList.add('hidden');
+                        hideLoginButtons();
                         document.getElementById('navCenterName').innerText = currentCenterInfo.name;
                         document.getElementById('navCenterName').classList.remove('hidden');
                         applyCenterLogo(currentCenterInfo);
                         updateContactUI(currentCenterInfo);
-                        showSection('adminPanel');
+                        const restoredRole = sessionStorage.getItem('user_role') || 'admin';
+                        if (restoredRole === 'teacher') {
+                            const tLabel = document.getElementById('teacherCenterLabel');
+                            if (tLabel) tLabel.innerText = currentCenterInfo.name + ' • শিক্ষক প্যানেল';
+                            showSection('teacherPanel');
+                            if (typeof syncTeacherStats === 'function') syncTeacherStats();
+                            if (typeof applyTeacherAdminRestrictions === 'function') applyTeacherAdminRestrictions();
+                        } else {
+                            showSection('adminPanel');
+                            if (typeof applyTeacherAdminRestrictions === 'function') applyTeacherAdminRestrictions();
+                        }
                         updateSubscriptionBanner();
                         populateProfileFields();
                         loadStudentList();
