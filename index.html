@@ -44,7 +44,7 @@
 
         @media print {
             body { background: white !important; color: black !important; }
-            .no-print, nav, #studentView, #loginSection, #adminPanel, #teacherPanel, #centerSelectSection, #registerSection, .slider-container, button, .contact-section {
+            .no-print, nav, #studentView, #loginSection, #adminPanel, #teacherPanel, #centerSelectSection, #registerSection, #softwareDemoSection, .slider-container, button, .contact-section {
                 display: none !important;
             }
             #displayArea {
@@ -232,52 +232,72 @@
     </nav>
 
     <!-- MODERN HOME / ROLE + CENTER SELECTION -->
-    <div id="centerSelectSection" class="container mx-auto mt-6 p-4 max-w-4xl no-print">
+    <div id="centerSelectSection" class="container mx-auto mt-6 p-4 max-w-5xl no-print">
 
-        <!-- Hero -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-700 to-indigo-600 shadow-lg mb-4">
-                <i class="fas fa-graduation-cap text-3xl text-white"></i>
+        <!-- ===== MODERN HERO ===== -->
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-6 md:p-10 mb-8 border border-gray-100 dark:border-gray-700 text-center relative overflow-hidden">
+            <div class="absolute top-4 left-4">
+                <span class="bg-green-100 text-green-700 text-[11px] font-medium px-3 py-1 rounded-full">প্রস্তাবিত হেডলাইন</span>
             </div>
-            <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-white mb-2">কোচিং ম্যানেজমেন্ট সফটওয়্যার</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto">ছাত্র-ছাত্রী ও শিক্ষকদের জন্য আলাদা পোর্টাল • একাধিক কোচিং সেন্টার এক প্ল্যাটফর্মে</p>
+            <div class="mt-6 md:mt-4">
+                <h1 class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
+                    আপনার কোচিং সেন্টার,<br class="hidden sm:block"> এখন সম্পূর্ণ ডিজিটাল!
+                </h1>
+                <p class="text-sm md:text-base text-gray-500 dark:text-gray-400 max-w-xl mx-auto mb-8 leading-relaxed">
+                    শিক্ষার্থী ভর্তি থেকে ফলাফল প্রকাশ, বেতন ব্যবস্থাপনা থেকে অনলাইন পরীক্ষা—সবকিছু এক প্ল্যাটফর্মে।
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <button onclick="showSoftwareDemo()" class="group relative w-full sm:w-auto overflow-hidden bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 hover:from-purple-500 hover:via-violet-500 hover:to-indigo-500 text-white px-8 py-3.5 rounded-2xl text-sm font-semibold shadow-xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0">
+                        <span class="relative z-10 inline-flex items-center gap-2">
+                            <i class="fas fa-play-circle text-base group-hover:scale-110 transition-transform"></i>
+                            সফটওয়্যার ডেমো দেখুন
+                            <i class="fas fa-arrow-right text-xs opacity-80 group-hover:translate-x-1 transition-transform"></i>
+                        </span>
+                        <span class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+                    </button>
+                    <button onclick="showSection('registerSection')" class="w-full sm:w-auto bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/40 dark:hover:bg-purple-900/60 text-purple-800 dark:text-purple-200 px-8 py-3.5 rounded-2xl text-sm font-semibold border border-purple-200 dark:border-purple-700 transition">
+                        নতুন সেন্টার রেজিস্টার
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <!-- Role Cards -->
-        <div id="roleCardsRow" class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
-            <!-- Student Portal Card -->
-            <button type="button" onclick="chooseRole('student')" class="group relative overflow-hidden bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border-2 border-transparent hover:border-purple-400 transition-all text-left hover:-translate-y-1 duration-300">
-                <div class="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-purple-100 to-transparent rounded-bl-full opacity-80 group-hover:opacity-100"></div>
-                <div class="relative z-10">
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-500 flex items-center justify-center mb-4 shadow-md group-hover:scale-105 transition">
-                        <i class="fas fa-user-graduate text-2xl text-white"></i>
+        <!-- ===== ROLE SELECTION ===== -->
+        <div id="roleCardsRow" class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white text-center mb-5">পোর্টাল নির্বাচন করুন</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <button type="button" onclick="chooseRole('student')" class="group relative overflow-hidden bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border-2 border-transparent hover:border-purple-400 transition-all text-left hover:-translate-y-1 duration-300">
+                    <div class="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-purple-100 to-transparent rounded-bl-full opacity-80 group-hover:opacity-100"></div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-500 flex items-center justify-center mb-4 shadow-md group-hover:scale-105 transition">
+                            <i class="fas fa-user-graduate text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-1">ছাত্র-ছাত্রী পোর্টাল</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">রেজাল্ট দেখুন, অ্যাডমিট কার্ড ডাউনলোড করুন, অনলাইন পরীক্ষা দিন ও পেমেন্ট স্লিপ প্রিন্ট করুন</p>
+                        <span class="inline-flex items-center gap-1.5 text-sm font-medium text-purple-700 dark:text-purple-300">
+                            প্রবেশ করুন <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition"></i>
+                        </span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-1">ছাত্র-ছাত্রী পোর্টাল</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">রেজাল্ট দেখুন, অ্যাডমিট কার্ড ডাউনলোড করুন, অনলাইন পরীক্ষা দিন ও পেমেন্ট স্লিপ প্রিন্ট করুন</p>
-                    <span class="inline-flex items-center gap-1.5 text-sm font-medium text-purple-700 dark:text-purple-300">
-                        প্রবেশ করুন <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition"></i>
-                    </span>
-                </div>
-            </button>
+                </button>
 
-            <!-- Teacher Portal Card -->
-            <button type="button" onclick="chooseRole('teacher')" class="group relative overflow-hidden bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border-2 border-transparent hover:border-teal-400 transition-all text-left hover:-translate-y-1 duration-300">
-                <div class="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-teal-100 to-transparent rounded-bl-full opacity-80 group-hover:opacity-100"></div>
-                <div class="relative z-10">
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-600 to-emerald-500 flex items-center justify-center mb-4 shadow-md group-hover:scale-105 transition">
-                        <i class="fas fa-chalkboard-teacher text-2xl text-white"></i>
+                <button type="button" onclick="chooseRole('teacher')" class="group relative overflow-hidden bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border-2 border-transparent hover:border-teal-400 transition-all text-left hover:-translate-y-1 duration-300">
+                    <div class="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-teal-100 to-transparent rounded-bl-full opacity-80 group-hover:opacity-100"></div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-600 to-emerald-500 flex items-center justify-center mb-4 shadow-md group-hover:scale-105 transition">
+                            <i class="fas fa-chalkboard-teacher text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-1">শিক্ষক প্যানেল</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">উপস্থিতি, রেজাল্ট এন্ট্রি, পেমেন্ট, রুটিন, অনলাইন পরীক্ষা ও সেন্টার ম্যানেজমেন্ট পরিচালনা করুন</p>
+                        <span class="inline-flex items-center gap-1.5 text-sm font-medium text-teal-700 dark:text-teal-300">
+                            প্রবেশ করুন <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition"></i>
+                        </span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-1">শিক্ষক প্যানেল</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">উপস্থিতি, রেজাল্ট এন্ট্রি, পেমেন্ট, রুটিন, অনলাইন পরীক্ষা ও সেন্টার ম্যানেজমেন্ট পরিচালনা করুন</p>
-                    <span class="inline-flex items-center gap-1.5 text-sm font-medium text-teal-700 dark:text-teal-300">
-                        প্রবেশ করুন <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition"></i>
-                    </span>
-                </div>
-            </button>
+                </button>
+            </div>
         </div>
 
         <!-- Center List (shown after role chosen) -->
-        <div id="centerPickBlock" class="hidden">
+        <div id="centerPickBlock" class="hidden mb-8">
             <div class="bg-white dark:bg-gray-800 p-6 md:p-8 rounded-3xl shadow-2xl border-t-8 border-purple-700">
                 <div class="flex items-center justify-between mb-5 flex-wrap gap-2">
                     <div>
@@ -294,29 +314,124 @@
             </div>
         </div>
 
-        <!-- Register CTA -->
-        <div class="mt-8 text-center">
-            <p class="text-xs text-gray-500 mb-3">নতুন কোচিং সেন্টার রেজিস্ট্রেশন করতে চান?</p>
-            <button onclick="showSection('registerSection')" class="bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-200 px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-200 transition shadow-sm">
-                <i class="fas fa-plus-circle mr-1"></i> নতুন সেন্টার রেজিস্টার
+        <!-- Quick contact strip -->
+        <div class="text-center mb-4">
+            <p class="text-xs text-gray-500 mb-2">নতুন সেন্টার রেজিস্ট্রেশন বা সাবস্ক্রিপশন নিতে চাইলে</p>
+            <a href="https://wa.me/8801774275248" target="_blank" class="inline-flex items-center gap-2 text-green-700 dark:text-green-400 text-sm font-medium hover:underline">
+                <i class="fab fa-whatsapp"></i> WhatsApp: 01774275248
+            </a>
+        </div>
+    </div>
+
+    <!-- ===== SOFTWARE DEMO SECTION (shown only on Demo button click) ===== -->
+    <div id="softwareDemoSection" class="container mx-auto mt-6 p-4 max-w-5xl no-print hidden">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl md:text-2xl font-semibold text-gray-800 dark:text-white">
+                <i class="fas fa-desktop text-purple-600 mr-2"></i>সফটওয়্যার ডেমো ও তথ্য
+            </h2>
+            <button onclick="showSection('centerSelectSection')" class="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 px-4 py-2 rounded-xl border transition flex items-center gap-1">
+                <i class="fas fa-arrow-left"></i> হোমে ফিরে যান
             </button>
         </div>
 
-        <!-- Subscription & WhatsApp Contact Info -->
-        <div class="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-700 border-2 border-green-300 dark:border-green-600 rounded-3xl p-6 text-center shadow-lg">
-            <p class="text-sm md:text-base font-medium text-gray-800 dark:text-white mb-4 leading-relaxed">
-                একাউন্ট এক্টিভ করতে নিচে থাকা নম্বরে যোগাযোগ অথবা WhatsApp এ যোগাযোগ করুন
-            </p>
-            <a href="https://wa.me/8801774275248" target="_blank" class="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-7 py-3.5 rounded-2xl text-lg font-semibold shadow-md transition transform hover:scale-105">
-                <i class="fab fa-whatsapp text-2xl"></i>
-                01774275248
-            </a>
-            <p class="text-sm text-gray-700 dark:text-gray-300 mt-4">
-                এক বছরের সাবস্ক্রিপশন ফি মাত্র <span class="font-bold text-green-700 dark:text-green-400 text-base">৩০০ টাকা</span>
-            </p>
-            <p class="text-xs text-gray-600 dark:text-gray-400 mt-2">
-                উপরোক্ত WhatsApp নম্বরে <b>bKash</b> ও <b>Nagad</b>-এ Send Money করতে হবে
-            </p>
+        <!-- Features Grid -->
+        <div class="mb-10">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white text-center mb-5">সফটওয়্যারের প্রধান সুবিধাসমূহ</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
+                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center"><i class="fas fa-user-plus"></i></div>
+                    <p class="text-xs font-medium text-gray-800 dark:text-white">শিক্ষার্থী ভর্তি ও ডাটাবেজ</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
+                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center"><i class="fas fa-laptop-code"></i></div>
+                    <p class="text-xs font-medium text-gray-800 dark:text-white">অনলাইন পরীক্ষা ও MCQ</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
+                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center"><i class="fas fa-poll"></i></div>
+                    <p class="text-xs font-medium text-gray-800 dark:text-white">ফলাফল প্রকাশ ও মেধা তালিকা</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
+                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-orange-100 text-orange-700 flex items-center justify-center"><i class="fas fa-id-card"></i></div>
+                    <p class="text-xs font-medium text-gray-800 dark:text-white">অ্যাডমিট কার্ড + QR</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
+                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center"><i class="fas fa-hand-holding-usd"></i></div>
+                    <p class="text-xs font-medium text-gray-800 dark:text-white">বেতন ও পেমেন্ট ব্যবস্থাপনা</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
+                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-green-100 text-green-700 flex items-center justify-center"><i class="fas fa-calendar-check"></i></div>
+                    <p class="text-xs font-medium text-gray-800 dark:text-white">উপস্থিতি (QR স্ক্যান)</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
+                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center"><i class="fas fa-calendar-alt"></i></div>
+                    <p class="text-xs font-medium text-gray-800 dark:text-white">রুটিন ও নোটিশ বোর্ড</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 text-center">
+                    <div class="w-11 h-11 mx-auto mb-3 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center"><i class="fas fa-file-pdf"></i></div>
+                    <p class="text-xs font-medium text-gray-800 dark:text-white">PDF রিপোর্ট ডাউনলোড</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Us + Subscription -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border-t-4 border-purple-600">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                    <i class="fas fa-star text-yellow-500"></i> কেন আমাদের সফটওয়্যার?
+                </h3>
+                <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> সময় বাঁচান — সবকিছু এক জায়গায়</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> হিসাব সহজ — বেতন, বকেয়া, রশিদ অটো</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> মাল্টি-সেন্টার সাপোর্ট</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> নবম–দ্বাদশ (বিজ্ঞান/মানবিক/ব্যবসায়) সহ সব শ্রেণী</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> QR অ্যাডমিট কার্ড ও অনলাইন পরীক্ষা</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> ডেটা সুরক্ষিত (Firebase রিয়েলটাইম)</li>
+                </ul>
+            </div>
+            <div class="bg-gradient-to-br from-purple-700 to-indigo-700 p-6 rounded-3xl shadow-xl text-white">
+                <h3 class="text-lg font-semibold mb-2 flex items-center gap-2">
+                    <i class="fas fa-crown text-yellow-300"></i> সাবস্ক্রিপশন প্যাকেজ
+                </h3>
+                <p class="text-3xl font-bold mb-1">মাত্র ৩০০ <span class="text-base font-normal opacity-90">টাকা / বছর</span></p>
+                <p class="text-xs opacity-80 mb-4">একবার পেমেন্ট • পুরো ১ বছর অ্যাক্টিভ</p>
+                <ul class="space-y-2 text-sm mb-5 opacity-95">
+                    <li class="flex items-center gap-2"><i class="fas fa-check text-yellow-300"></i> সীমাহীন শিক্ষার্থী</li>
+                    <li class="flex items-center gap-2"><i class="fas fa-check text-yellow-300"></i> সব ফিচার আনলক</li>
+                    <li class="flex items-center gap-2"><i class="fas fa-check text-yellow-300"></i> অনলাইন পরীক্ষা + QR অ্যাটেনডেন্স</li>
+                    <li class="flex items-center gap-2"><i class="fas fa-check text-yellow-300"></i> WhatsApp সাপোর্ট</li>
+                </ul>
+                <a href="https://wa.me/8801774275248?text=আমি%20কোচিং%20ম্যানেজমেন্ট%20সফটওয়্যারের%20সাবস্ক্রিপশন%20নিতে%20চাই" target="_blank" class="block w-full text-center bg-white text-purple-800 font-semibold py-3 rounded-xl hover:bg-yellow-50 transition">
+                    <i class="fab fa-whatsapp mr-1"></i> WhatsApp-এ যোগাযোগ (01774275248)
+                </a>
+                <p class="text-[11px] text-center mt-2 opacity-80">bKash / Nagad-এ Send Money করুন</p>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-6 mb-8 border border-gray-100 dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4 text-center">
+                <i class="fas fa-question-circle text-purple-600 mr-1"></i> সাধারণ জিজ্ঞাসা
+            </h3>
+            <div class="space-y-3 text-sm">
+                <details class="group bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
+                    <summary class="font-medium cursor-pointer text-gray-800 dark:text-white">সাবস্ক্রিপশন কীভাবে নেব?</summary>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300 text-xs leading-relaxed">WhatsApp 01774275248 নম্বরে যোগাযোগ করুন। bKash বা Nagad-এ ৩০০ টাকা Send Money করে স্ক্রিনশট পাঠান। অ্যাকাউন্ট এক্টিভ করে দেওয়া হবে।</p>
+                </details>
+                <details class="group bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
+                    <summary class="font-medium cursor-pointer text-gray-800 dark:text-white">কোন কোন শ্রেণী সাপোর্ট করে?</summary>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300 text-xs leading-relaxed">১ম থেকে ৮ম, নবম–দশম (বিজ্ঞান/মানবিক/ব্যবসায়), SSC, একাদশ ও দ্বাদশ (বিজ্ঞান/মানবিক/ব্যবসায়) — সব শ্রেণী সাপোর্ট করে।</p>
+                </details>
+                <details class="group bg-gray-50 dark:bg-gray-700/50 rounded-xl p-3">
+                    <summary class="font-medium cursor-pointer text-gray-800 dark:text-white">ডেটা কি নিরাপদ?</summary>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300 text-xs leading-relaxed">হ্যাঁ। Firebase Realtime Database ব্যবহার করা হয়। প্রতিটি সেন্টারের ডেটা আলাদা ও সুরক্ষিত।</p>
+                </details>
+            </div>
+        </div>
+
+        <div class="text-center pb-6">
+            <button onclick="showSection('registerSection')" class="bg-purple-700 hover:bg-purple-800 text-white px-8 py-3.5 rounded-2xl text-sm font-semibold shadow-lg transition">
+                <i class="fas fa-plus-circle mr-1"></i> নতুন সেন্টার রেজিস্টার করুন
+            </button>
         </div>
     </div>
 
@@ -419,9 +534,19 @@
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                         <option value="৭ম">৭ম</option>
                         <option value="৮ম">৮ম</option>
-                        <option value="৯ম">৯ম</option>
-                        <option value="১০ম">১০ম</option>
+                        <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option>
+                        <option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                        <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                        <option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
                         <option value="SSC">SSC</option>
+                        <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option>
+                        <option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option>
+                        <option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                        <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                        <option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option>
+                        <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                     </select>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
@@ -490,9 +615,19 @@
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                         <option value="৭ম">৭ম</option>
                         <option value="৮ম">৮ম</option>
-                        <option value="৯ম">৯ম</option>
-                        <option value="১০ম">১০ম</option>
+                        <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option>
+                        <option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                        <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                        <option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
                         <option value="SSC">SSC</option>
+                        <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option>
+                        <option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option>
+                        <option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                        <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                        <option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option>
+                        <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                     </select>
                 </div>
                 <div id="availableExamsList" class="space-y-2 max-h-60 overflow-y-auto">
@@ -520,9 +655,19 @@
                             <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                             <option value="৭ম">৭ম</option>
                             <option value="৮ম">৮ম</option>
-                            <option value="৯ম">৯ম</option>
-                            <option value="১০ম">১০ম</option>
+                            <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option>
+                        <option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                            <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                        <option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
                             <option value="SSC">SSC</option>
+                            <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option>
+                            <option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option>
+                            <option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                            <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                            <option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option>
+                            <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                         </select>
                     </div>
                     <div>
@@ -942,9 +1087,19 @@
                             <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                             <option value="৭ম">৭ম</option>
                             <option value="৮ম">৮ম</option>
-                            <option value="৯ম">৯ম</option>
-                            <option value="১০ম">১০ম</option>
+                            <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option>
+                        <option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                            <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                        <option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
                             <option value="SSC">SSC</option>
+                            <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option>
+                            <option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option>
+                            <option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                            <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                            <option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option>
+                            <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                         </select>
                         <input type="date" id="qrFilterDate" onchange="loadQRAttendanceList()" class="p-2 border rounded-lg text-sm">
                     </div>
@@ -975,9 +1130,19 @@
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                         <option value="৭ম">৭ম</option>
                         <option value="৮ম">৮ম</option>
-                        <option value="৯ম">৯ম</option>
-                        <option value="১০ম">১০ম</option>
+                        <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option>
+                        <option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                        <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                        <option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
                         <option value="SSC">SSC</option>
+                        <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option>
+                        <option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option>
+                        <option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                        <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                        <option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option>
+                        <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                     </select>
                     <input type="number" id="examDuration" placeholder="সময় (মিনিট)" class="p-2.5 border rounded-xl outline-none" value="30">
                     
@@ -1037,9 +1202,19 @@
                     <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                     <option value="৭ম">৭ম</option>
                     <option value="৮ম">৮ম</option>
-                    <option value="৯ম">৯ম</option>
-                    <option value="১০ম">১০ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option>
+                        <option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                        <option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
                     <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option>
+                    <option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option>
+                    <option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                    <option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option>
+                    <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                 </select>
                 <textarea id="routineDetails" rows="3" placeholder="রুটিনের বিস্তারিত বিবরণ (তারিখ, বিষয়, সময় ইত্যাদি)..." class="w-full p-2 border rounded outline-none md:col-span-3"></textarea>
                 <button onclick="addRoutineToDB()" class="md:col-span-3 bg-indigo-600 text-white py-2.5 rounded hover:bg-indigo-700 transition shadow">
@@ -1105,9 +1280,19 @@
                     <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                     <option value="৭ম">৭ম</option>
                     <option value="৮ম">৮ম</option>
-                    <option value="৯ম">৯ম</option>
-                    <option value="১০ম">১০ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option>
+                        <option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                        <option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
                     <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option>
+                    <option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option>
+                    <option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                    <option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option>
+                    <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                 </select>
                 <input type="number" id="payRoll" placeholder="রোল নম্বর" oninput="fetchPaymentStudentInfo()" class="p-2 border rounded outline-none">
                 <input type="text" id="payName" placeholder="শিক্ষার্থীর নাম" readonly class="p-2 border rounded outline-none bg-gray-100">
@@ -1153,9 +1338,19 @@
                     <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                     <option value="৭ম">৭ম</option>
                     <option value="৮ম">৮ম</option>
-                    <option value="৯ম">৯ম</option>
-                    <option value="১০ম">১০ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option>
+                        <option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                        <option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
                     <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option>
+                    <option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option>
+                    <option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                    <option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option>
+                    <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                 </select>
                 <div class="text-right py-2">
                     <span class="text-sm text-gray-600">উপস্থিত শিক্ষার্থীদের চেক করুন:</span>
@@ -1182,9 +1377,19 @@
                     <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                     <option value="৭ম">৭ম</option>
                     <option value="৮ম">৮ম</option>
-                    <option value="৯ম">৯ম</option>
-                    <option value="১০ম">১০ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option>
+                        <option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                        <option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
                     <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option>
+                    <option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option>
+                    <option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                    <option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option>
+                    <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                 </select>
                 <input type="text" id="newWa" placeholder="হোয়াটসঅ্যাপ (Ex: 88017...)" class="p-2 border rounded outline-none">
                 <button onclick="addStudentToDB()" id="saveStudentBtn" class="md:col-span-4 bg-green-600 text-white py-2.5 rounded hover:bg-green-700 transition">
@@ -1217,9 +1422,19 @@
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                         <option value="৭ম">৭ম</option>
                         <option value="৮ম">৮ম</option>
-                        <option value="৯ম">৯ম</option>
-                        <option value="১০ম">১০ম</option>
+                        <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option>
+                        <option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                        <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                        <option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
                         <option value="SSC">SSC</option>
+                        <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option>
+                        <option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option>
+                        <option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                        <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                        <option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option>
+                        <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                     </select>
                 </div>
                 <div>
@@ -1270,9 +1485,19 @@
                         <option value="৬ষ্ঠ">৬ষ্ঠ</option>
                         <option value="৭ম">৭ম</option>
                         <option value="৮ম">৮ম</option>
-                        <option value="৯ম">৯ম</option>
-                        <option value="১০ম">১০ম</option>
+                        <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option>
+                        <option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                        <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                        <option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
                         <option value="SSC">SSC</option>
+                        <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option>
+                        <option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option>
+                        <option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                        <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                        <option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option>
+                        <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                     </select>
                 </div>
             </div>
@@ -2577,9 +2802,11 @@
                 "চারু ও কারুকলা",
                 "গার্হস্থ্য বিজ্ঞান"
             ],
-            "৯ম": [
-                "বাংলা",
-                "ইংরেজি",
+            "৯ম (বিজ্ঞান)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
                 "সাধারণ গণিত",
                 "উচ্চতর গণিত",
                 "পদার্থবিজ্ঞান",
@@ -2587,10 +2814,17 @@
                 "জীববিজ্ঞান",
                 "বাংলাদেশ ও বিশ্বপরিচয়",
                 "তথ্য ও যোগাযোগ প্রযুক্তি",
+                "ধর্ম ও নৈতিক শিক্ষা"
+            ],
+            "৯ম (মানবিক)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
+                "সাধারণ গণিত",
+                "বাংলাদেশ ও বিশ্বপরিচয়",
+                "তথ্য ও যোগাযোগ প্রযুক্তি",
                 "ধর্ম ও নৈতিক শিক্ষা",
-                "হিসাববিজ্ঞান",
-                "ব্যবসায় উদ্যোগ",
-                "ফিন্যান্স ও ব্যাংকিং",
                 "ইতিহাস",
                 "ভূগোল ও পরিবেশ",
                 "অর্থনীতি",
@@ -2599,9 +2833,28 @@
                 "চারু ও কারুকলা",
                 "শারীরিক শিক্ষা ও স্বাস্থ্য"
             ],
-            "১০ম": [
-                "বাংলা",
-                "ইংরেজি",
+            "৯ম (ব্যবসায় শিক্ষা)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
+                "সাধারণ গণিত",
+                "বাংলাদেশ ও বিশ্বপরিচয়",
+                "তথ্য ও যোগাযোগ প্রযুক্তি",
+                "ধর্ম ও নৈতিক শিক্ষা",
+                "হিসাববিজ্ঞান",
+                "ব্যবসায় উদ্যোগ",
+                "ফিন্যান্স ও ব্যাংকিং",
+                "কৃষি শিক্ষা",
+                "গার্হস্থ্য বিজ্ঞান",
+                "চারু ও কারুকলা",
+                "শারীরিক শিক্ষা ও স্বাস্থ্য"
+            ],
+            "১০ম (বিজ্ঞান)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
                 "সাধারণ গণিত",
                 "উচ্চতর গণিত",
                 "পদার্থবিজ্ঞান",
@@ -2609,21 +2862,47 @@
                 "জীববিজ্ঞান",
                 "বাংলাদেশ ও বিশ্বপরিচয়",
                 "তথ্য ও যোগাযোগ প্রযুক্তি",
+                "ধর্ম ও নৈতিক শিক্ষা"
+            ],
+            "১০ম (মানবিক)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
+                "সাধারণ গণিত",
+                "বাংলাদেশ ও বিশ্বপরিচয়",
+                "তথ্য ও যোগাযোগ প্রযুক্তি",
+                "ধর্ম ও নৈতিক শিক্ষা",
+                "ইতিহাস",
+                "ভূগোল ও পরিবেশ",
+                "অর্থনীতি",
+                "কৃষি শিক্ষা",
+                "গার্হস্থ্য বিজ্ঞান",
+                "চারু ও কারুকলা",
+                "শারীরিক শিক্ষা ও স্বাস্থ্য"
+            ],
+            "১০ম (ব্যবসায় শিক্ষা)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
+                "সাধারণ গণিত",
+                "বাংলাদেশ ও বিশ্বপরিচয়",
+                "তথ্য ও যোগাযোগ প্রযুক্তি",
                 "ধর্ম ও নৈতিক শিক্ষা",
                 "হিসাববিজ্ঞান",
                 "ব্যবসায় উদ্যোগ",
                 "ফিন্যান্স ও ব্যাংকিং",
-                "ইতিহাস",
-                "ভূগোল ও পরিবেশ",
-                "অর্থনীতি",
                 "কৃষি শিক্ষা",
                 "গার্হস্থ্য বিজ্ঞান",
                 "চারু ও কারুকলা",
                 "শারীরিক শিক্ষা ও স্বাস্থ্য"
             ],
             "SSC": [
-                "বাংলা",
-                "ইংরেজি",
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
                 "সাধারণ গণিত",
                 "উচ্চতর গণিত",
                 "পদার্থবিজ্ঞান",
@@ -2642,6 +2921,104 @@
                 "গার্হস্থ্য বিজ্ঞান",
                 "চারু ও কারুকলা",
                 "শারীরিক শিক্ষা ও স্বাস্থ্য"
+            ],
+            "একাদশ (বিজ্ঞান)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
+                "তথ্য ও যোগাযোগ প্রযুক্তি",
+                "পদার্থবিজ্ঞান ১ম পত্র",
+                "পদার্থবিজ্ঞান ২য় পত্র",
+                "রসায়ন ১ম পত্র",
+                "রসায়ন ২য় পত্র",
+                "জীববিজ্ঞান ১ম পত্র",
+                "জীববিজ্ঞান ২য় পত্র",
+                "উচ্চতর গণিত ১ম পত্র",
+                "উচ্চতর গণিত ২য় পত্র"
+            ],
+            "একাদশ (মানবিক)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
+                "তথ্য ও যোগাযোগ প্রযুক্তি",
+                "ইতিহাস ১ম পত্র",
+                "ইতিহাস ২য় পত্র",
+                "ভূগোল ১ম পত্র",
+                "ভূগোল ২য় পত্র",
+                "অর্থনীতি ১ম পত্র",
+                "অর্থনীতি ২য় পত্র",
+                "যুক্তিবিদ্যা ১ম পত্র",
+                "যুক্তিবিদ্যা ২য় পত্র",
+                "সমাজকর্ম ১ম পত্র",
+                "সমাজকর্ম ২য় পত্র",
+                "পৌরনীতি ও সুশাসন ১ম পত্র",
+                "পৌরনীতি ও সুশাসন ২য় পত্র"
+            ],
+            "একাদশ (ব্যবসায় শিক্ষা)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
+                "তথ্য ও যোগাযোগ প্রযুক্তি",
+                "হিসাববিজ্ঞান ১ম পত্র",
+                "হিসাববিজ্ঞান ২য় পত্র",
+                "ব্যবসায় সংগঠন ও ব্যবস্থাপনা ১ম পত্র",
+                "ব্যবসায় সংগঠন ও ব্যবস্থাপনা ২য় পত্র",
+                "ফিন্যান্স, ব্যাংকিং ও বীমা ১ম পত্র",
+                "ফিন্যান্স, ব্যাংকিং ও বীমা ২য় পত্র",
+                "উৎপাদন ব্যবস্থাপনা ও বিপণন ১ম পত্র",
+                "উৎপাদন ব্যবস্থাপনা ও বিপণন ২য় পত্র"
+            ],
+            "দ্বাদশ (বিজ্ঞান)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
+                "তথ্য ও যোগাযোগ প্রযুক্তি",
+                "পদার্থবিজ্ঞান ১ম পত্র",
+                "পদার্থবিজ্ঞান ২য় পত্র",
+                "রসায়ন ১ম পত্র",
+                "রসায়ন ২য় পত্র",
+                "জীববিজ্ঞান ১ম পত্র",
+                "জীববিজ্ঞান ২য় পত্র",
+                "উচ্চতর গণিত ১ম পত্র",
+                "উচ্চতর গণিত ২য় পত্র"
+            ],
+            "দ্বাদশ (মানবিক)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
+                "তথ্য ও যোগাযোগ প্রযুক্তি",
+                "ইতিহাস ১ম পত্র",
+                "ইতিহাস ২য় পত্র",
+                "ভূগোল ১ম পত্র",
+                "ভূগোল ২য় পত্র",
+                "অর্থনীতি ১ম পত্র",
+                "অর্থনীতি ২য় পত্র",
+                "যুক্তিবিদ্যা ১ম পত্র",
+                "যুক্তিবিদ্যা ২য় পত্র",
+                "সমাজকর্ম ১ম পত্র",
+                "সমাজকর্ম ২য় পত্র",
+                "পৌরনীতি ও সুশাসন ১ম পত্র",
+                "পৌরনীতি ও সুশাসন ২য় পত্র"
+            ],
+            "দ্বাদশ (ব্যবসায় শিক্ষা)": [
+                "বাংলা ১ম পত্র",
+                "বাংলা ২য় পত্র",
+                "ইংরেজি ১ম পত্র",
+                "ইংরেজি ২য় পত্র",
+                "তথ্য ও যোগাযোগ প্রযুক্তি",
+                "হিসাববিজ্ঞান ১ম পত্র",
+                "হিসাববিজ্ঞান ২য় পত্র",
+                "ব্যবসায় সংগঠন ও ব্যবস্থাপনা ১ম পত্র",
+                "ব্যবসায় সংগঠন ও ব্যবস্থাপনা ২য় পত্র",
+                "ফিন্যান্স, ব্যাংকিং ও বীমা ১ম পত্র",
+                "ফিন্যান্স, ব্যাংকিং ও বীমা ২য় পত্র",
+                "উৎপাদন ব্যবস্থাপনা ও বিপণন ১ম পত্র",
+                "উৎপাদন ব্যবস্থাপনা ও বিপণন ২য় পত্র"
             ]
         };
 
@@ -2779,8 +3156,13 @@
             }
         }
 
+        function showSoftwareDemo() {
+            showSection('softwareDemoSection');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function showSection(id) {
-            ['studentView', 'loginSection', 'adminPanel', 'teacherPanel', 'displayArea', 'examTakingArea', 'centerSelectSection', 'registerSection'].forEach(s => {
+            ['studentView', 'loginSection', 'adminPanel', 'teacherPanel', 'displayArea', 'examTakingArea', 'centerSelectSection', 'registerSection', 'softwareDemoSection'].forEach(s => {
                 const el = document.getElementById(s);
                 if (el) el.classList.add('hidden');
             });
