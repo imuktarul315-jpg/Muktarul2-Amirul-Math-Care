@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4c1d95">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="কোচিং ম্যানেজমেন্ট">
+    <link rel="manifest" href="data:application/manifest+json,{"name":"কোচিং ম্যানেজমেন্ট সফটওয়্যার","short_name":"কোচিং CMS","start_url":".","display":"standalone","background_color":"#4c1d95","theme_color":"#4c1d95","lang":"bn"}">
     <title>কোচিং ম্যানেজমেন্ট সফটওয়্যার</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -270,6 +275,9 @@
             </div>
             <button onclick="toggleDarkMode()" class="p-2 w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition" title="ডার্ক মোড টগল">
                 <i class="fas fa-moon text-yellow-300"></i>
+            </button>
+            <button onclick="toggleUiLang()" class="p-2 px-3 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition text-xs font-medium" title="Language">
+                <span id="langToggleLabel">EN</span>
             </button>
             <button id="logoutBtn" onclick="logout()" class="hidden bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded-full text-xs font-medium transition shadow-md">
                 <i class="fas fa-sign-out-alt mr-1"></i>লগ আউট
@@ -660,6 +668,103 @@
             </div>
         </div>
 
+
+
+        <!-- ONLINE ADMISSION FORM (student) -->
+        <div class="bg-white p-6 rounded-3xl shadow-xl border-t-8 border-indigo-500 transition-colors mb-6">
+            <h3 class="text-gray-800 dark:text-white text-xl mb-3 text-center font-medium">
+                <i class="fas fa-user-plus mr-2 text-indigo-600"></i>অনলাইন ভর্তি আবেদন
+            </h3>
+            <div class="space-y-2 text-sm">
+                <input type="text" id="admName" placeholder="শিক্ষার্থীর নাম *" class="w-full p-2.5 border rounded-xl">
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="admClass" class="w-full p-2.5 border rounded-xl">
+                        <option value="">শ্রেণী *</option>
+                        <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                        <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                        <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                        <option value="SSC">SSC</option>
+                        <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                        <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                    </select>
+                    <input type="text" id="admRoll" placeholder="রোল (ঐচ্ছিক)" class="w-full p-2.5 border rounded-xl">
+                </div>
+                <input type="text" id="admFather" placeholder="পিতার নাম" class="w-full p-2.5 border rounded-xl">
+                <input type="text" id="admMother" placeholder="মাতার নাম" class="w-full p-2.5 border rounded-xl">
+                <input type="tel" id="admWa" placeholder="WhatsApp / মোবাইল *" class="w-full p-2.5 border rounded-xl">
+                <textarea id="admNote" rows="2" placeholder="মন্তব্য (ঐচ্ছিক)" class="w-full p-2.5 border rounded-xl"></textarea>
+                <button onclick="submitAdmissionApplication()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl">আবেদন জমা দিন</button>
+            </div>
+        </div>
+
+
+        <!-- SYLLABUS (student) -->
+        <div class="bg-white p-6 rounded-3xl shadow-xl border-t-8 border-blue-600 transition-colors mb-6">
+            <h3 class="text-gray-800 dark:text-white text-xl mb-3 text-center font-medium">
+                <i class="fas fa-list-check mr-2 text-blue-600"></i>সিলেবাস অগ্রগতি
+            </h3>
+            <select id="stuSylClass" onchange="loadStudentSyllabus()" class="w-full p-2.5 border rounded-xl mb-3 text-sm">
+                <option value="">শ্রেণী নির্বাচন</option>
+                <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                <option value="SSC">SSC</option>
+                <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+            </select>
+            <div id="studentSyllabusList" class="space-y-2 text-sm max-h-56 overflow-y-auto">
+                <p class="text-center text-gray-400 py-2">শ্রেণী বেছে নিন</p>
+            </div>
+        </div>
+
+        <!-- HOMEWORK BOARD (student) -->
+        <div class="bg-white p-6 rounded-3xl shadow-xl border-t-8 border-orange-500 transition-colors mb-6">
+            <h3 class="text-gray-800 dark:text-white text-xl mb-3 text-center font-medium">
+                <i class="fas fa-book-open mr-2 text-orange-600"></i>হোমওয়ার্ক বোর্ড
+            </h3>
+            <select id="hwStudentClass" onchange="loadStudentHomework()" class="w-full p-2.5 border rounded-xl mb-3 text-sm">
+                <option value="">শ্রেণী নির্বাচন করুন</option>
+                <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                <option value="SSC">SSC</option>
+                <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+            </select>
+            <div id="studentHomeworkList" class="space-y-2 text-sm max-h-60 overflow-y-auto">
+                <p class="text-center text-gray-400 py-3">শ্রেণী বেছে নিন</p>
+            </div>
+        </div>
+
+        <!-- PARENT / GUARDIAN PORTAL -->
+        <div class="bg-white p-6 rounded-3xl shadow-xl border-t-8 border-fuchsia-600 transition-colors mb-6">
+            <h3 class="text-gray-800 dark:text-white text-xl mb-4 text-center font-medium">
+                <i class="fas fa-user-friends mr-2 text-fuchsia-600"></i>অভিভাবক পোর্টাল
+            </h3>
+            <p class="text-xs text-center text-gray-500 mb-3">রোল, শ্রেণী ও (ঐচ্ছিক) WhatsApp নম্বর দিয়ে সন্তানের তথ্য দেখুন</p>
+            <div class="space-y-3">
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="parentClass" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black text-sm">
+                        <option value="">শ্রেণী</option>
+                        <option value="১ম">১ম</option><option value="২য়">২য়</option><option value="৩য়">৩য়</option>
+                        <option value="৪র্থ">৪র্থ</option><option value="৫ম">৫ম</option><option value="৬ষ্ঠ">৬ষ্ঠ</option>
+                        <option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                        <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                        <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                        <option value="SSC">SSC</option>
+                        <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                        <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                    </select>
+                    <input type="text" id="parentRoll" placeholder="রোল" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black text-sm">
+                </div>
+                <input type="text" id="parentWa" placeholder="WhatsApp (ঐচ্ছিক যাচাই)" class="w-full p-2.5 border border-gray-200 rounded-xl outline-none bg-gray-50 text-black text-sm">
+                <button onclick="loadParentPortal()" class="w-full bg-fuchsia-600 hover:bg-fuchsia-700 text-white py-3 rounded-xl shadow-md transition">
+                    <i class="fas fa-search mr-1"></i> তথ্য দেখুন
+                </button>
+                <div id="parentPortalResult" class="hidden mt-3 space-y-3 text-sm"></div>
+            </div>
+        </div>
+
         <!-- ONLINE EXAM SECTION -->
         <div class="bg-white p-6 rounded-3xl shadow-xl border-t-8 border-indigo-700 transition-colors mb-6">
             <h3 class="text-gray-800 dark:text-white text-xl mb-4 text-center font-medium">
@@ -762,6 +867,10 @@
                 <i class="fas fa-calendar-alt mr-2 text-indigo-600"></i>পরীক্ষা ও মডেল টেস্ট রুটিন
             </h3>
             <div id="routineContainer" class="space-y-3"></div>
+            <div class="mt-4">
+                <h4 class="text-sm font-medium text-indigo-800 mb-2">সাপ্তাহিক ক্লাস রুটিন</h4>
+                <div id="studentWeeklyRoutine" class="overflow-x-auto text-xs"></div>
+            </div>
         </div>
 
         <!-- Gallery -->
@@ -829,6 +938,17 @@
                 <a href="https://dinajpureducationboard.gov.bd" target="_blank" class="p-2.5 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-600 transition flex items-center gap-2">
                     <i class="fas fa-globe text-cyan-600"></i>দিনাজপুর শিক্ষা বোর্ড এর ওয়েবসাইট
                 </a>
+            </div>
+        </div>
+
+
+        <!-- PAYMENT GATEWAY INFO (student) -->
+        <div class="bg-white p-6 rounded-3xl shadow-xl border-t-8 border-emerald-700 transition-colors mb-6">
+            <h3 class="text-gray-800 dark:text-white text-xl mb-3 text-center font-medium">
+                <i class="fas fa-mobile-alt mr-2 text-emerald-600"></i>অনলাইন পেমেন্ট তথ্য
+            </h3>
+            <div id="studentPayGatewayBox" class="text-sm text-center text-gray-600 space-y-2">
+                <p class="text-gray-400">অ্যাডমিন পেমেন্ট নম্বর সেট করলে এখানে দেখাবে</p>
             </div>
         </div>
 
@@ -964,6 +1084,26 @@
             </div>
         </div>
 
+
+        <!-- ADMIN SUMMARY CARDS -->
+        <div id="adminSummaryCards" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            <div class="bg-gradient-to-br from-indigo-500 to-indigo-700 text-white p-4 rounded-2xl shadow">
+                <div class="text-xs opacity-90">মোট শিক্ষার্থী</div>
+                <div class="text-2xl font-bold" id="sumTotalStudents">0</div>
+            </div>
+            <div class="bg-gradient-to-br from-red-500 to-red-700 text-white p-4 rounded-2xl shadow">
+                <div class="text-xs opacity-90">বকেয়া (এই মাস আনুমানিক)</div>
+                <div class="text-2xl font-bold" id="sumDueCount">0</div>
+            </div>
+            <div class="bg-gradient-to-br from-green-500 to-green-700 text-white p-4 rounded-2xl shadow">
+                <div class="text-xs opacity-90">আজকের উপস্থিতি রেকর্ড</div>
+                <div class="text-2xl font-bold" id="sumTodayAtt">0</div>
+            </div>
+            <div class="bg-gradient-to-br from-amber-500 to-amber-700 text-white p-4 rounded-2xl shadow">
+                <div class="text-xs opacity-90">পেন্ডিং ভর্তি আবেদন</div>
+                <div class="text-2xl font-bold" id="sumPendingAdm">0</div>
+            </div>
+        </div>
         <!-- Action Buttons -->
         <div class="mb-6 flex flex-wrap gap-2">
             <button onclick="toggleSectionElement('studentManager')" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
@@ -1001,6 +1141,66 @@
             </button>
             <button onclick="downloadStudentListPDF()" class="bg-gray-700 hover:bg-gray-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
                 <i class="fas fa-file-download"></i>ছাত্র তালিকা PDF
+            </button>
+            <button onclick="toggleSectionElement('dueFeeSystem')" class="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-exclamation-circle"></i>বকেয়া ফি ট্র্যাকার
+            </button>
+            <button onclick="toggleSectionElement('weeklyRoutineSystem')" class="bg-sky-600 hover:bg-sky-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-table"></i>সাপ্তাহিক ক্লাস রুটিন
+            </button>
+            <button onclick="toggleSectionElement('attReportSystem')" class="bg-lime-600 hover:bg-lime-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-percent"></i>উপস্থিতি % রিপোর্ট
+            </button>
+            <button onclick="exportAllExcelMenu()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-file-excel"></i>Excel এক্সপোর্ট
+            </button>
+            <button onclick="toggleSectionElement('homeworkSystem')" class="bg-orange-600 hover:bg-orange-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-book-open"></i>হোমওয়ার্ক
+            </button>
+            <button onclick="toggleSectionElement('leaderboardSystem')" class="bg-fuchsia-600 hover:bg-fuchsia-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-trophy"></i>লিডারবোর্ড
+            </button>
+            <button onclick="toggleSectionElement('incomeReportSystem')" class="bg-teal-700 hover:bg-teal-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-chart-pie"></i>আয়–ব্যয় রিপোর্ট
+            </button>
+            <button onclick="toggleSectionElement('admissionSystem')" class="bg-indigo-700 hover:bg-indigo-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-user-plus"></i>অনলাইন ভর্তি আবেদন
+            </button>
+            <button onclick="toggleSectionElement('auditLogSystem')" class="bg-slate-600 hover:bg-slate-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-history"></i>অডিট লগ
+            </button>
+            <button onclick="toggleSectionElement('backupSystem')" class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-database"></i>ব্যাকআপ / রিস্টোর
+            </button>
+            <button onclick="toggleSectionElement('smsPanelSystem')" class="bg-green-700 hover:bg-green-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-sms"></i>SMS / মেসেজ প্যানেল
+            </button>
+            <button onclick="toggleSectionElement('syllabusSystem')" class="bg-blue-700 hover:bg-blue-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-list-check"></i>সিলেবাস ট্র্যাকার
+            </button>
+            <button onclick="toggleSectionElement('reportCardSystem')" class="bg-purple-800 hover:bg-purple-900 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-file-alt"></i>রিপোর্ট কার্ড
+            </button>
+            <button onclick="toggleSectionElement('honorariumSystem')" class="bg-amber-700 hover:bg-amber-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-coins"></i>শিক্ষক অনারারিয়াম
+            </button>
+            <button onclick="toggleSectionElement('referralSystem')" class="bg-pink-700 hover:bg-pink-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-gift"></i>রেফারেল / কুপন
+            </button>
+            <button onclick="toggleSectionElement('questionBankSystem')" class="bg-rose-700 hover:bg-rose-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-database"></i>প্রশ্ন ব্যাংক
+            </button>
+            <button onclick="toggleSectionElement('manualPayGateway')" class="bg-emerald-800 hover:bg-emerald-900 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-mobile-alt"></i>bKash/Nagad গেটওয়ে
+            </button>
+            <button onclick="toggleSectionElement('globalSearchSystem')" class="bg-cyan-700 hover:bg-cyan-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-search"></i>গ্লোবাল সার্চ
+            </button>
+            <button onclick="toggleSectionElement('seatingPlanSystem')" class="bg-violet-700 hover:bg-violet-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-chair"></i>সিটিং প্ল্যান
+            </button>
+            <button onclick="toggleSectionElement('certificateSystem')" class="bg-yellow-700 hover:bg-yellow-800 text-white px-5 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fas fa-certificate"></i>সার্টিফিকেট
             </button>
         </div>
 
@@ -1252,6 +1452,10 @@
                         <option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
                     </select>
                     <input type="number" id="examDuration" placeholder="সময় (মিনিট)" class="p-2.5 border rounded-xl outline-none" value="30">
+                    <label class="flex items-center gap-2 p-2.5 border rounded-xl text-sm bg-white cursor-pointer">
+                        <input type="checkbox" id="examNegMark" class="w-4 h-4 accent-pink-600">
+                        <span>নেগেটিভ মার্কিং (ভুলে −০.২৫)</span>
+                    </label>
                     
                     <div class="space-y-1">
                         <div class="border-2 border-dashed border-pink-400 rounded-xl p-2 text-center bg-white relative">
@@ -1267,6 +1471,9 @@
                     <div id="questionsBuilder" class="space-y-4"></div>
                     <button onclick="addQuestionField()" class="mt-3 bg-pink-200 text-pink-900 px-4 py-2 rounded-lg text-sm hover:bg-pink-300 transition">
                         <i class="fas fa-plus mr-1"></i> নতুন প্রশ্ন যোগ করুন
+                    </button>
+                    <button onclick="importFromQuestionBank()" class="mt-3 ml-2 bg-rose-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-rose-700 transition">
+                        <i class="fas fa-database mr-1"></i> প্রশ্ন ব্যাংক থেকে ইমপোর্ট
                     </button>
                 </div>
 
@@ -1434,6 +1641,393 @@
         </div>
 
         <!-- Attendance -->
+
+
+
+        <!-- SMS / MESSAGE PANEL -->
+        <div id="smsPanelSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-green-700 hidden text-black transition-colors">
+            <h2 class="text-xl text-green-800 mb-2 font-medium"><i class="fas fa-sms mr-2"></i>SMS / WhatsApp মেসেজ প্যানেল</h2>
+            <p class="text-xs text-gray-500 mb-4">ফোনের SMS অ্যাপ বা WhatsApp খুলে টেমপ্লেট পাঠান। বাইরের SMS API কী ছাড়াই কাজ করে।</p>
+            <div class="bg-green-50 p-4 rounded-xl mb-4 space-y-3">
+                <select id="smsTemplate" onchange="fillSmsTemplate()" class="w-full p-2 border rounded-xl text-sm">
+                    <option value="">টেমপ্লেট বেছে নিন</option>
+                    <option value="due">বকেয়া ফি রিমাইন্ডার</option>
+                    <option value="result">রেজাল্ট প্রকাশ</option>
+                    <option value="exam">পরীক্ষার নোটিশ</option>
+                    <option value="admit">অ্যাডমিট কার্ড</option>
+                    <option value="custom">কাস্টম</option>
+                </select>
+                <textarea id="smsBody" rows="3" placeholder="মেসেজ লিখুন..." class="w-full p-2 border rounded-xl text-sm"></textarea>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <select id="smsClass" class="p-2 border rounded-xl text-sm">
+                        <option value="">সব শ্রেণী</option>
+                        <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                        <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                        <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                        <option value="SSC">SSC</option>
+                        <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                        <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                    </select>
+                    <button onclick="blastWhatsAppMessages()" class="bg-green-600 text-white py-2 rounded-xl text-sm"><i class="fab fa-whatsapp"></i> WhatsApp বাল্ক</button>
+                    <button onclick="openSmsToFirst()" class="bg-blue-600 text-white py-2 rounded-xl text-sm"><i class="fas fa-sms"></i> SMS খুলুন</button>
+                </div>
+            </div>
+            <div id="smsTargetPreview" class="text-xs text-gray-500"></div>
+        </div>
+
+        <!-- SYLLABUS TRACKER -->
+        <div id="syllabusSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-blue-700 hidden text-black transition-colors">
+            <h2 class="text-xl text-blue-800 mb-4 font-medium"><i class="fas fa-list-check mr-2"></i>সিলেবাস ট্র্যাকার</h2>
+            <div class="bg-blue-50 p-4 rounded-xl mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+                <select id="sylClass" class="p-2 border rounded-xl">
+                    <option value="">শ্রেণী</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                </select>
+                <input type="text" id="sylSubject" placeholder="বিষয়" class="p-2 border rounded-xl">
+                <input type="text" id="sylChapter" placeholder="অধ্যায় / টপিক" class="p-2 border rounded-xl">
+                <select id="sylStatus" class="p-2 border rounded-xl">
+                    <option value="চলমান">চলমান</option>
+                    <option value="সম্পন্ন">সম্পন্ন</option>
+                    <option value="বাকি">বাকি</option>
+                </select>
+                <button onclick="saveSyllabusItem()" class="md:col-span-2 bg-blue-700 text-white py-2 rounded-xl hover:bg-blue-800">যোগ করুন</button>
+            </div>
+            <div id="syllabusList" class="max-h-80 overflow-y-auto border rounded-xl p-3 bg-gray-50 text-sm space-y-2"></div>
+        </div>
+
+        <!-- REPORT CARD -->
+        <div id="reportCardSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-purple-800 hidden text-black transition-colors">
+            <h2 class="text-xl text-purple-900 mb-4 font-medium"><i class="fas fa-file-alt mr-2"></i>প্রগ্রেস রিপোর্ট কার্ড</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4 bg-purple-50 p-4 rounded-xl">
+                <select id="rcClass" class="p-2 border rounded-xl">
+                    <option value="">শ্রেণী</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                </select>
+                <input type="text" id="rcRoll" placeholder="রোল" class="p-2 border rounded-xl">
+                <button onclick="generateReportCard()" class="bg-purple-800 text-white py-2 rounded-xl">রিপোর্ট তৈরি</button>
+                <button onclick="window.print()" class="bg-gray-600 text-white py-2 rounded-xl">প্রিন্ট</button>
+            </div>
+            <p class="text-xs text-gray-500">রিপোর্ট ডিসপ্লে এরিয়ায় খুলবে — প্রিন্ট/PDF করা যাবে।</p>
+        </div>
+
+        <!-- TEACHER HONORARIUM -->
+        <div id="honorariumSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-amber-700 hidden text-black transition-colors">
+            <h2 class="text-xl text-amber-900 mb-4 font-medium"><i class="fas fa-coins mr-2"></i>শিক্ষক অনারারিয়াম</h2>
+            <div class="bg-amber-50 p-4 rounded-xl mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+                <input type="text" id="honTeacher" placeholder="শিক্ষকের নাম" class="p-2 border rounded-xl">
+                <input type="text" id="honMonth" placeholder="মাস (যেমন: নভেম্বর ২০২৬)" class="p-2 border rounded-xl">
+                <input type="number" id="honClasses" placeholder="ক্লাস সংখ্যা" class="p-2 border rounded-xl">
+                <input type="number" id="honRate" placeholder="প্রতি ক্লাস হার (৳)" class="p-2 border rounded-xl">
+                <input type="text" id="honNote" placeholder="নোট" class="p-2 border rounded-xl">
+                <button onclick="saveHonorarium()" class="bg-amber-700 text-white py-2 rounded-xl hover:bg-amber-800">সংরক্ষণ</button>
+            </div>
+            <div id="honorariumList" class="max-h-72 overflow-y-auto border rounded-xl p-3 bg-gray-50 text-sm space-y-2"></div>
+        </div>
+
+        <!-- REFERRAL / COUPON -->
+        <div id="referralSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-pink-700 hidden text-black transition-colors">
+            <h2 class="text-xl text-pink-900 mb-4 font-medium"><i class="fas fa-gift mr-2"></i>রেফারেল কোড / কুপন</h2>
+            <div class="bg-pink-50 p-4 rounded-xl mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+                <input type="text" id="refCode" placeholder="কোড (যেমন: SAVE100)" class="p-2 border rounded-xl">
+                <input type="number" id="refDiscount" placeholder="ছাড় (৳ বা %)" class="p-2 border rounded-xl">
+                <select id="refType" class="p-2 border rounded-xl">
+                    <option value="fixed">ফিক্সড ৳</option>
+                    <option value="percent">শতকরা %</option>
+                </select>
+                <input type="text" id="refNote" placeholder="বিবরণ" class="p-2 border rounded-xl md:col-span-2">
+                <button onclick="saveReferralCode()" class="bg-pink-700 text-white py-2 rounded-xl">কুপন যোগ</button>
+            </div>
+            <div id="referralList" class="max-h-72 overflow-y-auto border rounded-xl p-3 bg-gray-50 text-sm space-y-2"></div>
+        </div>
+
+        <!-- QUESTION BANK -->
+        <div id="questionBankSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-rose-700 hidden text-black transition-colors">
+            <h2 class="text-xl text-rose-900 mb-4 font-medium"><i class="fas fa-database mr-2"></i>প্রশ্ন ব্যাংক</h2>
+            <div class="bg-rose-50 p-4 rounded-xl mb-4 space-y-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <select id="qbClass" class="p-2 border rounded-xl">
+                        <option value="">শ্রেণী</option>
+                        <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option>
+                        <option value="SSC">SSC</option>
+                        <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option>
+                        <option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option>
+                    </select>
+                    <input type="text" id="qbSubject" placeholder="বিষয়" class="p-2 border rounded-xl">
+                </div>
+                <textarea id="qbQuestion" rows="2" placeholder="প্রশ্ন" class="w-full p-2 border rounded-xl"></textarea>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="qbA" placeholder="অপশন A" class="p-2 border rounded-xl">
+                    <input type="text" id="qbB" placeholder="অপশন B" class="p-2 border rounded-xl">
+                    <input type="text" id="qbC" placeholder="অপশন C" class="p-2 border rounded-xl">
+                    <input type="text" id="qbD" placeholder="অপশন D" class="p-2 border rounded-xl">
+                </div>
+                <select id="qbCorrect" class="w-full p-2 border rounded-xl">
+                    <option value="A">সঠিক: A</option><option value="B">সঠিক: B</option>
+                    <option value="C">সঠিক: C</option><option value="D">সঠিক: D</option>
+                </select>
+                <button onclick="saveQuestionBankItem()" class="w-full bg-rose-700 text-white py-2.5 rounded-xl">ব্যাংকে সেভ</button>
+            </div>
+            <div id="questionBankList" class="max-h-72 overflow-y-auto border rounded-xl p-3 bg-gray-50 text-xs space-y-2"></div>
+        </div>
+
+        <!-- MANUAL PAYMENT GATEWAY INFO -->
+        <div id="manualPayGateway" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-emerald-800 hidden text-black transition-colors">
+            <h2 class="text-xl text-emerald-900 mb-3 font-medium"><i class="fas fa-mobile-alt mr-2"></i>bKash / Nagad পেমেন্ট সেটআপ</h2>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm space-y-3 mb-4">
+                <p>লাইভ পেমেন্ট গেটওয়ের জন্য bKash/Nagad <b>মার্চেন্ট API</b> প্রয়োজন। এখানে ম্যানুয়াল গ্রহণ নম্বর ও নির্দেশনা সেট করুন — শিক্ষার্থী/অভিভাবক দেখতে পাবে।</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs">bKash নম্বর</label>
+                        <input type="text" id="gwBkash" placeholder="01XXXXXXXXX" class="w-full p-2 border rounded-xl">
+                    </div>
+                    <div>
+                        <label class="text-xs">Nagad নম্বর</label>
+                        <input type="text" id="gwNagad" placeholder="01XXXXXXXXX" class="w-full p-2 border rounded-xl">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="text-xs">পেমেন্ট নির্দেশনা</label>
+                        <textarea id="gwInstructions" rows="2" class="w-full p-2 border rounded-xl" placeholder="Send Money করুন, টাইপ: Personal, রেফারেন্সে রোল লিখুন..."></textarea>
+                    </div>
+                </div>
+                <button onclick="savePaymentGatewayInfo()" class="w-full bg-emerald-800 text-white py-2.5 rounded-xl">সেভ করুন</button>
+            </div>
+            <div id="gwPreview" class="text-sm text-gray-600"></div>
+        </div>
+
+
+        <!-- GLOBAL SEARCH -->
+        <div id="globalSearchSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-cyan-700 hidden text-black transition-colors">
+            <h2 class="text-xl text-cyan-800 mb-4 font-medium"><i class="fas fa-search mr-2"></i>গ্লোবাল শিক্ষার্থী সার্চ</h2>
+            <input type="text" id="globalSearchInput" oninput="runGlobalStudentSearch()" placeholder="নাম, রোল বা মোবাইল লিখুন..." class="w-full p-3 border rounded-xl mb-4 text-sm">
+            <div id="globalSearchResults" class="max-h-96 overflow-y-auto border rounded-xl p-3 bg-gray-50 text-sm space-y-2">
+                <p class="text-center text-gray-400 py-4">খুঁজতে টাইপ করুন</p>
+            </div>
+        </div>
+
+        <!-- SEATING PLAN -->
+        <div id="seatingPlanSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-violet-700 hidden text-black transition-colors">
+            <h2 class="text-xl text-violet-800 mb-4 font-medium"><i class="fas fa-chair mr-2"></i>পরীক্ষার হল সিটিং প্ল্যান</h2>
+            <div class="bg-violet-50 p-4 rounded-xl mb-4 grid grid-cols-1 md:grid-cols-4 gap-3">
+                <select id="seatClass" class="p-2 border rounded-xl">
+                    <option value="">শ্রেণী</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                </select>
+                <input type="number" id="seatCols" value="5" min="2" max="12" placeholder="কলাম" class="p-2 border rounded-xl" title="প্রতি সারিতে সিট">
+                <input type="text" id="seatExamName" placeholder="পরীক্ষার নাম" class="p-2 border rounded-xl">
+                <button onclick="generateSeatingPlan()" class="bg-violet-700 text-white py-2 rounded-xl hover:bg-violet-800">প্ল্যান তৈরি</button>
+            </div>
+            <p class="text-xs text-gray-500">রোল অনুযায়ী সাজানো সিট চার্ট ডিসপ্লে এরিয়ায় যাবে — প্রিন্ট/PDF করা যাবে।</p>
+        </div>
+
+        <!-- CERTIFICATE -->
+        <div id="certificateSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-yellow-700 hidden text-black transition-colors">
+            <h2 class="text-xl text-yellow-900 mb-4 font-medium"><i class="fas fa-certificate mr-2"></i>সার্টিফিকেট জেনারেটর</h2>
+            <div class="bg-yellow-50 p-4 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-3">
+                <select id="certClass" class="p-2 border rounded-xl">
+                    <option value="">শ্রেণী</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                </select>
+                <input type="text" id="certRoll" placeholder="রোল" class="p-2 border rounded-xl">
+                <input type="text" id="certCourse" placeholder="কোর্স / বিষয় (যেমন: SSC মডেল টেস্ট)" class="p-2 border rounded-xl md:col-span-2">
+                <input type="text" id="certSession" placeholder="সেশন (যেমন: ২০২৫-২৬)" class="p-2 border rounded-xl">
+                <button onclick="generateCertificate()" class="bg-yellow-700 text-white py-2 rounded-xl hover:bg-yellow-800">সার্টিফিকেট তৈরি</button>
+            </div>
+        </div>
+
+        <!-- HOMEWORK SYSTEM -->
+        <div id="homeworkSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-orange-500 hidden text-black transition-colors">
+            <h2 class="text-xl text-orange-800 mb-4 font-medium"><i class="fas fa-book-open mr-2"></i>হোমওয়ার্ক / অ্যাসাইনমেন্ট</h2>
+            <div class="bg-orange-50 p-4 rounded-xl mb-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+                <input type="text" id="hwTitle" placeholder="শিরোনাম" class="p-2 border rounded-xl">
+                <select id="hwClass" class="p-2 border rounded-xl">
+                    <option value="">শ্রেণী</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                </select>
+                <input type="text" id="hwSubject" placeholder="বিষয়" class="p-2 border rounded-xl">
+                <input type="date" id="hwDue" class="p-2 border rounded-xl">
+                <textarea id="hwDetails" rows="2" placeholder="বিস্তারিত নির্দেশনা..." class="p-2 border rounded-xl md:col-span-2"></textarea>
+                <button onclick="saveHomework()" class="md:col-span-2 bg-orange-600 text-white py-2.5 rounded-xl hover:bg-orange-700">হোমওয়ার্ক প্রকাশ করুন</button>
+            </div>
+            <div id="adminHomeworkList" class="max-h-72 overflow-y-auto border rounded-xl p-3 bg-gray-50 space-y-2 text-sm"></div>
+        </div>
+
+        <!-- LEADERBOARD -->
+        <div id="leaderboardSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-fuchsia-600 hidden text-black transition-colors">
+            <h2 class="text-xl text-fuchsia-800 mb-4 font-medium"><i class="fas fa-trophy mr-2"></i>মেধা তালিকা / লিডারবোর্ড</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 bg-fuchsia-50 p-4 rounded-xl">
+                <select id="lbClass" class="p-2 border rounded-xl">
+                    <option value="">শ্রেণী</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                </select>
+                <input type="date" id="lbDate" class="p-2 border rounded-xl" title="খালি রাখলে সব তারিখ">
+                <button onclick="loadLeaderboard()" class="bg-fuchsia-600 text-white py-2 rounded-xl hover:bg-fuchsia-700">তালিকা দেখুন</button>
+            </div>
+            <div id="leaderboardList" class="max-h-96 overflow-y-auto border rounded-xl p-3 bg-gray-50 text-sm"></div>
+        </div>
+
+        <!-- INCOME REPORT -->
+        <div id="incomeReportSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-teal-700 hidden text-black transition-colors">
+            <h2 class="text-xl text-teal-800 mb-4 font-medium"><i class="fas fa-chart-pie mr-2"></i>মাসিক আয় রিপোর্ট (পেমেন্ট থেকে)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 bg-teal-50 p-4 rounded-xl">
+                <select id="incMonth" class="p-2 border rounded-xl">
+                    <option value="">সব মাস</option>
+                    <option value="জানুয়ারি">জানুয়ারি</option><option value="ফেব্রুয়ারি">ফেব্রুয়ারি</option><option value="মার্চ">মার্চ</option>
+                    <option value="এপ্রিল">এপ্রিল</option><option value="মে">মে</option><option value="জুন">জুন</option>
+                    <option value="জুলাই">জুলাই</option><option value="আগস্ট">আগস্ট</option><option value="সেপ্টেম্বর">সেপ্টেম্বর</option>
+                    <option value="অক্টোবর">অক্টোবর</option><option value="নভেম্বর">নভেম্বর</option><option value="ডিসেম্বর">ডিসেম্বর</option>
+                </select>
+                <button onclick="loadIncomeReport()" class="bg-teal-700 text-white py-2 rounded-xl hover:bg-teal-800">রিপোর্ট</button>
+                <button onclick="exportPaymentsCSV()" class="bg-gray-600 text-white py-2 rounded-xl hover:bg-gray-700">CSV</button>
+            </div>
+            <div id="incomeReportBox" class="border rounded-xl p-4 bg-gray-50 text-sm"></div>
+        </div>
+
+        <!-- ONLINE ADMISSION APPLICATIONS -->
+        <div id="admissionSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-indigo-700 hidden text-black transition-colors">
+            <h2 class="text-xl text-indigo-800 mb-4 font-medium"><i class="fas fa-user-plus mr-2"></i>অনলাইন ভর্তি আবেদনসমূহ</h2>
+            <p class="text-xs text-gray-500 mb-3">শিক্ষার্থী পোর্টাল থেকে আসা আবেদন — অনুমোদন করলে স্টুডেন্ট ডাটাবেজে যুক্ত হবে।</p>
+            <div id="admissionList" class="max-h-96 overflow-y-auto border rounded-xl p-3 bg-gray-50 space-y-2 text-sm">
+                <p class="text-center text-gray-400 py-4">কোনো আবেদন নেই</p>
+            </div>
+        </div>
+
+        <!-- AUDIT LOG -->
+        <div id="auditLogSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-slate-600 hidden text-black transition-colors">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl text-slate-800 font-medium"><i class="fas fa-history mr-2"></i>অডিট লগ</h2>
+                <button onclick="clearAuditLogs()" class="text-xs bg-red-100 text-red-700 px-3 py-1 rounded-lg">ক্লিয়ার</button>
+            </div>
+            <div id="auditLogList" class="max-h-96 overflow-y-auto border rounded-xl p-3 bg-gray-50 space-y-2 text-xs"></div>
+        </div>
+
+        <!-- BACKUP / RESTORE -->
+        <div id="backupSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-gray-600 hidden text-black transition-colors">
+            <h2 class="text-xl text-gray-800 mb-4 font-medium"><i class="fas fa-database mr-2"></i>ব্যাকআপ ও রিস্টোর</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 p-5 rounded-xl border">
+                    <h3 class="font-medium mb-2">ব্যাকআপ ডাউনলোড</h3>
+                    <p class="text-xs text-gray-500 mb-3">বর্তমান সেন্টারের সব ডাটা JSON ফাইল হিসেবে সেভ করুন।</p>
+                    <button onclick="downloadCenterBackup()" class="w-full bg-gray-800 text-white py-2.5 rounded-xl hover:bg-gray-900">ব্যাকআপ ডাউনলোড</button>
+                </div>
+                <div class="bg-gray-50 p-5 rounded-xl border">
+                    <h3 class="font-medium mb-2">রিস্টোর</h3>
+                    <p class="text-xs text-gray-500 mb-3">আগে ডাউনলোড করা JSON আপলোড করুন (সাবধান — ওভাররাইট হবে)।</p>
+                    <input type="file" id="restoreFile" accept="application/json,.json" class="w-full text-xs mb-2">
+                    <button onclick="restoreCenterBackup()" class="w-full bg-amber-600 text-white py-2.5 rounded-xl hover:bg-amber-700">রিস্টোর করুন</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DUE FEE TRACKER -->
+        <div id="dueFeeSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-red-600 hidden text-black transition-colors">
+            <h2 class="text-xl text-red-800 mb-4 font-medium">
+                <i class="fas fa-exclamation-circle mr-2"></i>বকেয়া ফি ট্র্যাকার
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4 bg-red-50 p-4 rounded-xl">
+                <select id="dueClass" class="p-2 border rounded-xl">
+                    <option value="">সব শ্রেণী</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                </select>
+                <select id="dueMonth" class="p-2 border rounded-xl">
+                    <option value="জানুয়ারি">জানুয়ারি</option><option value="ফেব্রুয়ারি">ফেব্রুয়ারি</option><option value="মার্চ">মার্চ</option>
+                    <option value="এপ্রিল">এপ্রিল</option><option value="মে">মে</option><option value="জুন">জুন</option>
+                    <option value="জুলাই">জুলাই</option><option value="আগস্ট">আগস্ট</option><option value="সেপ্টেম্বর">সেপ্টেম্বর</option>
+                    <option value="অক্টোবর">অক্টোবর</option><option value="নভেম্বর">নভেম্বর</option><option value="ডিসেম্বর">ডিসেম্বর</option>
+                </select>
+                <button onclick="loadDueFeeList()" class="bg-red-600 text-white py-2 rounded-xl hover:bg-red-700">বকেয়া দেখুন</button>
+                <button onclick="remindAllDueWhatsApp()" class="bg-green-600 text-white py-2 rounded-xl hover:bg-green-700"><i class="fab fa-whatsapp"></i> সবাইকে রিমাইন্ডার</button>
+            </div>
+            <div id="dueFeeList" class="max-h-96 overflow-y-auto border rounded-xl p-3 bg-gray-50 space-y-2 text-sm">
+                <p class="text-center text-gray-400 py-4">মাস ও শ্রেণী বেছে বকেয়া দেখুন</p>
+            </div>
+        </div>
+
+        <!-- WEEKLY CLASS ROUTINE -->
+        <div id="weeklyRoutineSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-sky-600 hidden text-black transition-colors">
+            <h2 class="text-xl text-sky-800 mb-4 font-medium">
+                <i class="fas fa-table mr-2"></i>সাপ্তাহিক ক্লাস রুটিন
+            </h2>
+            <div class="bg-sky-50 p-4 rounded-xl mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+                <select id="wrClass" class="p-2 border rounded-xl">
+                    <option value="">শ্রেণী</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                </select>
+                <select id="wrDay" class="p-2 border rounded-xl">
+                    <option value="শনিবার">শনিবার</option><option value="রবিবার">রবিবার</option><option value="সোমবার">সোমবার</option>
+                    <option value="মঙ্গলবার">মঙ্গলবার</option><option value="বুধবার">বুধবার</option><option value="বৃহস্পতিবার">বৃহস্পতিবার</option><option value="শুক্রবার">শুক্রবার</option>
+                </select>
+                <input type="text" id="wrTime" placeholder="সময় (যেমন: ৪:০০–৫:৩০)" class="p-2 border rounded-xl">
+                <input type="text" id="wrSubject" placeholder="বিষয়" class="p-2 border rounded-xl">
+                <input type="text" id="wrTeacher" placeholder="শিক্ষকের নাম" class="p-2 border rounded-xl">
+                <button onclick="saveWeeklyRoutineItem()" class="bg-sky-600 text-white py-2 rounded-xl hover:bg-sky-700">রুটিনে যোগ করুন</button>
+            </div>
+            <div id="weeklyRoutineList" class="overflow-x-auto border rounded-xl p-3 bg-gray-50 text-sm"></div>
+        </div>
+
+        <!-- ATTENDANCE % REPORT -->
+        <div id="attReportSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-lime-600 hidden text-black transition-colors">
+            <h2 class="text-xl text-lime-800 mb-4 font-medium">
+                <i class="fas fa-percent mr-2"></i>উপস্থিতি শতকরা রিপোর্ট
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4 bg-lime-50 p-4 rounded-xl">
+                <select id="attRepClass" class="p-2 border rounded-xl">
+                    <option value="">শ্রেণী নির্বাচন</option>
+                    <option value="৬ষ্ঠ">৬ষ্ঠ</option><option value="৭ম">৭ম</option><option value="৮ম">৮ম</option>
+                    <option value="৯ম (বিজ্ঞান)">৯ম (বিজ্ঞান)</option><option value="৯ম (মানবিক)">৯ম (মানবিক)</option><option value="৯ম (ব্যবসায় শিক্ষা)">৯ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="১০ম (বিজ্ঞান)">১০ম (বিজ্ঞান)</option><option value="১০ম (মানবিক)">১০ম (মানবিক)</option><option value="১০ম (ব্যবসায় শিক্ষা)">১০ম (ব্যবসায় শিক্ষা)</option>
+                    <option value="SSC">SSC</option>
+                    <option value="একাদশ (বিজ্ঞান)">একাদশ (বিজ্ঞান)</option><option value="একাদশ (মানবিক)">একাদশ (মানবিক)</option><option value="একাদশ (ব্যবসায় শিক্ষা)">একাদশ (ব্যবসায় শিক্ষা)</option>
+                    <option value="দ্বাদশ (বিজ্ঞান)">দ্বাদশ (বিজ্ঞান)</option><option value="দ্বাদশ (মানবিক)">দ্বাদশ (মানবিক)</option><option value="দ্বাদশ (ব্যবসায় শিক্ষা)">দ্বাদশ (ব্যবসায় শিক্ষা)</option>
+                </select>
+                <input type="date" id="attRepFrom" class="p-2 border rounded-xl">
+                <input type="date" id="attRepTo" class="p-2 border rounded-xl">
+                <button onclick="loadAttendancePercentReport()" class="bg-lime-600 text-white py-2 rounded-xl hover:bg-lime-700">রিপোর্ট দেখুন</button>
+            </div>
+            <div id="attReportList" class="max-h-96 overflow-y-auto border rounded-xl p-3 bg-gray-50 text-sm">
+                <p class="text-center text-gray-400 py-4">শ্রেণী ও তারিখ রেঞ্জ দিয়ে রিপোর্ট নিন</p>
+            </div>
+        </div>
+
         <div id="attendanceSystem" class="bg-white p-6 rounded-2xl shadow-xl mb-6 border-t-4 border-green-600 hidden text-black transition-colors">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl text-green-800 font-medium">দৈনিক উপস্থিতি ট্র্যাকার</h2>
@@ -1477,6 +2071,7 @@
                 <input type="text" id="newName" placeholder="নাম" class="p-2 border rounded outline-none">
                 <input type="text" id="newFather" placeholder="পিতার নাম (ঐচ্ছিক)" class="p-2 border rounded outline-none">
                 <input type="text" id="newMother" placeholder="মাতার নাম (ঐচ্ছিক)" class="p-2 border rounded outline-none">
+                <input type="file" id="newPhoto" accept="image/*" class="p-2 border rounded outline-none text-xs">
                 <select id="newClass" class="p-2 border rounded outline-none">
                     <option value="১ম">১ম</option>
                     <option value="২য়">২য়</option>
@@ -1729,6 +2324,13 @@
                 </div>
                 <h4 class="font-semibold text-gray-800 dark:text-white text-sm">QR অ্যাটেনডেন্স</h4>
                 <p class="text-[11px] text-gray-500 mt-1">স্ক্যান করে উপস্থিতি</p>
+            </button>
+            <button onclick="openTeacherModule('weeklyRoutineSystem')" class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-lg border border-sky-100 hover:border-sky-400 hover:-translate-y-1 transition text-left group">
+                <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                    <i class="fas fa-table text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-800 dark:text-white text-sm">ক্লাস রুটিন</h4>
+                <p class="text-[11px] text-gray-500 mt-1">সাপ্তাহিক সময়সূচি</p>
             </button>
         </div>
 
@@ -2017,6 +2619,56 @@
                 if (sessionStorage.getItem('is_admin')) loadPaymentList();
             });
 
+            onValue(ref(db, `${base}/weeklyRoutine`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_weekly_routine'), JSON.stringify(arr));
+                if (typeof loadWeeklyRoutineAdmin === 'function') loadWeeklyRoutineAdmin();
+                if (typeof renderStudentWeeklyRoutine === 'function') renderStudentWeeklyRoutine();
+            });
+
+            onValue(ref(db, `${base}/homework`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_homework'), JSON.stringify(arr));
+                if (typeof loadAdminHomeworkList === 'function') loadAdminHomeworkList();
+            });
+
+            onValue(ref(db, `${base}/admissions`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_admissions'), JSON.stringify(arr));
+                if (typeof loadAdmissionList === 'function') loadAdmissionList();
+            });
+
+            onValue(ref(db, `${base}/auditLog`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_audit_log'), JSON.stringify(arr));
+                if (typeof loadAuditLogs === 'function') loadAuditLogs();
+            });
+
+            onValue(ref(db, `${base}/syllabus`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_syllabus'), JSON.stringify(arr));
+            });
+            onValue(ref(db, `${base}/honorarium`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_honorarium'), JSON.stringify(arr));
+            });
+            onValue(ref(db, `${base}/referrals`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_referrals'), JSON.stringify(arr));
+            });
+            onValue(ref(db, `${base}/questionBank`), (snapshot) => {
+                let val = snapshot.exists() ? snapshot.val() : [];
+                let arr = Array.isArray(val) ? val : (val && typeof val === 'object' ? Object.values(val) : []);
+                safeSetItem(lsKey('amc_question_bank'), JSON.stringify(arr));
+            });
+
             // FAQs
             onValue(ref(db, `${base}/faqs`), (snapshot) => {
                 let val = snapshot.exists() ? snapshot.val() : [];
@@ -2197,6 +2849,8 @@
                 showSection('loginSection');
             } else {
                 showSection('studentView');
+                if (typeof renderStudentWeeklyRoutine === 'function') renderStudentWeeklyRoutine();
+                if (typeof renderStudentPayGateway === 'function') renderStudentPayGateway();
             }
         }
 
@@ -3378,7 +4032,11 @@
         function toggleSectionElement(id) {
             // Teachers blocked from subscription, payment, all centers, gallery
             if (sessionStorage.getItem('user_role') === 'teacher') {
-                const blocked = ['subscriptionManager', 'paymentSystem', 'allCentersManager', 'galleryManagerSystem'];
+                const blocked = ['subscriptionManager', 'paymentSystem', 'allCentersManager', 'galleryManagerSystem',
+                    'dueFeeSystem', 'attReportSystem', 'incomeReportSystem', 'admissionSystem',
+                    'auditLogSystem', 'backupSystem', 'smsPanelSystem', 'reportCardSystem',
+                    'honorariumSystem', 'referralSystem', 'manualPayGateway', 'questionBankSystem',
+                    'globalSearchSystem', 'seatingPlanSystem', 'certificateSystem'];
                 if (blocked.includes(id)) {
                     return Swal.fire('অনুমতি নেই', 'শিক্ষক অ্যাকাউন্ট থেকে এই ফিচার ব্যবহার করা যাবে না। শুধু অ্যাডমিন ব্যবহার করতে পারবেন।', 'warning');
                 }
@@ -3400,6 +4058,27 @@
             if (id === 'subscriptionManager') {
                 updateSubscriptionBanner();
             }
+            if (id === 'weeklyRoutineSystem' && typeof loadWeeklyRoutineAdmin === 'function') loadWeeklyRoutineAdmin();
+            if (id === 'homeworkSystem' && typeof loadAdminHomeworkList === 'function') loadAdminHomeworkList();
+            if (id === 'admissionSystem' && typeof loadAdmissionList === 'function') loadAdmissionList();
+            if (id === 'auditLogSystem' && typeof loadAuditLogs === 'function') loadAuditLogs();
+            if (id === 'incomeReportSystem' && typeof loadIncomeReport === 'function') loadIncomeReport();
+            if (id === 'smsPanelSystem' && typeof previewSmsTargets === 'function') previewSmsTargets();
+            if (id === 'syllabusSystem' && typeof loadSyllabusList === 'function') loadSyllabusList();
+            if (id === 'honorariumSystem' && typeof loadHonorariumList === 'function') loadHonorariumList();
+            if (id === 'referralSystem' && typeof loadReferralList === 'function') loadReferralList();
+            if (id === 'questionBankSystem' && typeof loadQuestionBankList === 'function') loadQuestionBankList();
+            if (id === 'manualPayGateway' && typeof loadPaymentGatewayFields === 'function') loadPaymentGatewayFields();
+            if (id === 'globalSearchSystem') {
+                const inp = document.getElementById('globalSearchInput');
+                if (inp) inp.focus();
+            }
+            if (id === 'attReportSystem') {
+                const f = document.getElementById('attRepFrom');
+                const t = document.getElementById('attRepTo');
+                if (f && !f.value) { const d = new Date(); d.setDate(1); f.valueAsDate = d; }
+                if (t && !t.value) t.valueAsDate = new Date();
+            }
         }
 
         function showSoftwareDemo() {
@@ -3414,6 +4093,9 @@
             });
             const target = document.getElementById(id);
             if (target) target.classList.remove('hidden');
+            if (id === 'adminPanel' && typeof refreshAdminSummaryCards === 'function') {
+                refreshAdminSummaryCards();
+            }
         }
 
         function closeDisplayArea() {
@@ -3443,9 +4125,13 @@
             // শিক্ষক সেশনে লুকানো অ্যাডমিন বাটনগুলো আবার দেখান
             const adminPanel = document.getElementById('adminPanel');
             if (adminPanel) {
-                ['subscriptionManager', 'paymentSystem', 'galleryManagerSystem'].forEach(id => {
+                ['subscriptionManager', 'paymentSystem', 'galleryManagerSystem',
+                 'dueFeeSystem', 'attReportSystem', 'incomeReportSystem', 'admissionSystem',
+                 'auditLogSystem', 'backupSystem', 'smsPanelSystem', 'reportCardSystem',
+                 'honorariumSystem', 'referralSystem', 'manualPayGateway', 'questionBankSystem'].forEach(id => {
                     adminPanel.querySelectorAll('button[onclick*="' + id + '"]').forEach(btn => btn.classList.remove('hidden'));
                 });
+                adminPanel.querySelectorAll('button[onclick*="exportAllExcelMenu"]').forEach(btn => btn.classList.remove('hidden'));
             }
             stopQRScanner();
             currentCenterId = null;
@@ -4120,6 +4806,7 @@
             <div style="border:3px double #4c1d95; padding:20px; border-radius:12px; font-family:'Hind Siliguri',sans-serif; background:white;">
                 <div style="text-align:center; margin-bottom:15px;">
                     <img src="${siteLogo}" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
+                    ${student && student.photo ? `<div style="margin:8px 0;"><img src="${student.photo}" style="width:72px;height:72px;border-radius:10px;object-fit:cover;border:2px solid #4c1d95;"></div>` : ''}
                     <h2 style="color:#4c1d95; margin:8px 0 2px 0; font-size:20px;">${centerName}</h2>
                     <p style="margin:0; color:#4a5568; font-size:13px;">Official Admit / ID Card</p>
                     <p style="margin:4px 0 0 0; font-size:11px; color:#059669; font-weight:600;">QR বৈধতা: সারা বছর ${year} (মেয়াদ: ${validUntil})</p>
@@ -4230,7 +4917,7 @@
             document.getElementById('stdName').value = s ? s.name : "";
         }
 
-        function addStudentToDB() {
+        async function addStudentToDB() {
             const roll = document.getElementById('newRoll').value.trim();
             const name = document.getElementById('newName').value.trim();
             const father = (document.getElementById('newFather')?.value || '').trim();
@@ -4245,15 +4932,23 @@
             const entry = { roll, name, cls, wa };
             if (father) entry.father = father;
             if (mother) entry.mother = mother;
-            // Keep previous optional fields if updating without retyping
             if (currentEditStudentId && db[currentEditStudentId]) {
                 const prev = db[currentEditStudentId];
                 if (!father && prev.father) entry.father = prev.father;
                 if (!mother && prev.mother) entry.mother = prev.mother;
+                if (prev.photo) entry.photo = prev.photo;
+            }
+            const photoFile = document.getElementById('newPhoto')?.files?.[0];
+            if (photoFile) {
+                if (photoFile.size > 400 * 1024) {
+                    return Swal.fire('ফাইল বড়', 'ছবি সর্বোচ্চ ৪০০ KB হতে হবে।', 'warning');
+                }
+                entry.photo = await readFileAsDataURL(photoFile);
             }
             db[`${cls}_${roll}`] = entry;
             saveCenterData('students', db);
             cancelEditStudent();
+            Swal.fire({ icon: 'success', title: 'সংরক্ষিত', timer: 1200, showConfirmButton: false });
         }
 
         function editStudent(id) {
@@ -4265,6 +4960,7 @@
             if (document.getElementById('newMother')) document.getElementById('newMother').value = s.mother || '';
             document.getElementById('newClass').value = s.cls;
             document.getElementById('newWa').value = s.wa || '';
+            if (document.getElementById('newPhoto')) document.getElementById('newPhoto').value = '';
             document.getElementById('saveStudentBtn').innerText = "আপডেট প্রোফাইল";
             document.getElementById('cancelStudentEditBtn').classList.remove('hidden');
             currentEditStudentId = id;
@@ -4281,6 +4977,7 @@
                 const el = document.getElementById(f);
                 if (el) el.value = '';
             });
+            if (document.getElementById('newPhoto')) document.getElementById('newPhoto').value = '';
             document.getElementById('saveStudentBtn').innerText = "সংরক্ষণ করুন";
             document.getElementById('cancelStudentEditBtn').classList.add('hidden');
             currentEditStudentId = null;
@@ -4869,6 +5566,7 @@
             }
 
             let exams = getArrayFromStorage('amc_exams');
+            const negMark = !!(document.getElementById('examNegMark')?.checked);
             const examData = {
                 id: currentEditExamId || ('EXAM_' + Date.now()),
                 title,
@@ -4876,6 +5574,7 @@
                 duration,
                 pdfUrl,
                 questions,
+                negativeMarking: negMark,
                 createdAt: new Date().toISOString()
             };
 
@@ -4899,6 +5598,7 @@
             document.getElementById('examClass').value = '';
             document.getElementById('examDuration').value = '30';
             document.getElementById('examPdfUrl').value = '';
+            if (document.getElementById('examNegMark')) document.getElementById('examNegMark').checked = false;
             document.getElementById('examPdfFileInput').value = '';
             document.getElementById('examPdfStatusText').innerText = 'প্রশ্নপত্রের PDF ফাইল আপলোড করুন (বা নিচে লিঙ্ক দিন)';
             examPdfBase64String = "";
@@ -4944,6 +5644,7 @@
             document.getElementById('examClass').value = exam.cls;
             document.getElementById('examDuration').value = exam.duration;
             document.getElementById('examPdfUrl').value = exam.pdfUrl || '';
+            if (document.getElementById('examNegMark')) document.getElementById('examNegMark').checked = !!exam.negativeMarking;
             document.getElementById('questionsBuilder').innerHTML = '';
             questionFieldCount = 0;
 
@@ -5195,12 +5896,17 @@
             if (examTimerInterval) clearInterval(examTimerInterval);
 
             let correctCount = 0;
+            let wrongCount = 0;
             const review = [];
+            const useNeg = !!currentExam.negativeMarking;
 
             currentExam.questions.forEach((q, idx) => {
                 const studentAns = studentAnswers[idx] || null;
                 const isCorrect = studentAns === q.correct;
-                if (isCorrect) correctCount++;
+                if (studentAns) {
+                    if (isCorrect) correctCount++;
+                    else wrongCount++;
+                }
                 review.push({
                     question: q.q,
                     options: q.options,
@@ -5211,7 +5917,9 @@
             });
 
             const total = currentExam.questions.length;
-            const percentage = Math.round((correctCount / total) * 100);
+            let scoreVal = correctCount;
+            if (useNeg) scoreVal = Math.max(0, Math.round((correctCount - wrongCount * 0.25) * 100) / 100);
+            const percentage = total ? Math.round((scoreVal / total) * 100) : 0;
 
             const attempt = {
                 id: 'ATT_' + Date.now(),
@@ -5220,7 +5928,10 @@
                 cls: currentExam._studentCls,
                 roll: currentExam._studentRoll,
                 studentName: currentExam._studentName,
-                score: correctCount,
+                score: scoreVal,
+                correctCount,
+                wrongCount,
+                negativeMarking: useNeg,
                 total,
                 percentage,
                 review,
@@ -5973,7 +6684,11 @@
 
         function openTeacherModule(moduleId) {
             // Teachers cannot access subscription, payment, all-centers, gallery
-            const teacherBlocked = ['subscriptionManager', 'paymentSystem', 'allCentersManager', 'galleryManagerSystem'];
+            const teacherBlocked = ['subscriptionManager', 'paymentSystem', 'allCentersManager', 'galleryManagerSystem',
+                'dueFeeSystem', 'attReportSystem', 'incomeReportSystem', 'admissionSystem',
+                'auditLogSystem', 'backupSystem', 'smsPanelSystem', 'reportCardSystem',
+                'honorariumSystem', 'referralSystem', 'manualPayGateway', 'questionBankSystem',
+                'globalSearchSystem', 'seatingPlanSystem', 'certificateSystem'];
             if (sessionStorage.getItem('user_role') === 'teacher' && teacherBlocked.includes(moduleId)) {
                 return Swal.fire('অনুমতি নেই', 'শিক্ষক অ্যাকাউন্ট থেকে এই ফিচার ব্যবহার করা যাবে না। শুধু অ্যাডমিন ব্যবহার করতে পারবেন।', 'warning');
             }
@@ -5982,7 +6697,8 @@
             applyTeacherAdminRestrictions();
 
             const modules = ['studentManager','attendanceSystem','paymentSystem','routineManagerSystem',
-                'galleryManagerSystem','faqManagerSystem','examManagerSystem','qrAttendanceSystem','subscriptionManager','allCentersManager'];
+                'galleryManagerSystem','faqManagerSystem','examManagerSystem','qrAttendanceSystem','subscriptionManager','allCentersManager',
+                'dueFeeSystem','weeklyRoutineSystem','attReportSystem','homeworkSystem','leaderboardSystem'];
             modules.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
@@ -6010,12 +6726,18 @@
                     const qd = document.getElementById('qrFilterDate');
                     if (qd && !qd.value) qd.valueAsDate = new Date();
                 }
+                if (moduleId === 'weeklyRoutineSystem' && typeof loadWeeklyRoutineAdmin === 'function') loadWeeklyRoutineAdmin();
+                if (moduleId === 'dueFeeSystem' && typeof loadDueFeeList === 'function') { /* wait for user click */ }
             }
         }
 
         function applyTeacherAdminRestrictions() {
             const isTeacher = sessionStorage.getItem('user_role') === 'teacher';
-            const restrictedIds = ['paymentSystem', 'galleryManagerSystem', 'subscriptionManager', 'allCentersManager'];
+            const restrictedIds = ['paymentSystem', 'galleryManagerSystem', 'subscriptionManager', 'allCentersManager',
+                'dueFeeSystem', 'attReportSystem', 'incomeReportSystem', 'admissionSystem',
+                'auditLogSystem', 'backupSystem', 'smsPanelSystem', 'reportCardSystem',
+                'honorariumSystem', 'referralSystem', 'manualPayGateway', 'questionBankSystem',
+                'globalSearchSystem', 'seatingPlanSystem', 'certificateSystem'];
 
             const adminPanel = document.getElementById('adminPanel');
             if (adminPanel) {
@@ -6037,6 +6759,16 @@
                 restrictedIds.forEach(id => {
                     const el = document.getElementById(id);
                     if (el) el.classList.add('hidden');
+                });
+                // Excel export is function-only (no section id)
+                if (adminPanel) {
+                    adminPanel.querySelectorAll('button[onclick*="exportAllExcelMenu"]').forEach(btn => {
+                        btn.classList.add('hidden');
+                    });
+                }
+            } else if (adminPanel) {
+                adminPanel.querySelectorAll('button[onclick*="exportAllExcelMenu"]').forEach(btn => {
+                    btn.classList.remove('hidden');
                 });
             }
         }
@@ -6060,6 +6792,1170 @@
 
 
 
+
+
+
+        // ==================== DUE FEE TRACKER ====================
+        function loadDueFeeList() {
+            const cls = document.getElementById('dueClass')?.value || '';
+            const month = document.getElementById('dueMonth')?.value;
+            const container = document.getElementById('dueFeeList');
+            if (!container) return;
+            const students = getObjectFromStorage('amc_student_db');
+            const payments = getArrayFromStorage('amc_payment_db');
+            const paidKeys = new Set(
+                payments.filter(p => p.month === month).map(p => `${p.cls}_${p.roll}`)
+            );
+            let list = Object.values(students);
+            if (cls) list = list.filter(s => s.cls === cls);
+            const due = list.filter(s => !paidKeys.has(`${s.cls}_${s.roll}`));
+            if (due.length === 0) {
+                container.innerHTML = `<p class="text-center text-green-600 py-4">এই মাসে বকেয়া নেই (বা কোনো শিক্ষার্থী নেই)</p>`;
+                return;
+            }
+            container.innerHTML = due.map(s => {
+                const phone = (s.wa || '').replace(/\D/g, '');
+                const wa = phone ? (phone.startsWith('880') ? phone : (phone.length === 11 ? '88' + phone : phone)) : '';
+                const msg = encodeURIComponent(`${s.name} (${s.cls}, রোল ${s.roll}) — ${month} মাসের ফি বকেয়া আছে। অনুগ্রহ করে পরিশোধ করুন।`);
+                return `<div class="flex flex-wrap justify-between items-center gap-2 p-3 bg-white border rounded-lg">
+                    <div><b>${s.name}</b> · ${s.cls} · রোল ${s.roll}
+                    ${s.father ? `<div class="text-[10px] text-gray-500">পিতা: ${s.father}</div>` : ''}</div>
+                    <div class="flex gap-2">
+                        ${wa ? `<a href="https://wa.me/${wa}?text=${msg}" target="_blank" class="text-xs bg-green-100 text-green-800 px-3 py-1.5 rounded-lg"><i class="fab fa-whatsapp"></i> রিমাইন্ডার</a>` : '<span class="text-xs text-gray-400">WA নেই</span>'}
+                    </div>
+                </div>`;
+            }).join('');
+            window._lastDueList = due;
+            window._lastDueMonth = month;
+        }
+
+        function remindAllDueWhatsApp() {
+            const due = window._lastDueList || [];
+            const month = window._lastDueMonth || '';
+            if (!due.length) return Swal.fire('তালিকা খালি', 'আগে বকেয়া তালিকা লোড করুন।', 'info');
+            let opened = 0;
+            due.forEach((s, i) => {
+                const phone = (s.wa || '').replace(/\D/g, '');
+                if (!phone) return;
+                const wa = phone.startsWith('880') ? phone : (phone.length === 11 ? '88' + phone : phone);
+                const msg = encodeURIComponent(`${s.name} (${s.cls}, রোল ${s.roll}) — ${month} মাসের ফি বকেয়া আছে। অনুগ্রহ করে পরিশোধ করুন।`);
+                setTimeout(() => { window.open(`https://wa.me/${wa}?text=${msg}`, '_blank'); }, i * 1500);
+                opened++;
+            });
+            Swal.fire('রিমাইন্ডার', `${opened} জনকে WhatsApp খোলা হচ্ছে (একটু অপেক্ষা করুন)।`, 'success');
+        }
+
+        // ==================== WEEKLY CLASS ROUTINE ====================
+        function saveWeeklyRoutineItem() {
+            const cls = document.getElementById('wrClass')?.value;
+            const day = document.getElementById('wrDay')?.value;
+            const time = document.getElementById('wrTime')?.value.trim();
+            const subject = document.getElementById('wrSubject')?.value.trim();
+            const teacher = document.getElementById('wrTeacher')?.value.trim();
+            if (!cls || !day || !time || !subject) {
+                return Swal.fire('অসম্পূর্ণ', 'শ্রেণী, দিন, সময় ও বিষয় দিন।', 'warning');
+            }
+            let list = getArrayFromStorage('amc_weekly_routine');
+            list.push({ id: 'WR_' + Date.now(), cls, day, time, subject, teacher: teacher || '' });
+            saveCenterData('weeklyRoutine', list);
+            document.getElementById('wrTime').value = '';
+            document.getElementById('wrSubject').value = '';
+            document.getElementById('wrTeacher').value = '';
+            loadWeeklyRoutineAdmin();
+            Swal.fire({ icon: 'success', title: 'যোগ হয়েছে', timer: 1000, showConfirmButton: false });
+        }
+
+        function loadWeeklyRoutineAdmin() {
+            const container = document.getElementById('weeklyRoutineList');
+            if (!container) return;
+            let list = getArrayFromStorage('amc_weekly_routine');
+            if (!list.length) {
+                container.innerHTML = '<p class="text-center text-gray-400 py-4">কোনো রুটিন নেই</p>';
+                return;
+            }
+            const days = ['শনিবার','রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার'];
+            list.sort((a,b) => days.indexOf(a.day) - days.indexOf(b.day) || a.time.localeCompare(b.time));
+            container.innerHTML = `<table class="w-full text-xs border-collapse">
+                <thead><tr class="bg-sky-700 text-white">
+                    <th class="p-2 border">দিন</th><th class="p-2 border">সময়</th><th class="p-2 border">শ্রেণী</th>
+                    <th class="p-2 border">বিষয়</th><th class="p-2 border">শিক্ষক</th><th class="p-2 border">✕</th>
+                </tr></thead>
+                <tbody>${list.map(r => `
+                    <tr class="border-b">
+                        <td class="p-2 border">${r.day}</td><td class="p-2 border">${r.time}</td>
+                        <td class="p-2 border">${r.cls}</td><td class="p-2 border">${r.subject}</td>
+                        <td class="p-2 border">${r.teacher || '—'}</td>
+                        <td class="p-2 border text-center"><button onclick="deleteWeeklyRoutine('${r.id}')" class="text-red-500"><i class="fas fa-trash"></i></button></td>
+                    </tr>`).join('')}
+                </tbody></table>`;
+        }
+
+        function deleteWeeklyRoutine(id) {
+            let list = getArrayFromStorage('amc_weekly_routine').filter(r => r.id !== id);
+            saveCenterData('weeklyRoutine', list);
+            loadWeeklyRoutineAdmin();
+        }
+
+        function renderStudentWeeklyRoutine() {
+            const el = document.getElementById('studentWeeklyRoutine');
+            if (!el) return;
+            let list = getArrayFromStorage('amc_weekly_routine');
+            if (!list.length) {
+                el.innerHTML = '<p class="text-gray-400 text-center py-2">রুটিন প্রকাশিত হয়নি</p>';
+                return;
+            }
+            const days = ['শনিবার','রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার'];
+            list.sort((a,b) => days.indexOf(a.day) - days.indexOf(b.day));
+            el.innerHTML = `<table class="w-full border-collapse">
+                <thead><tr class="bg-indigo-700 text-white">
+                    <th class="p-1.5 border">দিন</th><th class="p-1.5 border">সময়</th><th class="p-1.5 border">শ্রেণী</th>
+                    <th class="p-1.5 border">বিষয়</th><th class="p-1.5 border">শিক্ষক</th>
+                </tr></thead>
+                <tbody>${list.map(r => `<tr>
+                    <td class="p-1.5 border">${r.day}</td><td class="p-1.5 border">${r.time}</td>
+                    <td class="p-1.5 border">${r.cls}</td><td class="p-1.5 border">${r.subject}</td>
+                    <td class="p-1.5 border">${r.teacher || '—'}</td>
+                </tr>`).join('')}</tbody></table>`;
+        }
+
+        // ==================== ATTENDANCE % REPORT ====================
+        function loadAttendancePercentReport() {
+            const cls = document.getElementById('attRepClass')?.value;
+            const from = document.getElementById('attRepFrom')?.value;
+            const to = document.getElementById('attRepTo')?.value;
+            const container = document.getElementById('attReportList');
+            if (!cls) return Swal.fire('শ্রেণী দিন', '', 'warning');
+            const students = Object.values(getObjectFromStorage('amc_student_db')).filter(s => s.cls === cls);
+            const allAtt = getObjectFromStorage('amc_attendance');
+            const dates = Object.keys(allAtt).filter(d => {
+                if (from && d < from) return false;
+                if (to && d > to) return false;
+                return true;
+            });
+            const totalDays = dates.length || 1;
+            if (!students.length) {
+                container.innerHTML = '<p class="text-center text-gray-400 py-4">এই শ্রেণীতে শিক্ষার্থী নেই</p>';
+                return;
+            }
+            const rows = students.map(s => {
+                const key = `${s.cls}_${s.roll}`;
+                let present = 0;
+                dates.forEach(d => {
+                    const arr = allAtt[d] || [];
+                    if (arr.includes(key) || arr.includes(`${s.cls}_${Number(s.roll)}`)) present++;
+                });
+                const pct = Math.round((present / totalDays) * 100);
+                return { ...s, present, totalDays, pct };
+            }).sort((a,b) => b.pct - a.pct);
+            container.innerHTML = `<p class="text-xs text-gray-500 mb-2">তারিখ সংখ্যা: ${dates.length} দিন</p>
+                <table class="w-full text-xs border-collapse">
+                <thead><tr class="bg-lime-700 text-white">
+                    <th class="p-2 border">রোল</th><th class="p-2 border">নাম</th>
+                    <th class="p-2 border">উপস্থিত</th><th class="p-2 border">%</th>
+                </tr></thead>
+                <tbody>${rows.map(r => `
+                    <tr class="border-b">
+                        <td class="p-2 border text-center">${r.roll}</td>
+                        <td class="p-2 border">${r.name}</td>
+                        <td class="p-2 border text-center">${r.present}/${r.totalDays}</td>
+                        <td class="p-2 border text-center font-bold ${r.pct < 50 ? 'text-red-600' : 'text-green-700'}">${r.pct}%</td>
+                    </tr>`).join('')}
+                </tbody></table>`;
+        }
+
+        // ==================== EXCEL / CSV EXPORT ====================
+        function downloadCSV(filename, rows) {
+            const bom = '\uFEFF';
+            const csv = rows.map(r => r.map(c => {
+                const s = String(c ?? '');
+                if (/[",\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+                return s;
+            }).join(',')).join('\n');
+            const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        function exportAllExcelMenu() {
+            Swal.fire({
+                title: 'Excel / CSV এক্সপোর্ট',
+                html: `<div class="text-left space-y-2 text-sm">
+                    <button id="exStudents" class="w-full p-2 bg-blue-100 rounded-lg">শিক্ষার্থী তালিকা</button>
+                    <button id="exResults" class="w-full p-2 bg-purple-100 rounded-lg">রেজাল্ট</button>
+                    <button id="exPayments" class="w-full p-2 bg-amber-100 rounded-lg">পেমেন্ট</button>
+                    <button id="exAttendance" class="w-full p-2 bg-green-100 rounded-lg">উপস্থিতি</button>
+                </div>`,
+                showConfirmButton: false,
+                showCloseButton: true,
+                didOpen: () => {
+                    document.getElementById('exStudents').onclick = () => { exportStudentsCSV(); Swal.close(); };
+                    document.getElementById('exResults').onclick = () => { exportResultsCSV(); Swal.close(); };
+                    document.getElementById('exPayments').onclick = () => { exportPaymentsCSV(); Swal.close(); };
+                    document.getElementById('exAttendance').onclick = () => { exportAttendanceCSV(); Swal.close(); };
+                }
+            });
+        }
+
+        function exportStudentsCSV() {
+            const db = getObjectFromStorage('amc_student_db');
+            const rows = [['রোল', 'নাম', 'শ্রেণী', 'পিতা', 'মাতা', 'WhatsApp']];
+            Object.values(db).forEach(s => rows.push([s.roll, s.name, s.cls, s.father || '', s.mother || '', s.wa || '']));
+            downloadCSV('students.csv', rows);
+        }
+        function exportResultsCSV() {
+            const data = getArrayFromStorage('amc_db_final');
+            const rows = [['তারিখ', 'রোল', 'নাম', 'শ্রেণী', 'পরীক্ষা', 'মোট']];
+            data.forEach(r => rows.push([r.date, r.roll, r.name, r.cls, r.examType, r.grandTotal]));
+            downloadCSV('results.csv', rows);
+        }
+        function exportPaymentsCSV() {
+            const data = getArrayFromStorage('amc_payment_db');
+            const rows = [['তারিখ', 'রোল', 'নাম', 'শ্রেণী', 'মাস', 'টাকা', 'মাধ্যম', 'TrxID']];
+            data.forEach(p => rows.push([p.date, p.roll, p.name, p.cls, p.month, p.amount, p.method, p.txnId]));
+            downloadCSV('payments.csv', rows);
+        }
+        function exportAttendanceCSV() {
+            const allAtt = getObjectFromStorage('amc_attendance');
+            const rows = [['তারিখ', 'শ্রেণী_রোল']];
+            Object.keys(allAtt).sort().forEach(d => {
+                (allAtt[d] || []).forEach(k => rows.push([d, k]));
+            });
+            downloadCSV('attendance.csv', rows);
+        }
+
+        // ==================== PARENT PORTAL ====================
+        function loadParentPortal() {
+            const cls = document.getElementById('parentClass')?.value;
+            const roll = document.getElementById('parentRoll')?.value.trim();
+            const waIn = (document.getElementById('parentWa')?.value || '').replace(/\D/g, '');
+            const box = document.getElementById('parentPortalResult');
+            if (!cls || !roll) return Swal.fire('ফিল্ড খালি', 'শ্রেণী ও রোল দিন।', 'warning');
+            const db = getObjectFromStorage('amc_student_db');
+            const st = db[`${cls}_${roll}`] || db[`${cls}_${Number(roll)}`];
+            if (!st) {
+                box.classList.remove('hidden');
+                box.innerHTML = '<p class="text-red-600 text-center">শিক্ষার্থী পাওয়া যায়নি</p>';
+                return;
+            }
+            if (waIn && st.wa) {
+                const stored = String(st.wa).replace(/\D/g, '');
+                if (stored && !stored.endsWith(waIn.slice(-10)) && !waIn.endsWith(stored.slice(-10))) {
+                    return Swal.fire('যাচাই ব্যর্থ', 'WhatsApp নম্বর মিলছে না।', 'error');
+                }
+            }
+            const results = getArrayFromStorage('amc_db_final')
+                .filter(r => r.cls === cls && String(r.roll) === String(roll))
+                .sort((a,b) => b.date.localeCompare(a.date))
+                .slice(0, 8);
+            const payments = getArrayFromStorage('amc_payment_db')
+                .filter(p => p.cls === cls && String(p.roll) === String(roll))
+                .sort((a,b) => (b.date || '').localeCompare(a.date || ''))
+                .slice(0, 6);
+            const allAtt = getObjectFromStorage('amc_attendance');
+            const key = `${cls}_${roll}`;
+            let presentDays = 0, totalDays = 0;
+            Object.keys(allAtt).forEach(d => {
+                totalDays++;
+                const arr = allAtt[d] || [];
+                if (arr.includes(key) || arr.includes(`${cls}_${Number(roll)}`)) presentDays++;
+            });
+            const pct = totalDays ? Math.round((presentDays / totalDays) * 100) : 0;
+
+            box.classList.remove('hidden');
+            box.innerHTML = `
+                <div class="p-3 bg-fuchsia-50 rounded-xl border border-fuchsia-100">
+                    <b>${st.name}</b> · ${st.cls} · রোল ${st.roll}
+                    ${st.father ? `<div class="text-xs text-gray-600">পিতা: ${st.father}</div>` : ''}
+                    ${st.mother ? `<div class="text-xs text-gray-600">মাতা: ${st.mother}</div>` : ''}
+                    <div class="text-xs mt-1">উপস্থিতি: <b>${presentDays}/${totalDays}</b> (${pct}%)</div>
+                </div>
+                <div>
+                    <h4 class="font-medium text-purple-800 mb-1">সাম্প্রতিক রেজাল্ট</h4>
+                    ${results.length ? results.map(r => `<div class="p-2 border rounded-lg mb-1 flex justify-between"><span>${r.date} · ${r.examType}</span><b>${r.grandTotal}</b></div>`).join('') : '<p class="text-gray-400 text-xs">রেজাল্ট নেই</p>'}
+                </div>
+                <div>
+                    <h4 class="font-medium text-amber-800 mb-1">পেমেন্ট</h4>
+                    ${payments.length ? payments.map(p => `<div class="p-2 border rounded-lg mb-1 flex justify-between"><span>${p.month} · ${p.date}</span><b>৳${p.amount}</b></div>`).join('') : '<p class="text-gray-400 text-xs">পেমেন্ট নেই</p>'}
+                </div>`;
+        }
+
+        // Hook weekly routine load when selecting center / student view
+        const _origSelectCenter = typeof selectCenter === 'function' ? selectCenter : null;
+
+
+
+        // ==================== AUDIT LOG ====================
+        function pushAudit(action, detail) {
+            try {
+                let logs = getArrayFromStorage('amc_audit_log');
+                logs.unshift({
+                    id: 'AUD_' + Date.now(),
+                    action,
+                    detail: detail || '',
+                    role: sessionStorage.getItem('user_role') || 'guest',
+                    at: new Date().toLocaleString('bn-BD'),
+                    ts: Date.now()
+                });
+                if (logs.length > 300) logs = logs.slice(0, 300);
+                saveCenterData('auditLog', logs);
+                try { safeSetItem(lsKey('amc_audit_log'), JSON.stringify(logs)); } catch(e) {}
+            } catch (e) {}
+        }
+
+        function loadAuditLogs() {
+            const el = document.getElementById('auditLogList');
+            if (!el) return;
+            const logs = getArrayFromStorage('amc_audit_log');
+            if (!logs.length) {
+                el.innerHTML = '<p class="text-center text-gray-400 py-4">কোনো লগ নেই</p>';
+                return;
+            }
+            el.innerHTML = logs.map(l => `
+                <div class="p-2 bg-white border rounded-lg">
+                    <div class="flex justify-between gap-2">
+                        <b>${l.action}</b>
+                        <span class="text-gray-400">${l.at}</span>
+                    </div>
+                    <div class="text-gray-600 mt-0.5">${l.detail || ''} · ${l.role || ''}</div>
+                </div>`).join('');
+        }
+
+        function clearAuditLogs() {
+            Swal.fire({ title: 'লগ মুছবেন?', icon: 'warning', showCancelButton: true, confirmButtonText: 'হ্যাঁ' })
+            .then(r => {
+                if (!r.isConfirmed) return;
+                saveCenterData('auditLog', []);
+                try { safeSetItem(lsKey('amc_audit_log'), '[]'); } catch(e) {}
+                loadAuditLogs();
+            });
+        }
+
+        // ==================== HOMEWORK ====================
+        function saveHomework() {
+            const title = document.getElementById('hwTitle')?.value.trim();
+            const cls = document.getElementById('hwClass')?.value;
+            const subject = document.getElementById('hwSubject')?.value.trim();
+            const due = document.getElementById('hwDue')?.value;
+            const details = document.getElementById('hwDetails')?.value.trim();
+            if (!title || !cls) return Swal.fire('অসম্পূর্ণ', 'শিরোনাম ও শ্রেণী দিন।', 'warning');
+            let list = getArrayFromStorage('amc_homework');
+            list.unshift({
+                id: 'HW_' + Date.now(),
+                title, cls, subject: subject || '', due: due || '', details: details || '',
+                createdAt: new Date().toLocaleString('bn-BD')
+            });
+            saveCenterData('homework', list);
+            try { safeSetItem(lsKey('amc_homework'), JSON.stringify(list)); } catch(e) {}
+            pushAudit('homework_add', title + ' / ' + cls);
+            ['hwTitle','hwSubject','hwDetails'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+            loadAdminHomeworkList();
+            Swal.fire({ icon: 'success', title: 'প্রকাশিত', timer: 1200, showConfirmButton: false });
+        }
+
+        function loadAdminHomeworkList() {
+            const el = document.getElementById('adminHomeworkList');
+            if (!el) return;
+            const list = getArrayFromStorage('amc_homework');
+            if (!list.length) {
+                el.innerHTML = '<p class="text-center text-gray-400 py-4">কোনো হোমওয়ার্ক নেই</p>';
+                return;
+            }
+            el.innerHTML = list.map(h => `
+                <div class="p-3 bg-white border rounded-lg flex justify-between gap-2">
+                    <div>
+                        <b class="text-orange-800">${h.title}</b>
+                        <div class="text-xs text-gray-600">${h.cls} · ${h.subject || '—'} · সময়সীমা: ${h.due || '—'}</div>
+                        <div class="text-xs mt-1">${h.details || ''}</div>
+                    </div>
+                    <button onclick="deleteHomework('${h.id}')" class="text-red-500 shrink-0"><i class="fas fa-trash"></i></button>
+                </div>`).join('');
+        }
+
+        function deleteHomework(id) {
+            let list = getArrayFromStorage('amc_homework').filter(h => h.id !== id);
+            saveCenterData('homework', list);
+            try { safeSetItem(lsKey('amc_homework'), JSON.stringify(list)); } catch(e) {}
+            pushAudit('homework_delete', id);
+            loadAdminHomeworkList();
+        }
+
+        function loadStudentHomework() {
+            const cls = document.getElementById('hwStudentClass')?.value;
+            const el = document.getElementById('studentHomeworkList');
+            if (!el) return;
+            if (!cls) {
+                el.innerHTML = '<p class="text-center text-gray-400 py-3">শ্রেণী বেছে নিন</p>';
+                return;
+            }
+            const list = getArrayFromStorage('amc_homework').filter(h => h.cls === cls);
+            if (!list.length) {
+                el.innerHTML = '<p class="text-center text-gray-400 py-3">এই শ্রেণীর কোনো হোমওয়ার্ক নেই</p>';
+                return;
+            }
+            el.innerHTML = list.map(h => `
+                <div class="p-3 bg-orange-50 border border-orange-100 rounded-xl">
+                    <b class="text-orange-900">${h.title}</b>
+                    <div class="text-xs text-gray-600 mt-0.5">${h.subject || ''} · শেষ তারিখ: ${h.due || '—'}</div>
+                    <p class="text-xs mt-1">${h.details || ''}</p>
+                </div>`).join('');
+        }
+
+        // ==================== LEADERBOARD ====================
+        function loadLeaderboard() {
+            const cls = document.getElementById('lbClass')?.value;
+            const date = document.getElementById('lbDate')?.value;
+            const el = document.getElementById('leaderboardList');
+            if (!cls) return Swal.fire('শ্রেণী দিন', '', 'warning');
+            let data = getArrayFromStorage('amc_db_final').filter(r => r.cls === cls);
+            if (date) data = data.filter(r => r.date === date);
+            // Aggregate by roll: best/latest total or sum - use latest exam total average
+            const map = {};
+            data.forEach(r => {
+                const k = String(r.roll);
+                if (!map[k]) map[k] = { roll: r.roll, name: r.name, total: 0, count: 0, last: r.date };
+                map[k].total += Number(r.grandTotal || 0);
+                map[k].count += 1;
+                if (r.date > map[k].last) map[k].last = r.date;
+            });
+            const rows = Object.values(map).map(x => ({
+                ...x,
+                avg: x.count ? Math.round(x.total / x.count) : 0
+            })).sort((a, b) => b.avg - a.avg || b.total - a.total);
+            if (!rows.length) {
+                el.innerHTML = '<p class="text-center text-gray-400 py-4">ডাটা নেই</p>';
+                return;
+            }
+            el.innerHTML = `<table class="w-full text-xs border-collapse">
+                <thead><tr class="bg-fuchsia-700 text-white">
+                    <th class="p-2 border">মেধা</th><th class="p-2 border">রোল</th><th class="p-2 border">নাম</th>
+                    <th class="p-2 border">গড়</th><th class="p-2 border">মোট পরীক্ষা</th>
+                </tr></thead>
+                <tbody>${rows.map((r, i) => `
+                    <tr class="${i < 3 ? 'bg-yellow-50' : ''}">
+                        <td class="p-2 border text-center font-bold">#${i + 1}</td>
+                        <td class="p-2 border text-center">${r.roll}</td>
+                        <td class="p-2 border">${r.name}</td>
+                        <td class="p-2 border text-center font-bold text-fuchsia-800">${r.avg}</td>
+                        <td class="p-2 border text-center">${r.count}</td>
+                    </tr>`).join('')}
+                </tbody></table>`;
+        }
+
+        // ==================== INCOME REPORT ====================
+        function loadIncomeReport() {
+            const month = document.getElementById('incMonth')?.value || '';
+            const el = document.getElementById('incomeReportBox');
+            let pays = getArrayFromStorage('amc_payment_db');
+            if (month) pays = pays.filter(p => p.month === month);
+            const total = pays.reduce((s, p) => s + Number(p.amount || 0), 0);
+            const byMethod = {};
+            const byMonth = {};
+            pays.forEach(p => {
+                byMethod[p.method || 'অন্যান্য'] = (byMethod[p.method || 'অন্যান্য'] || 0) + Number(p.amount || 0);
+                byMonth[p.month || '?'] = (byMonth[p.month || '?'] || 0) + Number(p.amount || 0);
+            });
+            el.innerHTML = `
+                <div class="text-2xl font-bold text-teal-800 mb-3">মোট আয়: ৳${total.toLocaleString('bn-BD')}</div>
+                <p class="text-xs text-gray-500 mb-3">${pays.length} টি পেমেন্ট রেকর্ড</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-medium mb-1">মাধ্যম অনুযায়ী</h4>
+                        ${Object.keys(byMethod).map(k => `<div class="flex justify-between border-b py-1"><span>${k}</span><b>৳${byMethod[k]}</b></div>`).join('') || '—'}
+                    </div>
+                    <div>
+                        <h4 class="font-medium mb-1">মাস অনুযায়ী</h4>
+                        ${Object.keys(byMonth).map(k => `<div class="flex justify-between border-b py-1"><span>${k}</span><b>৳${byMonth[k]}</b></div>`).join('') || '—'}
+                    </div>
+                </div>`;
+        }
+
+        // ==================== ONLINE ADMISSION ====================
+        function submitAdmissionApplication() {
+            const name = document.getElementById('admName')?.value.trim();
+            const cls = document.getElementById('admClass')?.value;
+            const roll = document.getElementById('admRoll')?.value.trim();
+            const father = document.getElementById('admFather')?.value.trim();
+            const mother = document.getElementById('admMother')?.value.trim();
+            const wa = document.getElementById('admWa')?.value.trim();
+            const note = document.getElementById('admNote')?.value.trim();
+            if (!name || !cls || !wa) return Swal.fire('অসম্পূর্ণ', 'নাম, শ্রেণী ও মোবাইল আবশ্যক।', 'warning');
+            let list = getArrayFromStorage('amc_admissions');
+            list.unshift({
+                id: 'ADM_' + Date.now(),
+                name, cls, roll, father, mother, wa, note,
+                status: 'pending',
+                createdAt: new Date().toLocaleString('bn-BD')
+            });
+            saveCenterData('admissions', list);
+            try { safeSetItem(lsKey('amc_admissions'), JSON.stringify(list)); } catch(e) {}
+            pushAudit('admission_apply', name + ' / ' + cls);
+            Swal.fire('জমা হয়েছে!', 'আবেদন অ্যাডমিনের অনুমোদনের অপেক্ষায় আছে।', 'success');
+            ['admName','admRoll','admFather','admMother','admWa','admNote'].forEach(id => {
+                const e = document.getElementById(id); if (e) e.value = '';
+            });
+        }
+
+        function loadAdmissionList() {
+            const el = document.getElementById('admissionList');
+            if (!el) return;
+            const list = getArrayFromStorage('amc_admissions');
+            if (!list.length) {
+                el.innerHTML = '<p class="text-center text-gray-400 py-4">কোনো আবেদন নেই</p>';
+                return;
+            }
+            el.innerHTML = list.map(a => `
+                <div class="p-3 bg-white border rounded-lg">
+                    <div class="flex justify-between gap-2 flex-wrap">
+                        <div>
+                            <b>${a.name}</b> · ${a.cls} ${a.roll ? '· রোল ' + a.roll : ''}
+                            <div class="text-xs text-gray-600">${a.father ? 'পিতা: ' + a.father + ' · ' : ''}${a.wa}</div>
+                            <div class="text-[10px] text-gray-400">${a.createdAt} · ${a.status}</div>
+                        </div>
+                        <div class="flex gap-2 items-start">
+                            ${a.status === 'pending' ? `<button onclick="approveAdmission('${a.id}')" class="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg">অনুমোদন</button>` : '<span class="text-xs text-green-700">অনুমোদিত</span>'}
+                            <button onclick="rejectAdmission('${a.id}')" class="text-xs bg-red-100 text-red-700 px-3 py-1.5 rounded-lg">মুছুন</button>
+                        </div>
+                    </div>
+                </div>`).join('');
+        }
+
+        function approveAdmission(id) {
+            let list = getArrayFromStorage('amc_admissions');
+            const a = list.find(x => x.id === id);
+            if (!a) return;
+            const roll = a.roll || String(Date.now()).slice(-4);
+            let db = getObjectFromStorage('amc_student_db');
+            const key = `${a.cls}_${roll}`;
+            if (db[key]) return Swal.fire('রোল আছে', 'এই রোল ইতিমধ্যে আছে। আবেদনে অন্য রোল দিন বা এডিট করুন।', 'warning');
+            db[key] = { roll, name: a.name, cls: a.cls, wa: a.wa, father: a.father || '', mother: a.mother || '' };
+            saveCenterData('students', db);
+            a.status = 'approved';
+            saveCenterData('admissions', list);
+            try { safeSetItem(lsKey('amc_admissions'), JSON.stringify(list)); } catch(e) {}
+            pushAudit('admission_approve', a.name + ' → রোল ' + roll);
+            loadAdmissionList();
+            if (typeof loadStudentList === 'function') loadStudentList();
+            Swal.fire('অনুমোদিত', `${a.name} ডাটাবেজে যুক্ত (রোল ${roll})`, 'success');
+        }
+
+        function rejectAdmission(id) {
+            let list = getArrayFromStorage('amc_admissions').filter(x => x.id !== id);
+            saveCenterData('admissions', list);
+            try { safeSetItem(lsKey('amc_admissions'), JSON.stringify(list)); } catch(e) {}
+            pushAudit('admission_delete', id);
+            loadAdmissionList();
+        }
+
+        // ==================== BACKUP / RESTORE ====================
+        function downloadCenterBackup() {
+            if (!currentCenterId) return Swal.fire('সেন্টার নেই', '', 'warning');
+            const payload = {
+                version: 1,
+                exportedAt: new Date().toISOString(),
+                centerId: currentCenterId,
+                center: currentCenterInfo || {},
+                students: getObjectFromStorage('amc_student_db'),
+                results: getArrayFromStorage('amc_db_final'),
+                payments: getArrayFromStorage('amc_payment_db'),
+                attendance: getObjectFromStorage('amc_attendance'),
+                exams: getArrayFromStorage('amc_exams'),
+                examAttempts: getArrayFromStorage('amc_exam_attempts'),
+                homework: getArrayFromStorage('amc_homework'),
+                weeklyRoutine: getArrayFromStorage('amc_weekly_routine'),
+                admissions: getArrayFromStorage('amc_admissions'),
+                multiNotices: getArrayFromStorage('amc_multi_notices'),
+                routines: getArrayFromStorage('amc_routines'),
+                faqs: getArrayFromStorage('amc_faq_db')
+            };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `backup_${currentCenterId}_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+            pushAudit('backup_download', a.download);
+            Swal.fire('ডাউনলোড', 'ব্যাকআপ ফাইল সেভ হয়েছে।', 'success');
+        }
+
+        async function restoreCenterBackup() {
+            const file = document.getElementById('restoreFile')?.files?.[0];
+            if (!file) return Swal.fire('ফাইল নেই', 'JSON ব্যাকআপ সিলেক্ট করুন।', 'warning');
+            const conf = await Swal.fire({
+                title: 'রিস্টোর?',
+                text: 'বর্তমান ডাটা ওভাররাইট হতে পারে।',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'হ্যাঁ, রিস্টোর'
+            });
+            if (!conf.isConfirmed) return;
+            try {
+                const textData = await file.text();
+                const data = JSON.parse(textData);
+                if (data.students) saveCenterData('students', data.students);
+                if (data.results) saveCenterData('results', data.results);
+                if (data.payments) saveCenterData('payments', data.payments);
+                if (data.attendance) saveCenterData('attendance', data.attendance);
+                if (data.exams) saveCenterData('exams', data.exams);
+                if (data.examAttempts) saveCenterData('examAttempts', data.examAttempts);
+                if (data.homework) {
+                    saveCenterData('homework', data.homework);
+                    try { safeSetItem(lsKey('amc_homework'), JSON.stringify(data.homework)); } catch(e) {}
+                }
+                if (data.weeklyRoutine) {
+                    saveCenterData('weeklyRoutine', data.weeklyRoutine);
+                    try { safeSetItem(lsKey('amc_weekly_routine'), JSON.stringify(data.weeklyRoutine)); } catch(e) {}
+                }
+                if (data.admissions) {
+                    saveCenterData('admissions', data.admissions);
+                    try { safeSetItem(lsKey('amc_admissions'), JSON.stringify(data.admissions)); } catch(e) {}
+                }
+                // local mirrors for classic keys
+                try {
+                    if (data.students) safeSetItem(lsKey('amc_student_db'), JSON.stringify(data.students));
+                    if (data.results) safeSetItem(lsKey('amc_db_final'), JSON.stringify(data.results));
+                    if (data.payments) safeSetItem(lsKey('amc_payment_db'), JSON.stringify(data.payments));
+                    if (data.attendance) safeSetItem(lsKey('amc_attendance'), JSON.stringify(data.attendance));
+                } catch(e) {}
+                pushAudit('backup_restore', file.name);
+                if (typeof loadStudentList === 'function') loadStudentList();
+                if (typeof updateDashboardStats === 'function') updateDashboardStats();
+                Swal.fire('সফল', 'রিস্টোর সম্পন্ন। পেজ রিফ্রেশ করুন।', 'success');
+            } catch (err) {
+                console.error(err);
+                Swal.fire('ত্রুটি', 'ফাইল পড়া যায়নি।', 'error');
+            }
+        }
+
+
+
+        // ==================== UI LANGUAGE TOGGLE ====================
+        function toggleUiLang() {
+            const cur = localStorage.getItem('amc_ui_lang') || 'bn';
+            const next = cur === 'bn' ? 'en' : 'bn';
+            localStorage.setItem('amc_ui_lang', next);
+            const lab = document.getElementById('langToggleLabel');
+            if (lab) lab.innerText = next === 'bn' ? 'EN' : 'বাং';
+            document.documentElement.lang = next === 'bn' ? 'bn' : 'en';
+            Swal.fire({
+                icon: 'info',
+                title: next === 'bn' ? 'বাংলা UI' : 'English labels (partial)',
+                text: next === 'bn'
+                    ? 'ইন্টারফেস বাংলায় আছে।'
+                    : 'Core screens remain Bengali; full i18n can be expanded later.',
+                timer: 1800,
+                showConfirmButton: false
+            });
+        }
+
+        // ==================== SMS / WHATSAPP PANEL ====================
+        function fillSmsTemplate() {
+            const t = document.getElementById('smsTemplate')?.value;
+            const center = currentCenterInfo?.name || 'কোচিং সেন্টার';
+            const map = {
+                due: `${center}: আপনার ওয়ার্ডের মাসিক ফি বকেয়া আছে। অনুগ্রহ করে শীঘ্রই পরিশোধ করুন।`,
+                result: `${center}: নতুন রেজাল্ট প্রকাশিত হয়েছে। পোর্টাল থেকে দেখুন।`,
+                exam: `${center}: আসন্ন পরীক্ষার প্রস্তুতি নিন। রুটিন পোর্টালে দেখুন।`,
+                admit: `${center}: অ্যাডমিট কার্ড ডাউনলোড করে QR সহ প্রিন্ট করুন।`,
+                custom: ''
+            };
+            const body = document.getElementById('smsBody');
+            if (body) body.value = map[t] || '';
+            previewSmsTargets();
+        }
+
+        function previewSmsTargets() {
+            const cls = document.getElementById('smsClass')?.value || '';
+            let list = Object.values(getObjectFromStorage('amc_student_db'));
+            if (cls) list = list.filter(s => s.cls === cls);
+            const withPhone = list.filter(s => (s.wa || '').replace(/\D/g, '').length >= 10);
+            const el = document.getElementById('smsTargetPreview');
+            if (el) el.innerText = `টার্গেট: ${withPhone.length} জন (মোট ${list.length} জন শিক্ষার্থী)`;
+            return withPhone;
+        }
+
+        function blastWhatsAppMessages() {
+            const body = document.getElementById('smsBody')?.value.trim();
+            if (!body) return Swal.fire('মেসেজ খালি', '', 'warning');
+            const targets = previewSmsTargets();
+            if (!targets.length) return Swal.fire('নম্বর নেই', 'WhatsApp নম্বরযুক্ত শিক্ষার্থী নেই।', 'info');
+            targets.forEach((s, i) => {
+                const phone = String(s.wa).replace(/\D/g, '');
+                const wa = phone.startsWith('880') ? phone : (phone.length === 11 ? '88' + phone : phone);
+                const msg = encodeURIComponent(body.replace(/\{name\}/g, s.name).replace(/\{roll\}/g, s.roll));
+                setTimeout(() => window.open(`https://wa.me/${wa}?text=${msg}`, '_blank'), i * 1400);
+            });
+            pushAudit('sms_whatsapp_blast', targets.length + ' recipients');
+            Swal.fire('চালু', `${targets.length}টি WhatsApp উইন্ডো খুলবে।`, 'success');
+        }
+
+        function openSmsToFirst() {
+            const body = document.getElementById('smsBody')?.value.trim() || '';
+            const targets = previewSmsTargets();
+            if (!targets.length) return Swal.fire('নম্বর নেই', '', 'info');
+            const phone = String(targets[0].wa).replace(/\D/g, '');
+            const tel = phone.startsWith('880') ? phone : (phone.length === 11 ? '88' + phone : phone);
+            window.location.href = `sms:+${tel}?body=${encodeURIComponent(body)}`;
+        }
+
+        // ==================== SYLLABUS ====================
+        function saveSyllabusItem() {
+            const cls = document.getElementById('sylClass')?.value;
+            const subject = document.getElementById('sylSubject')?.value.trim();
+            const chapter = document.getElementById('sylChapter')?.value.trim();
+            const status = document.getElementById('sylStatus')?.value || 'চলমান';
+            if (!cls || !subject || !chapter) return Swal.fire('অসম্পূর্ণ', 'শ্রেণী, বিষয়, অধ্যায় দিন।', 'warning');
+            let list = getArrayFromStorage('amc_syllabus');
+            list.push({ id: 'SYL_' + Date.now(), cls, subject, chapter, status });
+            saveCenterData('syllabus', list);
+            try { safeSetItem(lsKey('amc_syllabus'), JSON.stringify(list)); } catch(e) {}
+            pushAudit('syllabus_add', chapter);
+            document.getElementById('sylChapter').value = '';
+            loadSyllabusList();
+        }
+
+        function loadSyllabusList() {
+            const el = document.getElementById('syllabusList');
+            if (!el) return;
+            const list = getArrayFromStorage('amc_syllabus');
+            if (!list.length) {
+                el.innerHTML = '<p class="text-center text-gray-400 py-4">সিলেবাস খালি</p>';
+                return;
+            }
+            el.innerHTML = list.map(s => {
+                const color = s.status === 'সম্পন্ন' ? 'text-green-700' : (s.status === 'বাকি' ? 'text-red-600' : 'text-blue-700');
+                return `<div class="p-2 bg-white border rounded-lg flex justify-between gap-2">
+                    <div><b>${s.chapter}</b><div class="text-xs text-gray-500">${s.cls} · ${s.subject} · <span class="${color}">${s.status}</span></div></div>
+                    <button onclick="deleteSyllabus('${s.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>
+                </div>`;
+            }).join('');
+        }
+
+        function deleteSyllabus(id) {
+            let list = getArrayFromStorage('amc_syllabus').filter(s => s.id !== id);
+            saveCenterData('syllabus', list);
+            try { safeSetItem(lsKey('amc_syllabus'), JSON.stringify(list)); } catch(e) {}
+            loadSyllabusList();
+        }
+
+        function loadStudentSyllabus() {
+            const cls = document.getElementById('stuSylClass')?.value;
+            const el = document.getElementById('studentSyllabusList');
+            if (!el) return;
+            if (!cls) { el.innerHTML = '<p class="text-center text-gray-400">শ্রেণী বেছে নিন</p>'; return; }
+            const list = getArrayFromStorage('amc_syllabus').filter(s => s.cls === cls);
+            if (!list.length) { el.innerHTML = '<p class="text-center text-gray-400">ডাটা নেই</p>'; return; }
+            el.innerHTML = list.map(s => {
+                const badge = s.status === 'সম্পন্ন' ? 'bg-green-100 text-green-800' : (s.status === 'বাকি' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-800');
+                return `<div class="p-2 border rounded-lg flex justify-between"><span>${s.subject}: <b>${s.chapter}</b></span><span class="text-[10px] px-2 py-0.5 rounded-full ${badge}">${s.status}</span></div>`;
+            }).join('');
+        }
+
+        // ==================== REPORT CARD ====================
+        function generateReportCard() {
+            const cls = document.getElementById('rcClass')?.value;
+            const roll = document.getElementById('rcRoll')?.value.trim();
+            if (!cls || !roll) return Swal.fire('ফিল্ড খালি', 'শ্রেণী ও রোল দিন।', 'warning');
+            const db = getObjectFromStorage('amc_student_db');
+            const st = db[`${cls}_${roll}`] || db[`${cls}_${Number(roll)}`] || {};
+            const results = getArrayFromStorage('amc_db_final')
+                .filter(r => r.cls === cls && String(r.roll) === String(roll))
+                .sort((a, b) => a.date.localeCompare(b.date));
+            if (!results.length) return Swal.fire('রেজাল্ট নেই', '', 'info');
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং ম্যানেজমেন্ট';
+            const name = st.name || results[0].name;
+            let rows = results.map(r => {
+                const subs = Object.keys(r.scores || {}).map(sub =>
+                    `<tr><td style="padding:4px;border:1px solid #ddd;">${sub}</td>
+                    <td style="padding:4px;border:1px solid #ddd;text-align:center;">${r.scores[sub].m}</td>
+                    <td style="padding:4px;border:1px solid #ddd;text-align:center;">${r.scores[sub].c}</td>
+                    <td style="padding:4px;border:1px solid #ddd;text-align:center;"><b>${r.scores[sub].t}</b></td>
+                    <td style="padding:4px;border:1px solid #ddd;text-align:center;">${r.scores[sub].g}</td></tr>`
+                ).join('');
+                return `<h4 style="margin:12px 0 4px;color:#4c1d95;">${r.date} — ${r.examType} (মোট: ${r.grandTotal})</h4>
+                    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px;">
+                    <tr style="background:#4c1d95;color:#fff;"><th style="padding:4px;">বিষয়</th><th>MCQ</th><th>CQ</th><th>মোট</th><th>গ্রেড</th></tr>
+                    ${subs}</table>`;
+            }).join('');
+            const avg = Math.round(results.reduce((s, r) => s + Number(r.grandTotal || 0), 0) / results.length);
+            showSection('displayArea');
+            document.getElementById('pdfContent').innerHTML = `
+                <div style="font-family:'Hind Siliguri',sans-serif;padding:12px;">
+                    <div style="text-align:center;border-bottom:2px solid #4c1d95;padding-bottom:8px;margin-bottom:12px;">
+                        <img src="${siteLogo}" style="width:55px;height:55px;border-radius:50%;">
+                        <h2 style="color:#4c1d95;margin:4px 0;">${centerName}</h2>
+                        <p style="margin:0;font-size:13px;">প্রগ্রেস রিপোর্ট কার্ড</p>
+                    </div>
+                    <p>নাম: <b>${name}</b> · শ্রেণী: <b>${cls}</b> · রোল: <b>${roll}</b></p>
+                    ${st.father ? `<p>পিতা: <b>${st.father}</b></p>` : ''}
+                    ${st.mother ? `<p>মাতা: <b>${st.mother}</b></p>` : ''}
+                    <p>মোট পরীক্ষা: <b>${results.length}</b> · গড় নম্বর: <b>${avg}</b></p>
+                    ${rows}
+                </div>`;
+            pushAudit('report_card', cls + ' ' + roll);
+        }
+
+        // ==================== HONORARIUM ====================
+        function saveHonorarium() {
+            const teacher = document.getElementById('honTeacher')?.value.trim();
+            const month = document.getElementById('honMonth')?.value.trim();
+            const classes = Number(document.getElementById('honClasses')?.value || 0);
+            const rate = Number(document.getElementById('honRate')?.value || 0);
+            const note = document.getElementById('honNote')?.value.trim();
+            if (!teacher || !month || !classes || !rate) return Swal.fire('অসম্পূর্ণ', '', 'warning');
+            const amount = classes * rate;
+            let list = getArrayFromStorage('amc_honorarium');
+            list.unshift({ id: 'HON_' + Date.now(), teacher, month, classes, rate, amount, note });
+            saveCenterData('honorarium', list);
+            try { safeSetItem(lsKey('amc_honorarium'), JSON.stringify(list)); } catch(e) {}
+            pushAudit('honorarium', teacher + ' ৳' + amount);
+            loadHonorariumList();
+            Swal.fire('সেভ', `মোট ৳${amount}`, 'success');
+        }
+
+        function loadHonorariumList() {
+            const el = document.getElementById('honorariumList');
+            if (!el) return;
+            const list = getArrayFromStorage('amc_honorarium');
+            if (!list.length) { el.innerHTML = '<p class="text-center text-gray-400 py-4">রেকর্ড নেই</p>'; return; }
+            el.innerHTML = list.map(h => `
+                <div class="p-2 bg-white border rounded-lg flex justify-between">
+                    <div><b>${h.teacher}</b> · ${h.month}<div class="text-xs">${h.classes} ক্লাস × ৳${h.rate} = <b>৳${h.amount}</b> ${h.note || ''}</div></div>
+                    <button onclick="deleteHonorarium('${h.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>
+                </div>`).join('');
+        }
+
+        function deleteHonorarium(id) {
+            let list = getArrayFromStorage('amc_honorarium').filter(h => h.id !== id);
+            saveCenterData('honorarium', list);
+            try { safeSetItem(lsKey('amc_honorarium'), JSON.stringify(list)); } catch(e) {}
+            loadHonorariumList();
+        }
+
+        // ==================== REFERRAL ====================
+        function saveReferralCode() {
+            const code = (document.getElementById('refCode')?.value || '').trim().toUpperCase();
+            const discount = Number(document.getElementById('refDiscount')?.value || 0);
+            const type = document.getElementById('refType')?.value || 'fixed';
+            const note = document.getElementById('refNote')?.value.trim();
+            if (!code || !discount) return Swal.fire('অসম্পূর্ণ', '', 'warning');
+            let list = getArrayFromStorage('amc_referrals');
+            if (list.some(r => r.code === code)) return Swal.fire('ডুপ্লিকেট', 'কোড আগেই আছে।', 'warning');
+            list.push({ id: 'REF_' + Date.now(), code, discount, type, note, active: true });
+            saveCenterData('referrals', list);
+            try { safeSetItem(lsKey('amc_referrals'), JSON.stringify(list)); } catch(e) {}
+            pushAudit('referral_add', code);
+            loadReferralList();
+            document.getElementById('refCode').value = '';
+        }
+
+        function loadReferralList() {
+            const el = document.getElementById('referralList');
+            if (!el) return;
+            const list = getArrayFromStorage('amc_referrals');
+            if (!list.length) { el.innerHTML = '<p class="text-center text-gray-400 py-4">কুপন নেই</p>'; return; }
+            el.innerHTML = list.map(r => `
+                <div class="p-2 bg-white border rounded-lg flex justify-between">
+                    <div><b class="text-pink-800">${r.code}</b> — ${r.type === 'percent' ? r.discount + '%' : '৳' + r.discount}
+                    <div class="text-xs text-gray-500">${r.note || ''}</div></div>
+                    <button onclick="deleteReferral('${r.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>
+                </div>`).join('');
+        }
+
+        function deleteReferral(id) {
+            let list = getArrayFromStorage('amc_referrals').filter(r => r.id !== id);
+            saveCenterData('referrals', list);
+            try { safeSetItem(lsKey('amc_referrals'), JSON.stringify(list)); } catch(e) {}
+            loadReferralList();
+        }
+
+        // ==================== QUESTION BANK ====================
+        function saveQuestionBankItem() {
+            const cls = document.getElementById('qbClass')?.value;
+            const subject = document.getElementById('qbSubject')?.value.trim();
+            const q = document.getElementById('qbQuestion')?.value.trim();
+            const a = document.getElementById('qbA')?.value.trim();
+            const b = document.getElementById('qbB')?.value.trim();
+            const c = document.getElementById('qbC')?.value.trim();
+            const d = document.getElementById('qbD')?.value.trim();
+            const correct = document.getElementById('qbCorrect')?.value || 'A';
+            if (!cls || !q || !a || !b || !c || !d) return Swal.fire('অসম্পূর্ণ', 'সব অপশন পূরণ করুন।', 'warning');
+            let list = getArrayFromStorage('amc_question_bank');
+            list.unshift({ id: 'QB_' + Date.now(), cls, subject: subject || '', q, options: [a,b,c,d], correct });
+            saveCenterData('questionBank', list);
+            try { safeSetItem(lsKey('amc_question_bank'), JSON.stringify(list)); } catch(e) {}
+            pushAudit('question_bank_add', cls);
+            loadQuestionBankList();
+            ['qbQuestion','qbA','qbB','qbC','qbD'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+            Swal.fire({ icon: 'success', title: 'সেভ', timer: 1000, showConfirmButton: false });
+        }
+
+        function loadQuestionBankList() {
+            const el = document.getElementById('questionBankList');
+            if (!el) return;
+            const list = getArrayFromStorage('amc_question_bank');
+            if (!list.length) { el.innerHTML = '<p class="text-center text-gray-400 py-4">ব্যাংক খালি</p>'; return; }
+            el.innerHTML = list.map(q => `
+                <div class="p-2 bg-white border rounded-lg">
+                    <div class="flex justify-between"><b>${q.cls} · ${q.subject || '—'}</b>
+                    <button onclick="deleteQuestionBank('${q.id}')" class="text-red-500"><i class="fas fa-trash"></i></button></div>
+                    <div class="mt-1">${q.q}</div>
+                    <div class="text-gray-500">A) ${q.options[0]} | B) ${q.options[1]} | C) ${q.options[2]} | D) ${q.options[3]} · সঠিক: ${q.correct}</div>
+                </div>`).join('');
+        }
+
+        function deleteQuestionBank(id) {
+            let list = getArrayFromStorage('amc_question_bank').filter(q => q.id !== id);
+            saveCenterData('questionBank', list);
+            try { safeSetItem(lsKey('amc_question_bank'), JSON.stringify(list)); } catch(e) {}
+            loadQuestionBankList();
+        }
+
+        // ==================== PAYMENT GATEWAY INFO ====================
+        function savePaymentGatewayInfo() {
+            if (!currentCenterId || !currentCenterInfo) return Swal.fire('সেন্টার নেই', '', 'error');
+            const bkash = document.getElementById('gwBkash')?.value.trim() || '';
+            const nagad = document.getElementById('gwNagad')?.value.trim() || '';
+            const instructions = document.getElementById('gwInstructions')?.value.trim() || '';
+            const updated = { ...currentCenterInfo, payBkash: bkash, payNagad: nagad, payInstructions: instructions };
+            const doSave = async () => {
+                try {
+                    if (window.saveToFirebase) await window.saveToFirebase(`centers/${currentCenterId}`, updated);
+                    currentCenterInfo = updated;
+                    if (window._centersCache) window._centersCache[currentCenterId] = updated;
+                    try { localStorage.setItem(lsKey('amc_pay_gateway'), JSON.stringify({ bkash, nagad, instructions })); } catch(e) {}
+                    renderStudentPayGateway();
+                    pushAudit('pay_gateway_update', bkash + '/' + nagad);
+                    Swal.fire('সেভ', 'পেমেন্ট তথ্য আপডেট হয়েছে।', 'success');
+                } catch (e) {
+                    Swal.fire('ত্রুটি', 'সেভ ব্যর্থ।', 'error');
+                }
+            };
+            doSave();
+        }
+
+        function loadPaymentGatewayFields() {
+            const c = currentCenterInfo || {};
+            if (document.getElementById('gwBkash')) document.getElementById('gwBkash').value = c.payBkash || '';
+            if (document.getElementById('gwNagad')) document.getElementById('gwNagad').value = c.payNagad || '';
+            if (document.getElementById('gwInstructions')) document.getElementById('gwInstructions').value = c.payInstructions || '';
+            const prev = document.getElementById('gwPreview');
+            if (prev) prev.innerHTML = `bKash: <b>${c.payBkash || '—'}</b> · Nagad: <b>${c.payNagad || '—'}</b>`;
+        }
+
+        function renderStudentPayGateway() {
+            const box = document.getElementById('studentPayGatewayBox');
+            if (!box) return;
+            const c = currentCenterInfo || {};
+            if (!c.payBkash && !c.payNagad) {
+                box.innerHTML = '<p class="text-gray-400">অ্যাডমিন পেমেন্ট নম্বর সেট করলে এখানে দেখাবে</p>';
+                return;
+            }
+            box.innerHTML = `
+                ${c.payBkash ? `<p><i class="fas fa-university text-pink-600"></i> bKash: <b>${c.payBkash}</b> (Send Money)</p>` : ''}
+                ${c.payNagad ? `<p><i class="fas fa-university text-orange-600"></i> Nagad: <b>${c.payNagad}</b> (Send Money)</p>` : ''}
+                ${c.payInstructions ? `<p class="text-xs text-gray-500 mt-2">${c.payInstructions}</p>` : '<p class="text-xs text-gray-500">রেফারেন্সে রোল নম্বর লিখুন</p>'}
+            `;
+        }
+
+
+
+        // ==================== ADMIN SUMMARY CARDS ====================
+        function refreshAdminSummaryCards() {
+            try {
+                const students = Object.values(getObjectFromStorage('amc_student_db') || {});
+                const elS = document.getElementById('sumTotalStudents');
+                if (elS) elS.innerText = students.length;
+
+                const months = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+                const month = months[new Date().getMonth()];
+                const payments = getArrayFromStorage('amc_payment_db');
+                const paid = new Set(payments.filter(p => p.month === month).map(p => `${p.cls}_${p.roll}`));
+                const due = students.filter(s => !paid.has(`${s.cls}_${s.roll}`)).length;
+                const elD = document.getElementById('sumDueCount');
+                if (elD) elD.innerText = due;
+
+                const today = new Date().toISOString().slice(0, 10);
+                const att = getObjectFromStorage('amc_attendance') || {};
+                const todayList = att[today] || [];
+                const elA = document.getElementById('sumTodayAtt');
+                if (elA) elA.innerText = Array.isArray(todayList) ? todayList.length : 0;
+
+                const adm = getArrayFromStorage('amc_admissions').filter(a => a.status === 'pending');
+                const elP = document.getElementById('sumPendingAdm');
+                if (elP) elP.innerText = adm.length;
+            } catch (e) { console.warn(e); }
+        }
+
+        // Hook into updateDashboardStats if exists
+        const _origUpdateDash = typeof updateDashboardStats === 'function' ? updateDashboardStats : null;
+        if (typeof updateDashboardStats === 'function') {
+            const _u = updateDashboardStats;
+            updateDashboardStats = function() {
+                try { _u.apply(this, arguments); } catch(e) {}
+                refreshAdminSummaryCards();
+            };
+        }
+
+        // ==================== GLOBAL SEARCH ====================
+        function runGlobalStudentSearch() {
+            const q = (document.getElementById('globalSearchInput')?.value || '').trim().toLowerCase();
+            const el = document.getElementById('globalSearchResults');
+            if (!el) return;
+            if (q.length < 1) {
+                el.innerHTML = '<p class="text-center text-gray-400 py-4">খুঁজতে টাইপ করুন</p>';
+                return;
+            }
+            const list = Object.values(getObjectFromStorage('amc_student_db') || {});
+            const hits = list.filter(s => {
+                const blob = `${s.name||''} ${s.roll||''} ${s.cls||''} ${s.wa||''} ${s.father||''} ${s.mother||''}`.toLowerCase();
+                return blob.includes(q);
+            }).slice(0, 40);
+            if (!hits.length) {
+                el.innerHTML = '<p class="text-center text-gray-400 py-4">কোনো ফলাফল নেই</p>';
+                return;
+            }
+            el.innerHTML = hits.map(s => {
+                const phone = (s.wa || '').replace(/\D/g, '');
+                const wa = phone ? (phone.startsWith('880') ? phone : (phone.length === 11 ? '88' + phone : phone)) : '';
+                return `<div class="p-3 bg-white border rounded-lg flex flex-wrap justify-between gap-2">
+                    <div>
+                        <b>${s.name}</b> · ${s.cls} · রোল ${s.roll}
+                        ${s.father ? `<div class="text-[10px] text-gray-500">পিতা: ${s.father}</div>` : ''}
+                        ${s.wa ? `<div class="text-[10px] text-gray-500">${s.wa}</div>` : ''}
+                    </div>
+                    <div class="flex gap-2 items-center">
+                        ${wa ? `<a href="https://wa.me/${wa}" target="_blank" class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded"><i class="fab fa-whatsapp"></i></a>` : ''}
+                        ${phone ? `<a href="tel:${phone}" class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"><i class="fas fa-phone"></i></a>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ==================== SEATING PLAN ====================
+        function generateSeatingPlan() {
+            const cls = document.getElementById('seatClass')?.value;
+            const cols = Math.max(2, Math.min(12, Number(document.getElementById('seatCols')?.value || 5)));
+            const examName = document.getElementById('seatExamName')?.value.trim() || 'পরীক্ষা';
+            if (!cls) return Swal.fire('শ্রেণী দিন', '', 'warning');
+            let list = Object.values(getObjectFromStorage('amc_student_db') || {}).filter(s => s.cls === cls);
+            list.sort((a, b) => Number(a.roll) - Number(b.roll) || String(a.roll).localeCompare(String(b.roll)));
+            if (!list.length) return Swal.fire('শিক্ষার্থী নেই', '', 'info');
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং সেন্টার';
+            let cells = list.map((s, i) => {
+                const seatNo = i + 1;
+                return `<div style="border:1px solid #7c3aed;border-radius:8px;padding:8px;text-align:center;font-size:11px;background:#f5f3ff;">
+                    <div style="font-weight:700;color:#5b21b6;">সিট ${seatNo}</div>
+                    <div>রোল: <b>${s.roll}</b></div>
+                    <div>${s.name}</div>
+                </div>`;
+            }).join('');
+            showSection('displayArea');
+            document.getElementById('pdfContent').innerHTML = `
+                <div style="font-family:'Hind Siliguri',sans-serif;padding:12px;">
+                    <div style="text-align:center;margin-bottom:12px;">
+                        <img src="${siteLogo}" style="width:50px;height:50px;border-radius:50%;">
+                        <h2 style="color:#5b21b6;margin:6px 0 2px;">${centerName}</h2>
+                        <p style="margin:0;">সিটিং প্ল্যান — ${examName}</p>
+                        <p style="margin:4px 0;font-size:13px;">শ্রেণী: <b>${cls}</b> · মোট: ${list.length} জন · কলাম: ${cols}</p>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:8px;">
+                        ${cells}
+                    </div>
+                </div>`;
+            pushAudit('seating_plan', cls + ' ' + list.length);
+        }
+
+        // ==================== CERTIFICATE ====================
+        function generateCertificate() {
+            const cls = document.getElementById('certClass')?.value;
+            const roll = document.getElementById('certRoll')?.value.trim();
+            const course = document.getElementById('certCourse')?.value.trim() || 'কোচিং কোর্স';
+            const session = document.getElementById('certSession')?.value.trim() || '';
+            if (!cls || !roll) return Swal.fire('শ্রেণী ও রোল দিন', '', 'warning');
+            const db = getObjectFromStorage('amc_student_db');
+            const st = db[`${cls}_${roll}`] || db[`${cls}_${Number(roll)}`];
+            if (!st) return Swal.fire('শিক্ষার্থী পাওয়া যায়নি', '', 'error');
+            const centerName = currentCenterInfo ? currentCenterInfo.name : 'কোচিং সেন্টার';
+            const today = new Date().toLocaleDateString('bn-BD');
+            showSection('displayArea');
+            document.getElementById('pdfContent').innerHTML = `
+                <div style="font-family:'Hind Siliguri',sans-serif;padding:28px;border:6px double #b45309;border-radius:12px;text-align:center;min-height:420px;">
+                    <img src="${siteLogo}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;">
+                    <h1 style="color:#92400e;margin:10px 0 4px;font-size:26px;">${centerName}</h1>
+                    <p style="letter-spacing:3px;color:#a16207;font-size:14px;margin:0;">CERTIFICATE OF COMPLETION</p>
+                    <hr style="border:none;border-top:2px solid #fbbf24;margin:16px auto;width:60%;">
+                    <p style="font-size:14px;color:#444;">এই সার্টিফিকেট প্রদান করা হচ্ছে</p>
+                    <h2 style="color:#1e1b4b;margin:10px 0;font-size:28px;">${st.name}</h2>
+                    <p style="font-size:13px;color:#555;">শ্রেণী: <b>${cls}</b> · রোল: <b>${roll}</b></p>
+                    ${st.father ? `<p style="font-size:12px;color:#666;">পিতা: ${st.father}</p>` : ''}
+                    <p style="margin:18px auto;max-width:480px;font-size:14px;line-height:1.6;">
+                        যিনি সফলভাবে <b>${course}</b> সম্পন্ন করেছেন
+                        ${session ? ` (সেশন: ${session})` : ''}।
+                    </p>
+                    <div style="display:flex;justify-content:space-between;margin-top:40px;padding:0 40px;font-size:12px;color:#666;">
+                        <div><div style="border-top:1px solid #999;padding-top:4px;min-width:120px;">তারিখ: ${today}</div></div>
+                        <div><div style="border-top:1px solid #999;padding-top:4px;min-width:120px;">কর্তৃপক্ষের স্বাক্ষর</div></div>
+                    </div>
+                </div>`;
+            pushAudit('certificate', st.name);
+        }
+
+        // ==================== QUESTION BANK IMPORT TO EXAM ====================
+        function importFromQuestionBank() {
+            const bank = getArrayFromStorage('amc_question_bank');
+            if (!bank.length) {
+                return Swal.fire('খালি', 'প্রশ্ন ব্যাংকে কোনো প্রশ্ন নেই। আগে ব্যাংকে প্রশ্ন যোগ করুন।', 'info');
+            }
+            const examCls = document.getElementById('examClass')?.value || '';
+            let filtered = examCls ? bank.filter(q => q.cls === examCls) : bank;
+            if (!filtered.length) filtered = bank;
+            const optionsHtml = filtered.slice(0, 80).map((q, i) => {
+                const label = `${q.cls} | ${(q.q || '').slice(0, 60)}...`;
+                return `<label class="flex gap-2 items-start p-2 border rounded-lg mb-1 text-left text-xs cursor-pointer hover:bg-rose-50">
+                    <input type="checkbox" class="qb-import-cb mt-1" data-idx="${i}" value="${q.id}">
+                    <span><b>${q.subject || ''}</b> ${label}</span>
+                </label>`;
+            }).join('');
+            window._qbImportPool = filtered;
+            Swal.fire({
+                title: 'প্রশ্ন ব্যাংক থেকে বেছে নিন',
+                html: `<div class="max-h-72 overflow-y-auto text-left">${optionsHtml}</div>
+                    <button type="button" id="qbSelectAll" class="mt-2 text-xs text-rose-700 underline">সব সিলেক্ট</button>`,
+                showCancelButton: true,
+                confirmButtonText: 'ইমপোর্ট করুন',
+                width: 560,
+                didOpen: () => {
+                    document.getElementById('qbSelectAll')?.addEventListener('click', () => {
+                        document.querySelectorAll('.qb-import-cb').forEach(cb => { cb.checked = true; });
+                    });
+                },
+                preConfirm: () => {
+                    const ids = [...document.querySelectorAll('.qb-import-cb:checked')].map(cb => cb.value);
+                    if (!ids.length) {
+                        Swal.showValidationMessage('কমপক্ষে একটি প্রশ্ন সিলেক্ট করুন');
+                        return false;
+                    }
+                    return ids;
+                }
+            }).then(res => {
+                if (!res.isConfirmed || !res.value) return;
+                const pool = window._qbImportPool || [];
+                const selected = pool.filter(q => res.value.includes(q.id));
+                selected.forEach(q => {
+                    const existingQ = {
+                        q: q.q || '',
+                        options: Array.isArray(q.options) ? q.options : ['', '', '', ''],
+                        correct: q.correct || 'A'
+                    };
+                    addQuestionField(existingQ);
+                });
+                pushAudit('qb_import', selected.length + ' questions');
+                Swal.fire('ইমপোর্ট', `${selected.length}টি প্রশ্ন যোগ হয়েছে।`, 'success');
+            });
+        }
 
 
         // ==================== INIT ====================
