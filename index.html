@@ -7,8 +7,13 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="কোচিং ম্যানেজমেন্ট">
-    <link rel="manifest" href="data:application/manifest+json,{"name":"কোচিং ম্যানেজমেন্ট সফটওয়্যার","short_name":"কোচিং CMS","start_url":".","display":"standalone","background_color":"#4c1d95","theme_color":"#4c1d95","lang":"bn"}">
+    <link rel="manifest" href='data:application/manifest+json,{"name":"কোচিং ম্যানেজমেন্ট সফটওয়্যার","short_name":"কোচিং CMS","start_url":".","display":"standalone","background_color":"#4c1d95","theme_color":"#4c1d95","lang":"bn"}'>
     <title>কোচিং ম্যানেজমেন্ট সফটওয়্যার</title>
+    <meta name="description" content="মাল্টি-সেন্টার কোচিং ম্যানেজমেন্ট সফটওয়্যার — শিক্ষার্থী ভর্তি, উপস্থিতি, অনলাইন পরীক্ষা, ফলাফল প্রকাশ ও বেতন ব্যবস্থাপনা।">
+    <meta property="og:title" content="কোচিং ম্যানেজমেন্ট সফটওয়্যার">
+    <meta property="og:description" content="মাল্টি-সেন্টার কোচিং ম্যানেজমেন্ট সফটওয়্যার — শিক্ষার্থী ভর্তি, উপস্থিতি, অনলাইন পরীক্ষা, ফলাফল প্রকাশ ও বেতন ব্যবস্থাপনা।">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -21,6 +26,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+    <!-- ==================== Google AdSense Configuration ==================== -->
+    <!--
+        ১. Publisher ID (ca-pub-8590588817604184) যুক্ত করা হয়েছে
+        ২. নির্দিষ্ট ব্যানার অ্যাড দেখাতে প্রতিটি ad unit-এর data-ad-slot এ আপনার AdSense থেকে তৈরি Ad Unit Slot ID বসান
+        ৩. Auto Ads চালু করতে AdSense ড্যাশবোর্ড থেকে Sites -> Auto ads Enable করুন
+    -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8590588817604184"
+         crossorigin="anonymous"></script>
+    <!-- ==================== End AdSense Script ==================== -->
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&display=swap');
@@ -53,7 +68,8 @@
 
         @media print {
             body { background: white !important; color: black !important; }
-            .no-print, nav, #studentView, #loginSection, #adminPanel, #teacherPanel, #centerSelectSection, #registerSection, #softwareDemoSection, .slider-container, button, .contact-section {
+            .no-print, nav, #studentView, #loginSection, #adminPanel, #teacherPanel, #centerSelectSection, #registerSection, #softwareDemoSection, .slider-container, button, .contact-section,
+            .adsense-container, .adsbygoogle {
                 display: none !important;
             }
             #displayArea {
@@ -248,6 +264,48 @@
             border-radius: 0.5rem;
             background: rgba(255,255,255,0.15);
         }
+
+        /* ==================== AdSense Styles ==================== */
+        .adsense-container {
+            width: 100%;
+            max-width: 100%;
+            margin: 12px auto;
+            text-align: center;
+            overflow: hidden;
+            background: transparent;
+        }
+        .adsense-label {
+            font-size: 10px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+        .adsense-wrapper {
+            width: 100%;
+            min-height: 90px;
+            display: block;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px dashed #e5e7eb;
+            overflow: hidden;
+        }
+        .adsense-wrapper ins.adsbygoogle,
+        .adsense-wrapper ins.adsbygoogle-pending {
+            display: block;
+            width: 100%;
+            min-height: 90px;
+        }
+        .dark-mode .adsense-wrapper {
+            background: #374151;
+            border-color: #4b5563;
+        }
+        @media print {
+            .adsense-container,
+            .adsbygoogle {
+                display: none !important;
+            }
+        }
+        /* ==================== End AdSense Styles ==================== */
     </style>
 </head>
 
@@ -262,6 +320,22 @@
             </marquee>
         </div>
     </div>
+
+    <!-- ==================== TOP BANNER AD (AdSense) ==================== -->
+    <div class="adsense-container no-print px-3 py-2">
+        <div class="adsense-label">Advertisement</div>
+        <div class="adsense-wrapper">
+            <!-- আপনার AdSense Ad Unit থেকে পাওয়া data-ad-slot নম্বরটি বসান -->
+            <ins id="topBannerAd"
+                 class="adsbygoogle-pending"
+                 style="display:block;width:100%;"
+                 data-ad-client="ca-pub-8590588817604184"
+                 data-ad-slot="1111111111"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+    </div>
+    <!-- ==================== END TOP BANNER AD ==================== -->
 
     <!-- Navbar -->
     <nav class="brand-purple p-4 text-white flex justify-between items-center sticky top-0 z-55 shadow-xl border-b-4 border-yellow-500 no-print">
@@ -325,6 +399,21 @@
                 </div>
             </div>
         </div>
+
+        <!-- ==================== HOME PAGE AD ==================== -->
+        <div class="adsense-container no-print mb-8">
+            <div class="adsense-label">Advertisement</div>
+            <div class="adsense-wrapper">
+                <ins id="homePageAd"
+                     class="adsbygoogle-pending"
+                     style="display:block;width:100%;"
+                     data-ad-client="ca-pub-8590588817604184"
+                     data-ad-slot="3333333333"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+        </div>
+        <!-- ==================== END HOME PAGE AD ==================== -->
 
         <!-- ===== ROLE SELECTION ===== -->
         <div id="roleCardsRow" class="mb-8">
@@ -585,6 +674,21 @@
             <div id="sliderTrack" class="slider-track"></div>
             <div class="absolute bottom-3 left-0 right-0 flex justify-center gap-2" id="sliderDots"></div>
         </div>
+
+        <!-- ==================== IN-CONTENT AD (Student View) ==================== -->
+        <div class="adsense-container no-print mb-6">
+            <div class="adsense-label">Advertisement</div>
+            <div class="adsense-wrapper">
+                <ins id="studentViewAd"
+                     class="adsbygoogle-pending"
+                     style="display:block;width:100%;"
+                     data-ad-client="ca-pub-8590588817604184"
+                     data-ad-slot="2222222222"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+            </div>
+        </div>
+        <!-- ==================== END IN-CONTENT AD ==================== -->
 
         <!-- Student Portal -->
         <div class="bg-white p-8 rounded-3xl shadow-2xl border-t-8 border-purple-800 transition-colors mb-6">
@@ -4634,6 +4738,23 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        function initVisibleAdSlots() {
+            requestAnimationFrame(() => {
+                document.querySelectorAll('ins.adsbygoogle-pending').forEach((adEl) => {
+                    if (adEl.dataset.adPushed === '1') return;
+                    if (adEl.offsetParent === null) return;
+                    const width = adEl.getBoundingClientRect().width;
+                    if (width < 200) return;
+                    adEl.dataset.adPushed = '1';
+                    adEl.classList.remove('adsbygoogle-pending');
+                    adEl.classList.add('adsbygoogle');
+                    try {
+                        (window.adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch (e) {}
+                });
+            });
+        }
+
         function showSection(id) {
             ['studentView', 'loginSection', 'adminPanel', 'teacherPanel', 'displayArea', 'examTakingArea', 'centerSelectSection', 'registerSection', 'softwareDemoSection'].forEach(s => {
                 const el = document.getElementById(s);
@@ -4641,6 +4762,7 @@
             });
             const target = document.getElementById(id);
             if (target) target.classList.remove('hidden');
+            initVisibleAdSlots();
             if (id === 'adminPanel' && typeof refreshAdminSummaryCards === 'function') {
                 refreshAdminSummaryCards();
             }
@@ -11255,8 +11377,12 @@
             }
 
             setTimeout(() => {
+                initVisibleAdSlots();
                 if (currentCenterId) logSecurityEvent('page_load', 'হোমপেজ ভিজিট');
             }, 1500);
+        });
+        window.addEventListener('resize', () => {
+            if (typeof initVisibleAdSlots === 'function') initVisibleAdSlots();
         });
     </script>
 </body>
